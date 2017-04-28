@@ -95,8 +95,9 @@ public:
 	{
 		gp::engine::Box o0(1, gp::engine::Vector3f::Zero(), gp::engine::Vector3f::Ones(), gp::engine::Vector3f(2, -8, 10));
 		o0.setAngularVelocity(gp::engine::Vector3f::UnitX());
-		o0.updatePositionAndRotation(0.5);
-		TS_ASSERT_EQUALS(o0.position(), gp::engine::Vector3f(1, -4, 5));
+		o0.updatePositionAndRotation(gp::engine::Vector3f::UnitY() * 8.0, 0.5);
+		TS_ASSERT_EQUALS(o0.position(), gp::engine::Vector3f(1, -3, 5));
+
 
 		gp::engine::Quaternion q0(0.5, gp::engine::Vector3f::UnitX());
 		TS_ASSERT_DELTA(o0.rotation().i(), q0.i(), gp::engine::EPSILON);

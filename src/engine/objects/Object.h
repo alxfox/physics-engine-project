@@ -211,10 +211,10 @@ public:
 	 * Does one step for the object by updating the position and rotation
 	 * from the velocity and angular velocity.
 	 */
-	void updatePositionAndRotation(float_t step)
+	void updatePositionAndRotation(const Vector3f &acceleration, float_t step)
 	{
 		// Update the position
-		m_position += step * m_velocity;
+		m_position += step * m_velocity; // TODO
 
 		// Update the rotation
 		m_rotation.rotate(step * m_angularVelocity);
