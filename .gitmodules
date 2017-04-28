@@ -1,0 +1,6 @@
+[submodule "lib/nanogui"]
+	path = lib/nanogui
+	url = https://github.com/wjakob/nanogui.git
+[submodule "lib/cxxtest"]
+	path = lib/cxxtest
+	url = https://github.com/CxxTest/cxxtest.git

@@ -1,0 +1,1 @@
+cxx_test( typeid.t.h )
