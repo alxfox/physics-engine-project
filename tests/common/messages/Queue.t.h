@@ -1,7 +1,25 @@
 #include <cxxtest/TestSuite.h>
 
 #include <pthread.h>
+#if defined(_WIN32) || defined(WIN32)
+#include <windows.h>
+
+/// http://stackoverflow.com/questions/5801813/c-usleep-is-obsolete-workarounds-for-windows-mingw
+void usleep(__int64 usec) 
+{ 
+    HANDLE timer; 
+    LARGE_INTEGER ft; 
+
+    ft.QuadPart = -(10*usec); // Convert to 100 nanosecond interval, negative value indicates relative time
+
+    timer = CreateWaitableTimer(NULL, TRUE, NULL); 
+    SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0); 
+    WaitForSingleObject(timer, INFINITE); 
+    CloseHandle(timer); 
+}
+#else
 #include <unistd.h>
+#endif
 
 #include "common/messages/Queue.h"
 #include "common/messages/Message.h"

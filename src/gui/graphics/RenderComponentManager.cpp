@@ -2,7 +2,7 @@
     
 void gp::graphics::updateRenderOrder(uint64_t begin, uint64_t end, uint64_t data, uint64_t& renderOrder)
 {
-  uint64_t mask = ( ((1ul << (end-begin+1ul)) - 1ul) << begin );
+  uint64_t mask = ( ((static_cast<uint64_t>(1) << (end-begin+static_cast<uint64_t>(1))) - static_cast<uint64_t>(1)) << begin );
   renderOrder = (renderOrder & ~mask) | ( (data << begin) & mask );
 }
 

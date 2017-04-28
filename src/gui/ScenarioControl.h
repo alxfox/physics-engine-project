@@ -7,7 +7,7 @@
 #include "common/messages/Message.h"
 #include "common/messages/Queue.h"
 
-class GLFWwindow;
+struct GLFWwindow;
 
 namespace gp
 {

@@ -8,7 +8,7 @@
 #include "gui/ScenarioControl.h"
 #include "gui/graphics/Render.h"
 
-class GLFWwindow;
+struct GLFWwindow;
 namespace gp
 {
 struct EngineData

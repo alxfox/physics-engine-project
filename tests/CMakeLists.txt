@@ -7,6 +7,11 @@ set( CMAKE_MODULE_PATH
 find_package( CxxTest REQUIRED )
 include_directories( ${CXXTEST_INCLUDES} )
 
+# Batch script does not seem to work on windows
+if (WIN32)
+  set(CXXTESTGEN python ${CXXTESTGEN})
+endif()
+
 # Base function to add tests
 # (Modified copy from cxxtest)
 function( cxx_test_base source )
@@ -22,7 +27,9 @@ function( cxx_test_base source )
     DEPENDS "${source}"
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
   add_executable( ${TEST_NAME} ${CPP_FULL_NAME} )
+if (NOT MSVC)
   set_target_properties( ${TEST_NAME} PROPERTIES COMPILE_FLAGS "-Wno-effc++" )
+endif()
 
   add_test( ${TEST_NAME} ${RUNTIME_OUTPUT_DIRECTORY}/${TEST_NAME} )
 endfunction( cxx_test_base )

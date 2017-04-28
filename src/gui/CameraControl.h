@@ -4,7 +4,7 @@
 #include "ScenarioControl.h"
 #include "graphics/Camera.h"
 
-class GLFWwindow;
+struct GLFWwindow;
 namespace gp {
   namespace gui {
     class CameraControl {

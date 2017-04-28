@@ -24,11 +24,11 @@ template<class Instance>
 class ComponentManager
 {
 public:
-	typedef ConstKeyIterator<std::unordered_map, Entity, unsigned int> EntityIterator;
+	typedef ConstKeyIterator<std::unordered_map, Entity, size_t> EntityIterator;
 
 protected:
 	/** Map from entities to local instance ids */
-	std::unordered_map<Entity, unsigned int> m_map;
+	std::unordered_map<Entity, size_t> m_map;
 
 	/** Spinlock for concurrent accesses */
 	pthread_spinlock_t m_lock;
@@ -100,10 +100,10 @@ protected:
 	 * @param instance The new instance.
 	 * @return The storage id of the new object
 	 */
-	unsigned int add(Entity entity, const Instance instance)
+	size_t add(Entity entity, const Instance instance)
 	{
 		pthread_spin_lock(&m_lock);
-		unsigned int id = addInstance(entity, instance);
+		size_t id = addInstance(entity, instance);
 		m_map[entity] = id;
 		pthread_spin_unlock(&m_lock);
 		return id;
@@ -121,7 +121,7 @@ protected:
 	 * @param instance The new instance, will never be NULL
 	 * @return The storage id of the instance
 	 */
-	virtual unsigned int addInstance(Entity entity, Instance instance) = 0;
+	virtual size_t addInstance(Entity entity, Instance instance) = 0;
 
 	/**
 	 * Get the instance for an id
@@ -129,7 +129,7 @@ protected:
 	 * This function is called by {@link lookup} and should be implemented
 	 * by subclasses.
 	 */
-	virtual Instance getInstance(unsigned int id) = 0;
+	virtual Instance getInstance(size_t id) = 0;
 };
 
 }

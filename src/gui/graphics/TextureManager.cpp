@@ -1,6 +1,7 @@
 #include "TextureManager.h"
 #include <common/Dir.h>
-#define STB_IMAGE_IMPLEMENTATION
+// Implementation already created in nanovg
+//#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <algorithm>
 #include <iostream>

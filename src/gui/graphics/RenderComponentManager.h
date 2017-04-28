@@ -31,7 +31,7 @@ namespace gp
     static uint64_t const ShapeEnd = 63;
     static uint64_t const ShapeBegin = 60;
     static uint64_t const ProgramEnd   = ShapeBegin - 1;
-    static uint64_t const ProgramBegin = ProgramEnd + 1 - (1 << Material::NUMBER_OF_TEXTURE_TYPES);
+    static uint64_t const ProgramBegin = ProgramEnd + 1 - (static_cast<uint64_t>(1) << Material::NUMBER_OF_TEXTURE_TYPES);
 
     void updateRenderOrder(uint64_t begin, uint64_t end, uint64_t data, uint64_t& renderOrder);
   }

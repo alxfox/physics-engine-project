@@ -39,7 +39,7 @@ public:
 	template<typename TT>
 	T* add(Entity entity, const TT &object)
 	{
-		unsigned int id = ComponentManager<T*>::add(entity, new TT(object));
+		size_t id = ComponentManager<T*>::add(entity, new TT(object));
 		return getInstance(id);
 	}
 
@@ -57,7 +57,7 @@ protected:
 	 *
 	 * @note This function should only be called by the parent class.
 	 */
-	unsigned int addInstance(Entity, T* object)
+	size_t addInstance(Entity, T* object)
 	{
 		assert(object);
 		m_objects.push_back(object);
@@ -68,7 +68,7 @@ protected:
 	 * @param id A valid object identifier
 	 * @return The object that corresponds to the given <code>id</code>
 	 */
-	T* getInstance(unsigned int id)
+	T* getInstance(size_t id)
 	{
 		assert(id < m_objects.size());
 		return m_objects[id];

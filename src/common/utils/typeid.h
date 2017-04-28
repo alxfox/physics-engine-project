@@ -4,6 +4,8 @@
 namespace gp
 {
 
+/// The following does not work for MSVC for whatever reason and we an alternative method.
+#ifndef _MSC_VER
 /**
  * Unique typeid for classes.
  *
@@ -31,7 +33,19 @@ public:
  * @returns A unique if for the class
  */
 template<typename T>
-typeid_t type_id() { return &type_id<T>; }
+typeid_t type_id() {
+  return &type_id<T>;
+}
+#else
+/// Taken from http://brotherst-code.blogspot.de/2015/10/how-to-get-typeindex-without-rtti.html
+typedef int* typeid_t;
+template<typename T>
+typeid_t type_id() {
+  static int id;
+  return &id;
+}
+
+#endif
 
 }
 

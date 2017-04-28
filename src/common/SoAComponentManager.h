@@ -11,17 +11,17 @@
 namespace gp
 {
   template<typename T>
-  class SoAComponentManager : public ComponentManager<unsigned int> {
+  class SoAComponentManager : public ComponentManager<size_t> {
   public:
     typedef ComponentManager<unsigned int>::EntityIterator EntityIterator;
 
     soa::soa1d<T> data;
 
-    typedef unsigned int Instance;
+    typedef size_t Instance;
 
     Instance add(Entity entity)
     {
-      unsigned int id = ComponentManager::add(entity, end());
+      size_t id = ComponentManager::add(entity, end());
       return getInstance(id);
     }
 
@@ -41,7 +41,7 @@ namespace gp
     }
 
   protected:
-    unsigned int addInstance(Entity entity, Instance)
+    size_t addInstance(Entity entity, Instance)
     {
       T component;
       memset(&component, 0, sizeof(T));
@@ -50,7 +50,7 @@ namespace gp
       return data.size() - 1;
     }
 
-    Instance getInstance(unsigned int id)
+    Instance getInstance(size_t id)
     {
       return id;
     }
