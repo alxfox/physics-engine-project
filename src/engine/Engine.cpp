@@ -40,11 +40,11 @@ void gp::engine::Engine::start()
 			// Detect collisions
 			detectCollisions();
 
-			// resolveInterpentrations by moving objects
-			resolveInterpenetrations();
-
 			// Apply collision impulse
 			applyCollisionImpulse();
+
+			// resolveInterpentrations by moving objects
+			resolveInterpenetrations();
 
 			for (unsigned int i = 1; i < COLLISION_RESOLVES_PER_STEP; i++) {
 				detectCollisions();
