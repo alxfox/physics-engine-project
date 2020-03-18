@@ -2,7 +2,7 @@
 An educational software for  simulation and visualization of 3D game physics
 
 ### Enviroment
-The officially supported OS for this cource is Ubuntu (Linux) between versions 14.04 and 20.04. We strongly recomend you to use VirtualBox in case of your host OS is either Windows or MacOS. It doesn't mean that our engine cannot get compiled for other OS's. It is done on purpose to provide a better support to students in case of any problems with compiling and linking.
+The officially supported OS for this cource is Ubuntu (Linux) between versions 14.04 and 20.04. We strongly recomend you to use VirtualBox in case if your host OS is either Windows or MacOS. It doesn't mean that our engine cannot get compiled for other OS's. It is done on purpose to provide a better support to students in case of any problems with compiling and linking.
 
 ### Instalation Process
 
