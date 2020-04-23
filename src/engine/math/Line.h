@@ -20,10 +20,10 @@ class Line
 {
 private:
 	/** A point on the line */
-	const Vector3f &m_point;
+	Vector3f m_point;
 
 	/** Direction of the line */
-	const Vector3f &m_direction;
+	Vector3f m_direction;
 
 public:
 	Line(const Vector3f &point, const Vector3f &direction)
