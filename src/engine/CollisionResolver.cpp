@@ -7,6 +7,24 @@
 void gp::engine::CollisionResolver::resolveInterpenetration()
 {
 	// TODO
+	Object* obj1 = m_collision.object1();
+	Object* obj2 = m_collision.object2();
+	Vector3f moveDistance = m_collision.collisionNormal()*m_collision.interpenetrationDepth();
+	if(!obj1->isMovable()){
+		if(!obj2->isMovable())return;
+		obj2->move(moveDistance);
+		return;
+	}
+	if(!obj2->isMovable()){
+		obj1->move(moveDistance*(-1));
+		return;
+	}
+	float_t m1 = obj1->mass();
+	float_t m2 = obj2->mass();
+	float_t d1 = m2/(m1+m2);
+	float_t d2 = m1/(m1+m2);
+	obj1->move(moveDistance*d1*(-1));
+	obj2->move(moveDistance*d2);
 }
 
 void gp::engine::CollisionResolver::applyCollisionImpulse()
