@@ -55,10 +55,10 @@ bool gp::engine::Collision::detectSphereSphere()
 	if (d < (r1 + r2)){
 
 		//distance if touching - real distance
-		m_interpenetrationDepth = (r1+r2) - d;
+		//m_interpenetrationDepth = (r1+r2) - d;
 		
 		//Unitary vector from o1 center to o2 center
-		m_collisionNormal = (p1 - p2).normalized();
+		m_collisionNormal = (p2 - p1).normalized();
 		assert(abs(m_collisionNormal.norm() - 1) < EPSILON);
 		
 		//From p1, direction collisionNormal, magnitude r1
