@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include <iostream>
 #include "Scenarios.h"
 #include "common/messages/StopMessage.h"
 #include "engine/messages/ScenarioMessage.h"
@@ -8,6 +9,7 @@
 #include "gui/graphics/RenderComponentManager.h"
 #include "gui/graphics/Camera.h"
 #include "gui/graphics/TextureManager.h"
+
 
 void* gp::runEngine(void* data)
 {
@@ -64,6 +66,11 @@ void gp::Game::run()
 
     m_cameraControl.moveCamera(m_window, m_scenarioControl, *camera);
 
+    if (frameCounter % 600 == 0) { 
+      std::cout << "{" 
+        << scenario->camera().worldPosition().x << " " << scenario->camera().worldPosition().y << " " << scenario->camera().worldPosition().z 
+        << "}" << std::endl; 
+    }
     scenario->synchronize();
 
     renderComponentMan->computeMatrices(camera->view, spotLight->depthVP);
@@ -76,6 +83,7 @@ void gp::Game::run()
     if (frameCounter % 60 == 0) {
       sprintf(buffer, "Game physics lab. Render %.2lf ms.", m_render.lastGPUTime() * 1.0e-6);
       glfwSetWindowTitle(m_window, buffer);
+
     }
     ++frameCounter;
 

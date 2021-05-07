@@ -2,6 +2,7 @@
 #define GP_ENGINE_MATH_AABOX_H
 
 #include <cmath>
+#include <iostream>
 
 #include "utils.h"
 #include "engine/objects/Box.h"
@@ -35,7 +36,17 @@ public:
 	Vector3f closestPointOnSurface(const Vector3f &point)
 	{
 		// TODO
-		return Vector3f();
+		assert(abs(point(0)) > m_box.halfSize()(0) || abs(point(1)) > m_box.halfSize()(1) || abs(point(2)) > m_box.halfSize()(2));
+		Vector3f projection(point);
+		for (int i = 0; i < 3; i++) {
+			//Respective component > Respective half size 
+			if (abs(projection(i)) > m_box.halfSize()(i) ) {
+				//Project component to box
+				// 							(1) or (-1)                   
+				projection(i) = (projection(i) / abs(projection(i))) * m_box.halfSize()(i);
+			}
+		}
+		return projection;
 	}
 };
 
