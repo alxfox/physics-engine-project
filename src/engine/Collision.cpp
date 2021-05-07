@@ -101,7 +101,7 @@ bool gp::engine::Collision::detectSphereBox()
 		m_collisionPoint2 = bs;
 
 		//bring back to World space
-		m_collisionNormal = m_object2->modelMatrix() * m_collisionNormal; 
+		m_collisionNormal = (m_object2->modelMatrix() * m_collisionNormal).normalized(); 
 		m_collisionPoint1 = m_object2->modelMatrix() * m_collisionPoint1; 
 		m_collisionPoint2 = m_object2->modelMatrix() * m_collisionPoint2; 
 		m_interpenetrationDepth = (m_collisionPoint1 - m_collisionPoint2).norm();
