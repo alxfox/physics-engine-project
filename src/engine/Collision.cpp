@@ -40,25 +40,22 @@ bool gp::engine::Collision::detect()
 bool gp::engine::Collision::detectSphereSphere()
 {
 	// TODO
-
 	//Centers of the objects
 	Vector3f p1 = m_object1->position();
 	Vector3f p2 = m_object2->position();
-	std::cout << "---------------" << std::endl;
-	std::cout << p1 << std::endl;
-	std::cout << p2 << std::endl;
 	float_t d = (p1-p2).norm();
 
 	//Segmentation fault in case one of the objects wouldn't be a Sphere
 	float_t r1 = dynamic_cast<Sphere*>(m_object1)->radius();
 	float_t r2 = dynamic_cast<Sphere*>(m_object2)->radius();
+
+	//Only happens if they are intersecting
 	if (d < (r1 + r2)){
 
-		//distance if touching - real distance
-		//m_interpenetrationDepth = (r1+r2) - d;
 		
-		//Unitary vector from o1 center to o2 center
+		//Unitary vector p1 to p2. (Quick trick to see why-->(p1 + (p2-p1) = p2) )
 		m_collisionNormal = (p2 - p1).normalized();
+
 		assert(abs(m_collisionNormal.norm() - 1) < EPSILON);
 		
 		//From p1, direction collisionNormal, magnitude r1
@@ -69,7 +66,7 @@ bool gp::engine::Collision::detectSphereSphere()
 		//Closest point to p1 that pertains to o2 
 		m_collisionPoint2 = -m_collisionNormal*r2 + p2;
 		
-		//or distance between collision points	
+		//distance between collision points	
 		m_interpenetrationDepth = (m_collisionPoint1 - m_collisionPoint2).norm();
 		
 		return true;
@@ -87,25 +84,33 @@ bool gp::engine::Collision::detectSphereBox()
 
 	float_t r1 = dynamic_cast<Sphere*>(m_object1)->radius();
 
-	//Bring Sphere to Box space
+	//Bring Sphere center to Box space
 	Vector3f scB = m_object2->invModelMatrix() * scW;
-	//Vector3f p2b = m_object2->invModelMatrix() * p2;
 
+	//Container object from Box, so we can use method in AABox
 	AABox b = AABox(*(dynamic_cast<Box*>(m_object2))); 
 
+	//Projection of Sphere center to Box surface
 	Vector3f bs = b.closestPointOnSurface(scB);
 
+	//Distance from Sphere center to box < radi 
 	if ((bs - scB).norm() < r1) {
+
+		//Unitary from Sphere center to projection.
 		m_collisionNormal = (bs - scB).normalized();
+
+		//From Sphere center, direction of collision normal, magnitude r1
 		m_collisionPoint1 = m_collisionNormal * r1 + scB;
+
 		m_collisionPoint2 = bs;
 
 		//bring back to World space
+		//Why normalizing makes a difference here if our modelMatrix preserves lengths?
 		m_collisionNormal = (m_object2->modelMatrix() * m_collisionNormal).normalized(); 
 		m_collisionPoint1 = m_object2->modelMatrix() * m_collisionPoint1; 
 		m_collisionPoint2 = m_object2->modelMatrix() * m_collisionPoint2; 
+
 		m_interpenetrationDepth = (m_collisionPoint1 - m_collisionPoint2).norm();
-		std::cout << "Collided!!!" << "\n" << m_collisionPoint1 << "\n" << m_collisionPoint2 << std::endl;
 		return true;
 	}
 	return false;
