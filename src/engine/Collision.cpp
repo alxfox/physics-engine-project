@@ -37,14 +37,15 @@ bool gp::engine::Collision::detect()
 
 bool gp::engine::Collision::detectSphereSphere()
 {
-	// TODO
-	float_t collDistance = m_object1->boundingRadius() + m_object2->boundingRadius();
-	Vector3f collNormal = m_object2->position() - m_object1->position();
+	Sphere* sphere1 = dynamic_cast<Sphere*>(m_object1);
+	Sphere* sphere2 = dynamic_cast<Sphere*>(m_object2);
+	float_t collDistance = sphere1->radius() + sphere2->radius(); //if distance is smaller than this value then there is a collision
+	Vector3f collNormal = sphere2->position() - sphere1->position(); //normal vector from sphere1 to sphere2
 	float_t collNormalLength = collNormal.norm();
 	if(collNormalLength < collDistance){
 		m_collisionNormal = collNormal.normalized();
-		m_collisionPoint1 = m_object1->position();
-		m_collisionPoint2 = m_object2->position();
+		m_collisionPoint1 = sphere1->position()+collNormal.normalized()*sphere1->radius();
+		m_collisionPoint2 = sphere2->position()-collNormal.normalized()*sphere2->radius();
 		m_interpenetrationDepth=collDistance-collNormalLength;
 		return true;
 	}
@@ -53,22 +54,20 @@ bool gp::engine::Collision::detectSphereSphere()
 
 bool gp::engine::Collision::detectSphereBox()
 {
-	// TODO
-	//m_object1->modelMatrix
 	Box* myBox= dynamic_cast<Box*>(m_object2);
 	Sphere* mySphere = dynamic_cast<Sphere*>(m_object1);
 
 	AABox aabox (*myBox);
 	Vector3f sphereLocation = myBox->invModelMatrix() * mySphere->position(); // transform coordinates of the sphere in world space to the box's model space
 	Vector3f boxSurfacePoint = aabox.closestPointOnSurface(sphereLocation);
-	Vector3f collNormal = boxSurfacePoint-sphereLocation; // normal goes from the sphere center to the surface point of the box
-	//convert everything back to world space
+	Vector3f collNormal = (boxSurfacePoint-sphereLocation); // normal goes from the sphere center to the surface point of the box
 	float_t collNormalLength = collNormal.norm();
 	if(collNormalLength < mySphere->radius()){
-		m_collisionPoint1 = myBox->modelMatrix()*sphereLocation;
+		//convert everything back to world space
+		m_collisionPoint1 = myBox->modelMatrix()*sphereLocation+mySphere->radius()*collNormal.normalized();
 		m_collisionPoint2 = myBox->modelMatrix()*boxSurfacePoint;
-		m_collisionNormal = (boxSurfacePoint-sphereLocation).normalized(); //hmm
-		m_interpenetrationDepth = mySphere->radius()-collNormal.norm();
+		m_collisionNormal = collNormal.normalized();
+		m_interpenetrationDepth = mySphere->radius()-collNormalLength;
 		return true;
 	}
 	return false;
