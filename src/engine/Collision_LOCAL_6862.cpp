@@ -1,7 +1,6 @@
 #include <cassert>
 #include <limits>
 #include <iostream>
-#include <ostream>
 
 #include "Collision.h"
 #include "math/AABox.h"
@@ -12,7 +11,6 @@
 bool gp::engine::Collision::detect()
 {
 	bool ret = false;
-
 
 	switch (m_type) {
 	case SPHERE_SPHERE:
@@ -46,7 +44,6 @@ bool gp::engine::Collision::detectSphereSphere()
 	float_t collNormalLength = collNormal.norm();
 	if(collNormalLength < collDistance){
 		m_collisionNormal = collNormal.normalized();
-		assert(abs(m_collisionNormal.norm() - 1) < EPSILON);
 		m_collisionPoint1 = sphere1->position()+collNormal.normalized()*sphere1->radius();
 		m_collisionPoint2 = sphere2->position()-collNormal.normalized()*sphere2->radius();
 		m_interpenetrationDepth=collDistance-collNormalLength;
@@ -65,12 +62,11 @@ bool gp::engine::Collision::detectSphereBox()
 	Vector3f boxSurfacePoint = aabox.closestPointOnSurface(sphereLocation);
 	Vector3f collNormal = (boxSurfacePoint-sphereLocation); // normal goes from the sphere center to the surface point of the box
 	float_t collNormalLength = collNormal.norm();
-	collNormal.normalize();
 	if(collNormalLength < mySphere->radius()){
 		//convert everything back to world space
-		m_collisionPoint1 = myBox->modelMatrix()*sphereLocation + mySphere->radius()*collNormal;
+		m_collisionPoint1 = myBox->modelMatrix()*sphereLocation+mySphere->radius()*collNormal.normalized();
 		m_collisionPoint2 = myBox->modelMatrix()*boxSurfacePoint;
-		m_collisionNormal = collNormal; //why do we not have to convert this back to worldspace?
+		m_collisionNormal = collNormal.normalized();
 		m_interpenetrationDepth = mySphere->radius()-collNormalLength;
 		return true;
 	}

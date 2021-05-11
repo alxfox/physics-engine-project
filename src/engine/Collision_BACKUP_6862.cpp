@@ -39,6 +39,7 @@ bool gp::engine::Collision::detect()
 
 bool gp::engine::Collision::detectSphereSphere()
 {
+<<<<<<< HEAD
 	Sphere* sphere1 = dynamic_cast<Sphere*>(m_object1);
 	Sphere* sphere2 = dynamic_cast<Sphere*>(m_object2);
 	float_t collDistance = sphere1->radius() + sphere2->radius(); //if distance is smaller than this value then there is a collision
@@ -46,10 +47,41 @@ bool gp::engine::Collision::detectSphereSphere()
 	float_t collNormalLength = collNormal.norm();
 	if(collNormalLength < collDistance){
 		m_collisionNormal = collNormal.normalized();
-		assert(abs(m_collisionNormal.norm() - 1) < EPSILON);
 		m_collisionPoint1 = sphere1->position()+collNormal.normalized()*sphere1->radius();
 		m_collisionPoint2 = sphere2->position()-collNormal.normalized()*sphere2->radius();
 		m_interpenetrationDepth=collDistance-collNormalLength;
+=======
+	// TODO
+	//Centers of the objects
+	Vector3f p1 = m_object1->position();
+	Vector3f p2 = m_object2->position();
+	float_t d = (p1-p2).norm();
+
+	//Segmentation fault in case one of the objects wouldn't be a Sphere
+	float_t r1 = dynamic_cast<Sphere*>(m_object1)->radius();
+	float_t r2 = dynamic_cast<Sphere*>(m_object2)->radius();
+
+	//Only happens if they are intersecting
+	if (d < (r1 + r2)){
+
+		
+		//Unitary vector p1 to p2. (Quick trick to see why-->(p1 + (p2-p1) = p2) )
+		m_collisionNormal = (p2 - p1).normalized();
+
+		assert(abs(m_collisionNormal.norm() - 1) < EPSILON);
+		
+		//From p1, direction collisionNormal, magnitude r1
+		//Closest point to p2 that pertains to o1 
+		m_collisionPoint1 = m_collisionNormal*r1 + p1;
+		
+		//From p2, (inverse sense) direction collisionNormal, magnitude r2
+		//Closest point to p1 that pertains to o2 
+		m_collisionPoint2 = -m_collisionNormal*r2 + p2;
+		
+		//distance between collision points	
+		m_interpenetrationDepth = (m_collisionPoint1 - m_collisionPoint2).norm();
+		
+>>>>>>> sheet2gi
 		return true;
 	}
 	return false;
@@ -57,6 +89,7 @@ bool gp::engine::Collision::detectSphereSphere()
 
 bool gp::engine::Collision::detectSphereBox()
 {
+<<<<<<< HEAD
 	Box* myBox= dynamic_cast<Box*>(m_object2);
 	Sphere* mySphere = dynamic_cast<Sphere*>(m_object1);
 
@@ -65,13 +98,49 @@ bool gp::engine::Collision::detectSphereBox()
 	Vector3f boxSurfacePoint = aabox.closestPointOnSurface(sphereLocation);
 	Vector3f collNormal = (boxSurfacePoint-sphereLocation); // normal goes from the sphere center to the surface point of the box
 	float_t collNormalLength = collNormal.norm();
-	collNormal.normalize();
 	if(collNormalLength < mySphere->radius()){
 		//convert everything back to world space
-		m_collisionPoint1 = myBox->modelMatrix()*sphereLocation + mySphere->radius()*collNormal;
+		m_collisionPoint1 = myBox->modelMatrix()*sphereLocation+mySphere->radius()*collNormal.normalized();
 		m_collisionPoint2 = myBox->modelMatrix()*boxSurfacePoint;
-		m_collisionNormal = collNormal; //why do we not have to convert this back to worldspace?
+		m_collisionNormal = collNormal.normalized();
 		m_interpenetrationDepth = mySphere->radius()-collNormalLength;
+=======
+	// TODO
+	//Centers of the objects
+	//First object Sphere, second object Box
+	Vector3f scW = m_object1->position();
+	Vector3f bcW = m_object2->position();
+
+	float_t r1 = dynamic_cast<Sphere*>(m_object1)->radius();
+
+	//Bring Sphere center to Box space
+	Vector3f scB = m_object2->invModelMatrix() * scW;
+
+	//Container object from Box, so we can use method in AABox
+	AABox b = AABox(*(dynamic_cast<Box*>(m_object2))); 
+
+	//Projection of Sphere center to Box surface
+	Vector3f bs = b.closestPointOnSurface(scB);
+
+	//Distance from Sphere center to box < radi 
+	if ((bs - scB).norm() < r1) {
+
+		//Unitary from Sphere center to projection.
+		m_collisionNormal = (bs - scB).normalized();
+
+		//From Sphere center, direction of collision normal, magnitude r1
+		m_collisionPoint1 = m_collisionNormal * r1 + scB;
+
+		m_collisionPoint2 = bs;
+
+		//bring back to World space
+		//Why normalizing makes a difference here if our modelMatrix preserves lengths?
+		m_collisionNormal = (m_object2->modelMatrix() * m_collisionNormal).normalized(); 
+		m_collisionPoint1 = m_object2->modelMatrix() * m_collisionPoint1; 
+		m_collisionPoint2 = m_object2->modelMatrix() * m_collisionPoint2; 
+
+		m_interpenetrationDepth = (m_collisionPoint1 - m_collisionPoint2).norm();
+>>>>>>> sheet2gi
 		return true;
 	}
 	return false;

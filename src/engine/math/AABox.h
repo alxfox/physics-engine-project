@@ -2,6 +2,7 @@
 #define GP_ENGINE_MATH_AABOX_H
 
 #include <cmath>
+#include <iostream>
 
 #include "utils.h"
 #include "engine/objects/Box.h"
@@ -34,40 +35,20 @@ public:
 	 */
 	Vector3f closestPointOnSurface(const Vector3f &point)
 	{
-		Vector3f closest = point;
-		// TODO
-		// assert that point is outside the box
-		assert(!(abs(point.x())>m_box.halfSize().x() && abs(point.y())>m_box.halfSize().y() && abs(point.z())>m_box.halfSize().z()));
-		
-		// if our point is within the bounds of the box for two out of the three axis (as in it hovers over a face of the box) we just need to adjust the 3rd coordinate to the closest of either +h or -h of that axis 
-		// this will project the point on that face
-		/*if(abs(point.x()) < m_box.halfSize().x() && abs(point.y()) < m_box.halfSize().y()){
-			closest.z() = m_box.halfSize().z() > 0  ? m_box.halfSize().z() : -m_box.halfSize().z();
-		}*/
+		//Point outside iff one of the coordinates is in absolute value bigger than corresponding half size
+		assert(abs(point(0)) > m_box.halfSize()(0) || abs(point(1)) > m_box.halfSize()(1) || abs(point(2)) > m_box.halfSize()(2));
 
-		// if our point is within the bounds of the box for one out of three axis we need to clamp the other two coordinates to the bounds of the box
-		// the resulting point will be on one of the edges of the box
-		/*else if(abs(point.x()) < m_box.halfSize().x()){
-			closest.y() = m_box.halfSize().y() > 0  ? m_box.halfSize().y() : -m_box.halfSize().y();
-			closest.z() = m_box.halfSize().z() > 0  ? m_box.halfSize().z() : -m_box.halfSize().z();
-		}*/
-
-		// if our point is out of the bounds of the box for all three axis we need to clamp all coordinates to the bounds of the box
-		// the point will be on one of the corners
-		/*else{
-
-		}*/
-		if(!(abs(point.x()) < m_box.halfSize().x())){
-			closest.x() = m_box.halfSize().x() > 0  ? m_box.halfSize().x() : -m_box.halfSize().x();
+		//To project the point, we modify its components accordingly
+		Vector3f projection(point);
+		for (int i = 0; i < 3; i++) {
+			//Respective component > Respective half size (we went further than halfSize)
+			if (abs(projection(i)) > m_box.halfSize()(i) ) {
+				//Project component to box
+				// 							(1) or (-1)             	we cannot go further than halfSize      
+				projection(i) = (projection(i) / abs(projection(i))) * m_box.halfSize()(i);
+			}
 		}
-		if(!(abs(point.y()) < m_box.halfSize().y())){
-			closest.y() = m_box.halfSize().y() > 0  ? m_box.halfSize().y() : -m_box.halfSize().y();
-		}
-		if(!(abs(point.z()) < m_box.halfSize().z())){
-			closest.z() = m_box.halfSize().z() > 0  ? m_box.halfSize().z() : -m_box.halfSize().z();
-		}
-
-		return closest;
+		return projection;
 	}
 };
 
