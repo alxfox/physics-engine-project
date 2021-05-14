@@ -101,14 +101,14 @@ void gp::engine::Engine::handleMessage(const gp::messages::Message& message)
 void gp::engine::Engine::updatePositionVelocity()
 {
 	const std::vector<Object*>& objects = m_objectManager->objects();
-	const Vector3f accel{0,-9.81,0};
+	//const Vector3f accel{0,-9.81,0};
 	const float_t step = UPDATE_INTERVAL*SLOW_MOTION_FACTOR;
 	for (std::vector<Object*>::const_iterator it = objects.cbegin();
 		it != objects.cend(); ++it) {
 		Object* o = *it;
 		if(!o->isMovable()) continue;
-		o->updatePositionAndRotation(accel,step);
-		o->updateVelocity(accel, step);
+		o->updatePositionAndRotation(ACCELERATION,step);
+		o->updateVelocity(ACCELERATION, step);
 	}
 }
 
