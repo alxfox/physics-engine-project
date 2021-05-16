@@ -26,8 +26,5 @@ bool gp::engine::Rope::collision(Vector3f &collisionNormal, Vector3f &collisionP
 		return true;
 
 	}
-	else{
-
-		return false;
-	}
+	return false;
 }

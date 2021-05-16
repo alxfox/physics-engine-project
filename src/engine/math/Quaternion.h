@@ -68,9 +68,23 @@ public:
 
 	Quaternion operator*(const Quaternion &q) const
 	{
-		Quaternion p;
 
 		// TODO
+		float_t w1 = m_w;
+		float_t i1 = m_i;
+		float_t j1 = m_j;
+		float_t k1 = m_k;
+		float_t w2 = q.w();
+		float_t i2 = q.i();
+		float_t j2 = q.j();
+		float_t k2 = q.k();
+
+		float_t w = w1*w2 - (i1*i2 + j1*j2 + k1*k2);
+		float_t i = w1*i2+w2*i1+j1*k2-k1*j2;
+		float_t j = w1*j2+w2*j1+k1*i2-i1*k2;
+		float_t k = w1*k2+w2*k1+i1*j2-j1*i2;
+
+		Quaternion p(i,j,k,w);
 
 		return p;
 	}
@@ -117,6 +131,23 @@ public:
 		rotationMatrix.setIdentity();
 
 		// TODO
+
+		float_t w = m_w; 
+		float_t i = m_i;
+		float_t j = m_j;
+		float_t k = m_k;
+
+		rotationMatrix(0,0) = 1-2*(j*j+k*k);
+		rotationMatrix(0,1) = 2*(i*j-k*w);
+		rotationMatrix(0,2) = 2*(i*k+j*w);
+
+		rotationMatrix(1,0) = 2*(i*j+k*w);
+		rotationMatrix(1,1) = 1-2*(i*i+k*k);
+		rotationMatrix(1,2) = 2*(j*k-i*w);
+
+		rotationMatrix(2,0) = 2*(i*k-j*w);
+		rotationMatrix(2,1) = 2*(j*k-i*w);
+		rotationMatrix(2,2) = 1-2*(i*i-j*j);
 
 		return rotationMatrix;
 	}
