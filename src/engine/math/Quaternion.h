@@ -146,8 +146,8 @@ public:
 		rotationMatrix(1,2) = 2*(j*k-i*w);
 
 		rotationMatrix(2,0) = 2*(i*k-j*w);
-		rotationMatrix(2,1) = 2*(j*k-i*w);
-		rotationMatrix(2,2) = 1-2*(i*i-j*j);
+		rotationMatrix(2,1) = 2*(j*k+i*w);
+		rotationMatrix(2,2) = 1-2*(i*i+j*j);
 
 		return rotationMatrix;
 	}
