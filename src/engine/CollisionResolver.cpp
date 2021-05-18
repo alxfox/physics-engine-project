@@ -56,8 +56,8 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 	float_t massFraction1 = invM1/(invM1+invM2);
 	float_t massFraction2 = invM2/(invM1+invM2);
 
-	float_t vC1 = (-m_collision.collisionNormal()).dot(v1);
-	float_t vC2 = (-m_collision.collisionNormal()).dot(v2);
+	float_t vC1 = v1.dot(-m_collision.collisionNormal());
+	float_t vC2 = v2.dot(-m_collision.collisionNormal());
 	//Vector3f vC = v1*vC1 - v2*vC2;
 	Vector3f vC = (vC1-vC2)*m_collision.collisionNormal();
 
