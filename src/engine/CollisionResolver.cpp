@@ -39,6 +39,31 @@ void gp::engine::CollisionResolver::applyCollisionImpulse()
 void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction()
 {
 	// TODO
+	Object* obj1 = m_collision.object1();
+	Object* obj2 = m_collision.object2();
+
+	//Getting velocity, Cr and inverse masses from objects 
+	Vector3f v1 = obj1->velocity();
+	Vector3f v2 = obj2->velocity();
+	float_t COF1 = obj1->restitutionCoefficient();
+	float_t COF2 = obj2->restitutionCoefficient();
+	float_t invM1 = obj1->invMass();
+	float_t invM2 = obj2->invMass();
+
+	float_t massFraction1 = invM1/(invM1+invM2);
+	float_t massFraction2 = invM2/(invM1+invM2);
+
+	float_t v1N = v1.dot(m_collision.collisionNormal()); //velocity along normal
+	float_t v2N = v2.dot(-m_collision.collisionNormal());
+	Vector3f vC = (v1N-v2N)*m_collision.collisionNormal();
+	//Vector3f vC = v1 - v2;
+
+	Vector3f v1New = -(1 + COF1) * massFraction1 * vC;
+	Vector3f v2New = (1 + COF2) * massFraction2 * vC;
+
+	obj1->changeVelocity(v1New);
+	obj2->changeVelocity(v2New);
+
 }
 
 void gp::engine::CollisionResolver::applyCollisionImpulseWithoutFriction()
