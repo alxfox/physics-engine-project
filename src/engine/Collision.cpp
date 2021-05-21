@@ -60,12 +60,18 @@ bool gp::engine::Collision::detectSphereBox()
 	Box* myBox= dynamic_cast<Box*>(m_object2);
 	Sphere* mySphere = dynamic_cast<Sphere*>(m_object1);
 
+	//if(myBox->isMovable()) {
+	//	std::cout << "box: " << myBox->mass() << "  sphere: " << mySphere->mass() << std::endl;
+	//	std::cout << "box: " << myBox->restitutionCoefficient() << "  sphere: " << mySphere->restitutionCoefficient() << std::endl;
+	//}
+
 	AABox aabox (*myBox);
 	Vector3f sphereLocation = myBox->invModelMatrix() * mySphere->position(); // transform coordinates of the sphere in world space to the box's model space
 	Vector3f boxSurfacePoint = aabox.closestPointOnSurface(sphereLocation);
 	Vector3f collNormal = (boxSurfacePoint-sphereLocation); // normal goes from the sphere center to the surface point of the box
 	float_t collNormalLength = collNormal.norm();
 	collNormal.normalize();
+	//collNormal = (myBox->modelMatrix()*collNormal).normalized();
 	if(collNormalLength < mySphere->radius()){
 		//convert everything back to world space
 		m_collisionPoint1 = myBox->modelMatrix()*sphereLocation + mySphere->radius()*collNormal;

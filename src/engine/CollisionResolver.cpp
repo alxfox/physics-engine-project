@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <cassert>
 
 #include "CollisionResolver.h"
 #include "config.h"
@@ -56,22 +57,47 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 	float_t massFraction1 = invM1/(invM1+invM2);
 	float_t massFraction2 = invM2/(invM1+invM2);
 
+	//Getting Vc just along collision normal direction
 	Vector3f vC = (v1-v2).dot(m_collision.collisionNormal())*m_collision.collisionNormal();
 
+	//Updating velocities
 	Vector3f v1New = -(1 + COF1) * massFraction1 * vC;
 	Vector3f v2New = (1 + COF2) * massFraction2 * vC;
-
 	obj1->changeVelocity(v1New);
 	obj2->changeVelocity(v2New);
 
-	//float_t vS = (obj2->velocity() - obj1->velocity()).dot(m_collision.collisionNormal());
-	//float_t vc = (v1-v2).dot(m_collision.collisionNormal());
+	if(obj1->isMovable() && obj2->isMovable()) {
+		float_t Ekin1Before = obj1->mass()*v1.dot(v1)/2.0f;
+		float_t Ekin2Before = obj2->mass()*v2.dot(v2)/2.0f;
+		float_t Ekin1After = obj1->mass()*(v1New+v1).dot(v1New+v1)/2.0f;
+		float_t Ekin2After = obj2->mass()*(v2New+v2).dot(v2New+v2)/2.0f;
 
-	//obj1->setRestitutionCoefficient(-vS/vc);
-	//obj2->setRestitutionCoefficient(-vS/vc);
+		Vector3f momentumBefore1 = obj1->mass()*v1;
+		Vector3f momentumBefore2 = obj2->mass()*v2;
+		Vector3f momentumAfter1 = obj1->mass()*(v1New+v1);
+		Vector3f momentumAfter2 = obj2->mass()*(v2New+v2);
+
+		Vector3f mDiff =  (momentumAfter1+ momentumAfter2) - (momentumBefore1 + momentumBefore2); 
+		
+		float_t ourDiff = (Ekin1After + Ekin2After) - (Ekin1Before + Ekin2Before); 
+
+		//Checking momentum conservation
+		if(mDiff != engine::Vector3f::Ones()*0) {
+			std::cout << mDiff << std::endl;
+		}
 
 
+		float_t theoryDiff = -((1.0f-COF1*COF2) / 2.0f);
+		theoryDiff*=((v1-v2).dot(m_collision.collisionNormal()));
+		theoryDiff*=((v1-v2).dot(m_collision.collisionNormal()));
+		theoryDiff/=(invM1 + invM2);
 
+		//Chechking kinetic energy loss
+		if (std::abs(ourDiff - theoryDiff) >= EPSILON) {
+			std::cout << std::abs(ourDiff - theoryDiff) << "  " << EPSILON << std::endl;
+		}
+		assert(std::abs(ourDiff - theoryDiff) < EPSILON);
+	}
 }
 
 void gp::engine::CollisionResolver::applyCollisionImpulseWithoutFriction()
