@@ -47,24 +47,51 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 	Vector3f v2 = obj2->velocity();
 	float_t COF1 = obj1->restitutionCoefficient();
 	float_t COF2 = obj2->restitutionCoefficient();
+	float_t COF = std::min(COF1,COF2);
 	float_t invM1 = obj1->invMass();
 	float_t invM2 = obj2->invMass();
 
 	float_t massFraction1 = invM1/(invM1+invM2);
 	float_t massFraction2 = invM2/(invM1+invM2);
 
-	float_t v1N = v1.dot(-m_collision.collisionNormal()); //velocity along normal
-	float_t v2N = v2.dot(-m_collision.collisionNormal());
+	float_t v1N = v1.dot(m_collision.collisionNormal()); //velocity along normal
+	float_t v2N = v2.dot(m_collision.collisionNormal());
 	//float_t test = m_collision.collisionNormal().norm();
 	Vector3f vC = (v1N-v2N)*m_collision.collisionNormal();
 	//Vector3f vC = v1 - v2;
-
-	Vector3f v1New = (1 + COF1) * massFraction1 * vC;
-	Vector3f v2New = -(1 + COF2) * massFraction2 * vC;
+	//float_t collisionM;
+	/*if(obj1->isMovable()&&obj2->isMovable()){
+    	collisionM = obj1->mass()*obj1->velocity()+ obj2->mass()*obj2->velocity();
+	}else if (obj1->isMovable()){
+		collisionM=obj1->mass()*obj1->velocity();
+		}
+	else if(obj2->isMovable()){
+		collisionM=obj2->mass()*obj2->velocity();
+		}
+	else std::cout<<"immovable"<<std::endl;*/
+	Vector3f v1New = -(1 + COF) * massFraction1 * vC;
+	Vector3f v2New = (1 + COF) * massFraction2 * vC;
 
 	obj1->changeVelocity(v1New);
 	obj2->changeVelocity(v2New);
-
+	if(obj1->isMovable()&&obj2->isMovable()){
+	float_t beforeM = m_collision.collisionNormal().dot(obj1->mass()*v1 + obj2->mass()*v2);
+	float_t afterM = m_collision.collisionNormal().dot(obj1->mass()*obj1->velocity() + obj2->mass()*obj2->velocity());
+	float_t diffM = abs(beforeM-afterM);
+	if(diffM>EPSILON)std::cout<<diffM<<std::endl;
+	}else if (obj1->isMovable()){
+		float_t beforeM = m_collision.collisionNormal().dot(obj1->mass()*v1);
+		float_t afterM = m_collision.collisionNormal().dot(obj1->mass()*obj1->velocity());
+		float_t diffM = COF*abs(beforeM)-abs(afterM);
+		if(diffM>EPSILON)std::cout<<diffM<<std::endl;
+	}else if (obj2->isMovable()){
+		float_t beforeM = m_collision.collisionNormal().dot(obj2->mass()*v2);
+		float_t afterM = m_collision.collisionNormal().dot(obj2->mass()*obj2->velocity());
+		float_t diffM = COF*abs(beforeM)-abs(afterM);
+		if(diffM>EPSILON)std::cout<<diffM<<std::endl;
+	}else{
+		//std::cout<<"both immovable"<<std::endl;
+		}
 }
 
 void gp::engine::CollisionResolver::applyCollisionImpulseWithoutFriction()
