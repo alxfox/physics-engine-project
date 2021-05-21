@@ -69,8 +69,10 @@ public:
 	Quaternion operator*(const Quaternion &q) const
 	{
 		Quaternion p;
-
-		// TODO
+		p.m_w = m_w*q.w() -(m_i*q.i() + m_j*q.j() + m_k*q.k());
+		p.m_i = m_w*q.i() + q.w()*m_i + m_j*q.k() - m_k*q.j();
+		p.m_j = m_w*q.j() + q.w()*m_j + m_k*q.i() - m_i*q.k();
+		p.m_k = m_w*q.k() + q.w()*m_k + m_i*q.j() - m_j*q.i();
 
 		return p;
 	}
@@ -115,8 +117,18 @@ public:
 	{
 		Affine3f rotationMatrix;
 		rotationMatrix.setIdentity();
+		
+		rotationMatrix(0,0) = 1-2*(m_j*m_j+m_k*m_k);
+		rotationMatrix(0,1) = 2*(m_i*m_j-m_k*m_w);
+		rotationMatrix(0,2) = 2*(m_i*m_k+m_j*m_w);
 
-		// TODO
+		rotationMatrix(1,0) = 2*(m_i*m_j+m_k*m_w);
+		rotationMatrix(1,1) = 1-2*(m_i*m_i+m_k*m_k);
+		rotationMatrix(1,2) = 2*(m_j*m_k-m_i*m_w);
+
+		rotationMatrix(2,0) = 2*(m_i*m_k-m_j*m_w);
+		rotationMatrix(2,1) = 2*(m_j*m_k+m_i*m_w);
+		rotationMatrix(2,2) = 1-2*(m_i*m_i+m_j*m_j);
 
 		return rotationMatrix;
 	}
