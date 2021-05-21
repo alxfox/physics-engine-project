@@ -1,13 +1,16 @@
 #include <cassert>
+#include <cmath>
 #include <limits>
 #include <iostream>
 #include <ostream>
 
 #include "Collision.h"
+#include "config.h"
 #include "math/AABox.h"
 #include "math/BoxProjection.h"
 #include "math/Line.h"
 #include "math/utils.h"
+#include "utils.h"
 
 bool gp::engine::Collision::detect()
 {
@@ -70,14 +73,34 @@ bool gp::engine::Collision::detectSphereBox()
 	Vector3f boxSurfacePoint = aabox.closestPointOnSurface(sphereLocation);
 	Vector3f collNormal = (boxSurfacePoint-sphereLocation); // normal goes from the sphere center to the surface point of the box
 	float_t collNormalLength = collNormal.norm();
-	collNormal.normalize();
-	//collNormal = (myBox->modelMatrix()*collNormal).normalized();
+	//collNormal.normalize();
+	collNormal = (myBox->modelMatrix()*collNormal).normalized();
 	if(collNormalLength < mySphere->radius()){
 		//convert everything back to world space
 		m_collisionPoint1 = myBox->modelMatrix()*sphereLocation + mySphere->radius()*collNormal;
 		m_collisionPoint2 = myBox->modelMatrix()*boxSurfacePoint;
 		m_collisionNormal = collNormal; //why do we not have to convert this back to worldspace?
 		m_interpenetrationDepth = mySphere->radius()-collNormalLength;
+
+		//Just assert that the distance from the center of the sphere to the plane, is bigger or equal than the radius
+		Vector3f collisionPointToCenter = mySphere->position() - m_collisionPoint1;
+		float_t distSpherePlane = abs(m_collisionNormal.dot(collisionPointToCenter));
+		assert(distSpherePlane >= mySphere->radius());
+
+		//Just assert that the 8 corners of a box lie on the same side
+		int pointsAbove = 0;
+		for (int i = -1; i < 2; i+=2){
+			for (int j = -1; j < 2; j+=2){
+				for (int k = -1; k < 2; k+=2){
+					Vector3f boxCorner = Vector3f(i*myBox->halfSize().x(), j*myBox->halfSize().y(), k*myBox->halfSize().z());
+					Vector3f collisionPointToCorner = boxCorner - m_collisionPoint2;
+					if(collisionPointToCorner.dot(m_collisionNormal) >= 0) {
+						pointsAbove+=1;
+					}
+				}
+			}
+		}
+		assert(pointsAbove==0 or pointsAbove==8);
 		return true;
 	}
 	return false;
