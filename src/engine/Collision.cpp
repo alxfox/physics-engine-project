@@ -70,11 +70,11 @@ bool gp::engine::Collision::detectSphereBox()
 
 	AABox aabox (*myBox);
 	Vector3f sphereLocation = myBox->invModelMatrix() * mySphere->position(); // transform coordinates of the sphere in world space to the box's model space
-	Vector3f boxSurfacePoint = aabox.closestPointOnSurface(sphereLocation);
-	Vector3f collNormal = (boxSurfacePoint-sphereLocation); // normal goes from the sphere center to the surface point of the box
+	Vector3f boxSurfacePoint = aabox.closestPointOnSurface(sphereLocation); //!!is this correct?
+	Vector3f collNormal = myBox->modelMatrix().linear()*(boxSurfacePoint-sphereLocation); // normal goes from the sphere center to the surface point of the box
 	float_t collNormalLength = collNormal.norm();
 	//collNormal.normalize();
-	collNormal = (myBox->modelMatrix()*collNormal).normalized();
+	collNormal = (collNormal).normalized();
 	if(collNormalLength < mySphere->radius()){
 		//convert everything back to world space
 		m_collisionPoint1 = myBox->modelMatrix()*sphereLocation + mySphere->radius()*collNormal;
@@ -85,22 +85,34 @@ bool gp::engine::Collision::detectSphereBox()
 		//Just assert that the distance from the center of the sphere to the plane, is bigger or equal than the radius
 		Vector3f collisionPointToCenter = mySphere->position() - m_collisionPoint1;
 		float_t distSpherePlane = abs(m_collisionNormal.dot(collisionPointToCenter));
-		assert(distSpherePlane >= mySphere->radius());
-
+		assert(distSpherePlane >= mySphere->radius()-EPSILON);
+		//if(m_collisionNormal.x()<0.707106709+EPSILON&&m_collisionNormal.x()>0.707106709-EPSILON)
+		//std::cout<<"test";
+		//if(m_collisionNormal.x()<0.999879122+EPSILON&&m_collisionNormal.x()>0.999879122-EPSILON)
+		//std::cout<<"test";
 		//Just assert that the 8 corners of a box lie on the same side
 		int pointsAbove = 0;
+		int pointsBelow = 0;
 		for (int i = -1; i < 2; i+=2){
 			for (int j = -1; j < 2; j+=2){
 				for (int k = -1; k < 2; k+=2){
+					//Vector3f boxCorner = Vector3f(myBox->position().x()+ i*myBox->halfSize().x(), myBox->position().y()+j*myBox->halfSize().y(), myBox->position().z()+k*myBox->halfSize().z());
 					Vector3f boxCorner = Vector3f(i*myBox->halfSize().x(), j*myBox->halfSize().y(), k*myBox->halfSize().z());
+					boxCorner = myBox->modelMatrix()*boxCorner;
 					Vector3f collisionPointToCorner = boxCorner - m_collisionPoint2;
-					if(collisionPointToCorner.dot(m_collisionNormal) >= 0) {
+					float_t dist = collisionPointToCorner.dot(m_collisionNormal);
+					if(dist >= -EPSILON) {
 						pointsAbove+=1;
+					}
+					if(dist < EPSILON) {
+						pointsBelow+=1;
 					}
 				}
 			}
 		}
-		assert(pointsAbove==0 or pointsAbove==8);
+		if(!(pointsBelow==8 || pointsAbove==8))
+			std::cout<<"warning";
+		assert(pointsBelow==8 or pointsAbove==8);
 		return true;
 	}
 	return false;
