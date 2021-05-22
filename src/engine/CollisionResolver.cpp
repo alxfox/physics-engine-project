@@ -17,6 +17,10 @@ void gp::engine::CollisionResolver::resolveInterpenetration()
 	// checking for isMovable is unnecessary when using invMass
 	float_t m1 = obj1->invMass();
 	float_t m2 = obj2->invMass();
+	if(m1<EPSILON&&m1>-EPSILON &&m2<EPSILON&&m2>-EPSILON){
+		//std::cout << "2 objects with infinite mass are colliding"<<std::endl;
+		return;
+	}
 	float_t d1 = m1/(m1+m2);
 	float_t d2 = m2/(m1+m2);
 	obj1->move(moveDistance*d1*(-1));
@@ -52,7 +56,8 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 	float_t COF = fmin(obj1->restitutionCoefficient(), obj2->restitutionCoefficient());
 	float_t invM1 = obj1->invMass();
 	float_t invM2 = obj2->invMass();
-
+	if(!obj1->isMovable()&&!obj2->isMovable())
+		return;
 	float_t massFraction1 = invM1/(invM1+invM2);
 	float_t massFraction2 = invM2/(invM1+invM2);
 

@@ -1,6 +1,6 @@
 #include "Scenarios.h"
 #include "gui/graphics/Material.h"
-
+#include <sstream>
 gp::Scenario1::Scenario1()
 {
 	gp::graphics::Material& blue = getMaterial("blue");
@@ -177,7 +177,10 @@ gp::HangingBridge::HangingBridge()
     for (unsigned z = 0; z < numZ; ++z) {
       float mass = (x == 0 || x == numX-1) ? gp::engine::Object::UNMOVABLE_MASS : 1.0;
       entities[x][z] = addBox(mass, engine::Vector3f(xpos, 1.0f, spacingZ*z - numZ/2 * spacingZ), engine::Vector3f::Ones() * scale);
-      setMaterial(entities[x][z], cube);
+      std::stringstream tag;
+	  tag << "x: " << x << " z: "<<z;
+	  setName(entities[x][z],tag.str());
+	  setMaterial(entities[x][z], cube);
       if (x > 0) {
         addRope(entities[x-1][z], entities[x][z], ropeLengthX, engine::Vector3f(scale/2.0, 0.0f, 0.0f), engine::Vector3f(-scale/2.0, 0.0f, 0.0f));
       }
