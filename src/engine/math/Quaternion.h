@@ -68,8 +68,6 @@ public:
 
 	Quaternion operator*(const Quaternion &q) const
 	{
-
-		// TODO
 		float_t w1 = m_w;
 		float_t i1 = m_i;
 		float_t j1 = m_j;
@@ -129,8 +127,6 @@ public:
 	{
 		Affine3f rotationMatrix;
 		rotationMatrix.setIdentity();
-
-		// TODO
 
 		float_t w = m_w; 
 		float_t i = m_i;

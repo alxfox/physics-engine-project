@@ -70,8 +70,9 @@ bool gp::engine::Collision::detectSphereBox()
 
 	AABox aabox (*myBox);
 	Vector3f sphereLocation = myBox->invModelMatrix() * mySphere->position(); // transform coordinates of the sphere in world space to the box's model space
-	Vector3f boxSurfacePoint = aabox.closestPointOnSurface(sphereLocation); //!!is this correct?
-	Vector3f collNormal = myBox->modelMatrix().linear()*(boxSurfacePoint-sphereLocation); // normal goes from the sphere center to the surface point of the box
+	Vector3f boxSurfacePoint = aabox.closestPointOnSurface(sphereLocation);
+	Vector3f collNormalOld = (boxSurfacePoint-sphereLocation); // normal goes from the sphere center to the surface point of the box
+	Vector3f collNormal = myBox->modelMatrix().linear()*collNormalOld;//convert the collision normal to world space (length is not affected because of linear)
 	float_t collNormalLength = collNormal.norm();
 	//collNormal.normalize();
 	collNormal = (collNormal).normalized();
@@ -79,7 +80,7 @@ bool gp::engine::Collision::detectSphereBox()
 		//convert everything back to world space
 		m_collisionPoint1 = myBox->modelMatrix()*sphereLocation + mySphere->radius()*collNormal;
 		m_collisionPoint2 = myBox->modelMatrix()*boxSurfacePoint;
-		m_collisionNormal = collNormal; //why do we not have to convert this back to worldspace?
+		m_collisionNormal = collNormal; // was already converted to world space
 		m_interpenetrationDepth = mySphere->radius()-collNormalLength;
 
 		//Just assert that the distance from the center of the sphere to the plane, is bigger or equal than the radius

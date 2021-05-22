@@ -71,12 +71,10 @@ public:
 	}
 
 	Vector3f computeCollisionPoint1() const {
-		// TODO
 		return m_object1.position();
 	}
 
 	Vector3f computeCollisionPoint2() const {
-		// TODO
 		return m_object2.position();
 	}
 
