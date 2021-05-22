@@ -7,7 +7,7 @@ bool gp::engine::Rope::collision(Vector3f &collisionNormal, Vector3f &collisionP
 {
 	// TODO
 	//m_objectPointX is in objPointX space, so we need to bring to world to compare
-	interpenetrationDepth = (m_object2.modelMatrix()*m_objPoint2 - m_object1.modelMatrix()*m_objPoint1).norm() - m_length;
+	interpenetrationDepth = (computeCollisionPoint2() - computeCollisionPoint1()).norm() - m_length;
 
 	if(interpenetrationDepth > -EPSILON){
 
