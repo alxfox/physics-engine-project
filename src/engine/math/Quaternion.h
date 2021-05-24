@@ -77,6 +77,7 @@ public:
 		float_t j2 = q.j();
 		float_t k2 = q.k();
 
+		//Each component of the quaternion product
 		float_t w = w1*w2 - (i1*i2 + j1*j2 + k1*k2);
 		float_t i = w1*i2+w2*i1+j1*k2-k1*j2;
 		float_t j = w1*j2+w2*j1+k1*i2-i1*k2;
@@ -132,7 +133,7 @@ public:
 		float_t i = m_i;
 		float_t j = m_j;
 		float_t k = m_k;
-
+		
 		rotationMatrix(0,0) = 1-2*(j*j+k*k);
 		rotationMatrix(0,1) = 2*(i*j-k*w);
 		rotationMatrix(0,2) = 2*(i*k+j*w);
