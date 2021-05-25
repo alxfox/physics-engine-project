@@ -77,6 +77,7 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 	Vector3f vC = (v1-v2).dot(m_collision.collisionNormal())*m_collision.collisionNormal();
 
 	//Updating velocities
+	//COF =1.f;
 	Vector3f v1New = -(1 + COF) * massFraction1 * vC;
 	Vector3f v2New = (1 + COF) * massFraction2 * vC;
 	obj1->changeVelocity(v1New);
@@ -108,17 +109,20 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 	}
 
 	//expected 0 momentum variation
-	Vector3f momentumDiff =  (COF*(momentumBefore1 + momentumBefore2) - (momentumAfter1+ momentumAfter2)).cwiseAbs(); 
+	Vector3f momentumBefore = momentumBefore1+momentumBefore2;
+	Vector3f momentumAfter = momentumAfter1+momentumAfter2;
+	if(!obj1->isMovable()||!obj2->isMovable()) return; 
+	Vector3f momentumDiff =  (momentumBefore.cwiseAbs() - momentumAfter.cwiseAbs()).cwiseAbs();
 	if(abs(momentumDiff.x()) > EPSILON) {
-		//std::cout << "Variation of momentum along x > EPSILON: " << momentumDiff.x() << std::endl;
+		std::cout << "Variation of momentum along x > EPSILON: " << momentumDiff.x() << std::endl;
 
 	}
 	if(abs(momentumDiff.y()) > EPSILON) {
-		//std::cout << "Variation of momentum along y > EPSILON: " << momentumDiff.y() << std::endl;
+		std::cout << "Variation of momentum along y > EPSILON: " << momentumDiff.y() << std::endl;
 
 	}
 	if(abs(momentumDiff.z()) > EPSILON) {
-		//std::cout << "Variation of momentum along z > EPSILON: " << momentumDiff.z() << std::endl;
+		std::cout << "Variation of momentum along z > EPSILON: " << momentumDiff.z() << std::endl;
 
 	}
 	//assert(abs(momentumDiff.x()) <= EPSILON && abs(momentumDiff.y()) <= EPSILON && abs(momentumDiff.z()) <= EPSILON);
