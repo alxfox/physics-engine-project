@@ -59,25 +59,25 @@ gp::Custom2::Custom2()
    // }
 
 
-    int j = 0;
-    for(float_t degree = 0; degree < 2*M_PI; degree += 2*M_PI/40){
+    //int j = 0;
+    //for(float_t degree = 0; degree < 2*M_PI; degree += 2*M_PI/40){
 
-        e = addBox(gp::engine::Object::UNMOVABLE_MASS,
-                engine::Vector3f(std::cos(degree)*1.1f, 3, -std::sin(degree)*1.1f), 
-                gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
-                //engine::Vector3f(2.0f, 0.1f, 0.2f),
-                engine::Vector3f(0, 0, 0),
-        		engine::Quaternion((2*M_PI / 40) * j, engine::Vector3f(0, 1, 0))
-                );
+    //    e = addBox(gp::engine::Object::UNMOVABLE_MASS,
+    //            engine::Vector3f(std::cos(degree)*1.1f, 3, -std::sin(degree)*1.1f), 
+    //            gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+    //            //engine::Vector3f(2.0f, 0.1f, 0.2f),
+    //            engine::Vector3f(0, 0, 0),
+    //    		engine::Quaternion((2*M_PI / 40) * j, engine::Vector3f(0, 1, 0))
+    //            );
 
-        colorName = "c" + std::to_string(j);
-        getMaterial(colorName).diffuseColor = engine::Vector3f(0.2f, 0.5f, j/40.0f);
-	    getMaterial(colorName).shininess = 10.0f;
-	    getMaterial(colorName).specularColor = engine::Vector3f(0.2f, 0.5f, j/40.0f);
-        //gp::engine::Vector3f a;
-        //a << 0.1f, 0.1f, 0.1f;
-	    setMaterial(e, getMaterial(colorName));
-        j+=1;
+    //    colorName = "c" + std::to_string(j);
+    //    getMaterial(colorName).diffuseColor = engine::Vector3f(0.2f, 0.5f, j/40.0f);
+	    // getMaterial(colorName).shininess = 10.0f;
+	    // getMaterial(colorName).specularColor = engine::Vector3f(0.2f, 0.5f, j/40.0f);
+    //    //gp::engine::Vector3f a;
+    //    //a << 0.1f, 0.1f, 0.1f;
+	    // setMaterial(e, getMaterial(colorName));
+    //    j+=1;
     }
 	//setName(e, "orange box")
 }
