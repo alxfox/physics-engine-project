@@ -53,7 +53,6 @@ void gp::engine::CollisionResolver::applyCollisionImpulse()
 
 void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction()
 {
-	// TODO
 	Object* obj1 = m_collision.object1();
 	Object* obj2 = m_collision.object2();
 
@@ -69,7 +68,7 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 	float_t invM1 = obj1->invMass();
 	float_t invM2 = obj2->invMass();
 
-
+	//COF = 1.0f;
 	float_t massFraction1 = invM1/(invM1+invM2);
 	float_t massFraction2 = invM2/(invM1+invM2);
 
@@ -77,7 +76,6 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 	Vector3f vC = (v1-v2).dot(m_collision.collisionNormal())*m_collision.collisionNormal();
 
 	//Updating velocities
-	//COF =1.f;
 	Vector3f v1New = -(1 + COF) * massFraction1 * vC;
 	Vector3f v2New = (1 + COF) * massFraction2 * vC;
 	obj1->changeVelocity(v1New);
@@ -108,10 +106,26 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 		momentumAfter2 = obj2->mass()*(v2New+v2);
 	}
 
+	
+
+	float_t ourEkinLoss = (Ekin1After + Ekin2After) - (Ekin1Before + Ekin2Before); 
+
+	float_t theorEkinLoss = -((1.0f-COF*COF) / 2.0f);
+	theorEkinLoss*=((v1-v2).dot(m_collision.collisionNormal()));
+	theorEkinLoss*=((v1-v2).dot(m_collision.collisionNormal()));
+	theorEkinLoss/=(invM1 + invM2);
+
+	//Checking kinetic energy loss
+	if (std::abs(ourEkinLoss - theorEkinLoss) > EPSILON) {
+		std::cout << "EnergyLossDifference > EPSILON: " << std::abs(ourEkinLoss - theorEkinLoss) << std::endl;
+	}
+	//assert(std::abs(ourDiff - theoryDiff) < EPSILON);
+
+	if(!obj1->isMovable()||!obj2->isMovable()) return; 
+
 	//expected 0 momentum variation
 	Vector3f momentumBefore = momentumBefore1+momentumBefore2;
 	Vector3f momentumAfter = momentumAfter1+momentumAfter2;
-	if(!obj1->isMovable()||!obj2->isMovable()) return; 
 	Vector3f momentumDiff =  (momentumBefore.cwiseAbs() - momentumAfter.cwiseAbs()).cwiseAbs();
 	if(abs(momentumDiff.x()) > EPSILON) {
 		std::cout << "Variation of momentum along x > EPSILON: " << momentumDiff.x() << std::endl;
@@ -129,18 +143,7 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 
 
 
-	float_t ourEkinLoss = (Ekin1After + Ekin2After) - (Ekin1Before + Ekin2Before); 
-
-	float_t theorEkinLoss = -((1.0f-COF*COF) / 2.0f);
-	theorEkinLoss*=((v1-v2).dot(m_collision.collisionNormal()));
-	theorEkinLoss*=((v1-v2).dot(m_collision.collisionNormal()));
-	theorEkinLoss/=(invM1 + invM2);
-
-	//Checking kinetic energy loss
-	if (std::abs(ourEkinLoss - theorEkinLoss) > EPSILON) {
-		std::cout << "EnergyLossDifference > EPSILON: " << std::abs(ourEkinLoss - theorEkinLoss) << std::endl;
-	}
-	//assert(std::abs(ourDiff - theoryDiff) < EPSILON);
+	
 
 
 	//______________OLD_________________
