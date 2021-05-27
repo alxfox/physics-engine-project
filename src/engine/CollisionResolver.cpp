@@ -82,15 +82,16 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 	obj2->changeVelocity(v2New);
 
 //=========================================Energy and momentum assertions==============================================
+// ASSERTIONS ARE COMMENTED OUT AS SOME OF THE ENERGY/MOMENTUM DIFFERENCES WERE SLIGHTLY ABOVE EPSILON
 	float_t Ekin1Before = 0.0f;
 	float_t Ekin1After = 0.0f;
 	float_t Ekin2Before = 0.0f;
 	float_t Ekin2After = 0.0f;
 
-	Vector3f momentumBefore1 = Vector3f::Ones()*0.0f; 
-	Vector3f momentumBefore2 = Vector3f::Ones()*0.0f;
-	Vector3f momentumAfter1 = Vector3f::Ones()*0.0f;
-	Vector3f momentumAfter2 = Vector3f::Ones()*0.0f;
+	Vector3f momentumBefore1 = Vector3f::Zero(); 
+	Vector3f momentumBefore2 = Vector3f::Zero();
+	Vector3f momentumAfter1 = Vector3f::Zero();
+	Vector3f momentumAfter2 = Vector3f::Zero();
 
 	if(obj1->isMovable()){
 		Ekin1Before = obj1->mass()*v1.dot(v1)/2.0f;
@@ -119,7 +120,7 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 	if (std::abs(ourEkinLoss - theorEkinLoss) > EPSILON) {
 		std::cout << "EnergyLossDifference > EPSILON: " << std::abs(ourEkinLoss - theorEkinLoss) << std::endl;
 	}
-	//assert(std::abs(ourDiff - theoryDiff) < EPSILON);
+	//assert(std::abs(ourDiff - theoryDiff) < EPSILON); // UNCOMMENT THIS
 
 	if(!obj1->isMovable()||!obj2->isMovable()) return; 
 
@@ -139,7 +140,7 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 		std::cout << "Variation of momentum along z > EPSILON: " << momentumDiff.z() << std::endl;
 
 	}
-	//assert(abs(momentumDiff.x()) <= EPSILON && abs(momentumDiff.y()) <= EPSILON && abs(momentumDiff.z()) <= EPSILON);
+	//assert(abs(momentumDiff.x()) <= EPSILON && abs(momentumDiff.y()) <= EPSILON && abs(momentumDiff.z()) <= EPSILON); // UNCOMMENT THIS
 
 
 }
