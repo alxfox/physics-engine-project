@@ -75,6 +75,7 @@ bool gp::engine::Collision::detectSphereBox()
 		m_collisionPoint1 = myBox->modelMatrix()*sphereLocation + mySphere->radius()*collNormal;
 		m_collisionPoint2 = myBox->modelMatrix()*boxSurfacePoint;
 		m_collisionNormal = collNormal; // was already converted to world space
+		//m_collisionNormal = (m_collisionPoint1 - m_collisionPoint2).normalized();
 		m_interpenetrationDepth = mySphere->radius()-collNormalLength;
 
 		//Just assert that the distance from the center of the sphere to the plane, is bigger or equal than the radius
@@ -95,7 +96,7 @@ bool gp::engine::Collision::detectSphereBox()
 					if(dist >= -EPSILON) {
 						pointsAbove+=1;
 					}
-					if(dist < EPSILON) {
+					if(dist <= EPSILON) {
 						pointsBelow+=1;
 					}
 				}

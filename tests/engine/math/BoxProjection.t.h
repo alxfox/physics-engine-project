@@ -38,9 +38,15 @@ public:
 
 		gp::engine::BoxProjection boxProjection4(axes1, box1.halfSize(), axes2, box4.halfSize(),
 			center2center(box1, box4));
+
+
+		std::cout << "c2c \n"<< boxProjection4.m_center2center << std::endl;
 		TS_ASSERT_DELTA(boxProjection4.overlapOnAxis(gp::engine::Vector3f(1, 0, 0)), .5, gp::engine::EPSILON);
+		std::cout << "c2c \n"<< boxProjection4.m_center2center << std::endl;
 		TS_ASSERT_DELTA(boxProjection4.overlapOnAxis(gp::engine::Vector3f(0, 1, 0)), .25, gp::engine::EPSILON);
+		std::cout << "c2c \n"<< boxProjection4.m_center2center << std::endl;
 		TS_ASSERT_LESS_THAN(boxProjection4.overlapOnAxis(gp::engine::Vector3f(0, 0, 1)), 0.);
+		std::cout << "c2c \n"<< boxProjection4.m_center2center << std::endl;
 	}
 
 private:

@@ -81,6 +81,24 @@ public:
 	bool closestPoints(const Line &other, Vector3f &pointOnLine1, Vector3f &pointOnLine2)
 	{
 		// TODO
+		Vector3f u = m_direction;
+		Vector3f v = other.m_direction;
+		//a·b = |a|*|b|*cos(0 || 180)
+		if(abs(abs(u.dot(v)) - abs(u.norm()*v.norm())) < EPSILON) {
+			return false;
+		}
+
+		Vector3f w0 = m_point - other.m_point;
+		float_t a = u.dot(u);
+		float_t b = u.dot(v);
+		float_t c = v.dot(v);
+		float_t d = u.dot(w0);
+		float_t e = v.dot(w0);
+		float_t sc = (b*e - c*d) / (a*c - b*b);
+		float_t tc = (a*e - b*d) / (a*c - b*b);
+		pointOnLine1 = m_point + u*sc;
+		pointOnLine2 = other.m_point + v*tc;
+
 		return true;
 	}
 };
