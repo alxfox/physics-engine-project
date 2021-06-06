@@ -35,4 +35,24 @@ public:
 		TS_ASSERT_DELTA(coll.collisionNormal().norm(),1.,gp::engine::EPSILON);
 		//TS_ASSERT(false);
 	}
+
+    void testdetectBoxBox(void)
+	{
+		gp::engine::Box box1(1., gp::engine::Vector3f(3.4f, 0.0f, 0.0f));
+		gp::engine::Box box2(1.,gp::engine::Vector3f(4.0f, -0.5f, 0.0f));
+		gp::engine::Object* o1 = &box1;
+		gp::engine::Object* o2 = &box2;
+		gp::engine::Collision coll(o1, o2);
+		bool ret = coll.detect();
+		//TS_ASSERT_EQUALS(ret,true);
+		// collPoint is on the sphere
+		//std::cout<<"This is a Test "  << coll.collisionPoint1();
+		//TS_ASSERT_DELTA((coll.collisionPoint1()-sphere.position()).norm(),sphere.radius(),gp::engine::EPSILON);
+		// interpentration depth is distance between collision points
+		//TS_ASSERT_DELTA((coll.collisionPoint2()-coll.collisionPoint1()).norm(),coll.interpenetrationDepth(),gp::engine::EPSILON);
+		//collNormal is normalized
+		//TS_ASSERT_DELTA(coll.collisionNormal().norm(),1.,gp::engine::EPSILON);
+		//TS_ASSERT(false);
+	}
+	
 };

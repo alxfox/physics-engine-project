@@ -54,18 +54,7 @@ public:
 	 * @return value > 0 for an overlap, value < 0 for no overlap
 	 */
 	float_t overlapOnAxis(const gp::engine::Vector3f axis)
-	{
-		// TODO
-		//float_t box1projectionSize = projectToAxis(m_box1Axis, m_box1HalfSize, axis);
-		//float_t box2projectionSize = projectToAxis(m_box2Axis, m_box2HalfSize, axis);
-		//float_t c2cProjectionSize = abs(m_center2center.dot(axis));
-		//if(c2cProjectionSize >= box1projectionSize + box2projectionSize) // ?????
-		//	return -1;
-		//else
-		//	return 1;
-
-		//std::cout << "c2c \n"<< this->m_center2center<< std::endl;
-
+	{	
 		float_t maxProjectedCorner = std::numeric_limits<float_t>::min();
 		float_t minProjectedCorner = std::numeric_limits<float_t>::max();
 		float_t maxProjectedCornerB1 = std::numeric_limits<float_t>::min();
@@ -78,7 +67,7 @@ public:
 			for (int j = -1; j < 2; j+=2){
 				for (int k = -1; k < 2; k+=2){
 					Vector3f boxCorner1 = i*m_box1Axis[0]*m_box1HalfSize.x() + j*m_box1Axis[1]*m_box1HalfSize.y() + k*m_box1Axis[2]*m_box1HalfSize.z();
-					Vector3f boxCorner2 = i*m_box2Axis[0]*m_box2HalfSize.x() + j*m_box2Axis[1]*m_box2HalfSize.y() + k*m_box2Axis[2]*m_box2HalfSize.z();
+					Vector3f boxCorner2 = m_center2center + i*m_box2Axis[0]*m_box2HalfSize.x() + j*m_box2Axis[1]*m_box2HalfSize.y() + k*m_box2Axis[2]*m_box2HalfSize.z();
 
 
 					//std::cout << "bC2 \n"<< boxCorner2<< std::endl;
@@ -134,8 +123,6 @@ private:
 			const gp::engine::Vector3f axis)
 	{
 		// TODO
-
-
 		assert(abs(boxAxis[0].norm() - 1) < EPSILON);
 		assert(abs(boxAxis[1].norm() - 1) < EPSILON);
 		assert(abs(boxAxis[2].norm() - 1) < EPSILON);

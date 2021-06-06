@@ -8,6 +8,10 @@
 gp::Custom1::Custom1()
 {	
 	
+    gp::graphics::Material& green = getMaterial("green");
+    green.diffuseColor = engine::Vector3f(0.0f, 1.0f, 0.5f);
+    gp::graphics::Material& blue = getMaterial("blue");
+    blue.diffuseColor = engine::Vector3f(0.0f, 0.5f, 1.0f);;
 	//shows that the Quaternion is working right
 
     //texture
@@ -15,32 +19,49 @@ gp::Custom1::Custom1()
 	gp::graphics::Material& beton = getMaterial("beton");
 	beton.setTexture(gp::graphics::Material::Diffuse, "beton_3");
     
-	//fixed sphere on top
-	Entity fixedSphere2 = addSphere(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0, 2, 0), 0.4);
-	setMaterial(fixedSphere2, beton);
+	////fixed sphere on top
+	//Entity fixedSphere2 = addSphere(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0, 2, 0), 0.4);
+	//setMaterial(fixedSphere2, beton);
 	
-	//first box moving nomraly
-	Entity e = addBox(1, engine::Vector3f(0.0, 1.0, 0.0), engine::Vector3f::Ones()* 0.5,engine::Vector3f(0, 0, 0),
+	////first box moving nomraly
+	//Entity e = addBox(1, engine::Vector3f(0.0, 1.0, 0.0), engine::Vector3f::Ones()* 0.5,engine::Vector3f(0, 0, 0),
+	//engine::Quaternion(M_PI, engine::Vector3f(0, 0, 1)));
+	//engine::Object* o = m_objectManager.engine.find(e);
+	//o->setAngularVelocity(engine::Vector3f(0, 0, M_PI));
+	//setMaterial(e, welt);
+
+	////rope
+	//addRope(fixedSphere2, e, 1.5f, engine::Vector3f(0.0f, 0.0f, 0.0f), engine::Vector3f(0.0f, 0.0f, 0.0f));
+
+	////second box moving against standart direction
+	//Entity box2 = addBox(1, engine::Vector3f(0.0, 0.0, 0.0), engine::Vector3f::Ones()* 0.5,engine::Vector3f(0, 0, 0),
+	//engine::Quaternion(M_PI, engine::Vector3f(0, 0, 1)));
+	//engine::Object* u = m_objectManager.engine.find(box2);
+	//u->setAngularVelocity(engine::Vector3f(0, 0, -M_PI));
+	//setMaterial(box2, welt);
+
+	////rope
+	//addRope(e, box2, 1.5f, engine::Vector3f(0.0f, 0.0f, 0.0f), engine::Vector3f(0.0f, 0.0f, 0.0f));
+
+
+    //second box moving against standart direction
+	Entity box3 = addBox(1, 
+    engine::Vector3f(1.0, 1.0, 0.0),
+    engine::Vector3f::Ones()* 0.5,
+    engine::Vector3f(0, 0, 0),
 	engine::Quaternion(M_PI, engine::Vector3f(0, 0, 1)));
-	engine::Object* o = m_objectManager.engine.find(e);
-	o->setAngularVelocity(engine::Vector3f(0, 0, M_PI));
-	setMaterial(e, welt);
+	//engine::Object* u = m_objectManager.engine.find(box2);
+	//u->setAngularVelocity(engine::Vector3f(0, 0, -M_PI));
+	setMaterial(box3, green);
 
-	//rope
-	addRope(fixedSphere2, e, 1.5f, engine::Vector3f(0.0f, 0.0f, 0.0f), engine::Vector3f(0.0f, 0.0f, 0.0f));
-
-	//second box moving against standart direction
-	Entity box2 = addBox(1, engine::Vector3f(0.0, 0.0, 0.0), engine::Vector3f::Ones()* 0.5,engine::Vector3f(0, 0, 0),
+	Entity box4 = addBox(1, 
+    engine::Vector3f(1.1, 0.0, 0.0),
+    engine::Vector3f::Ones()* 0.5,
+    engine::Vector3f(0, 2.0f, 0),
 	engine::Quaternion(M_PI, engine::Vector3f(0, 0, 1)));
-	engine::Object* u = m_objectManager.engine.find(box2);
-	u->setAngularVelocity(engine::Vector3f(0, 0, -M_PI));
-	setMaterial(box2, welt);
-
-	//rope
-	addRope(e, box2, 1.5f, engine::Vector3f(0.0f, 0.0f, 0.0f), engine::Vector3f(0.0f, 0.0f, 0.0f));
-
-
-
+	//engine::Object* u = m_objectManager.engine.find(box2);
+	//u->setAngularVelocity(engine::Vector3f(0, 0, -M_PI));
+	setMaterial(box4, blue);
 }
 
 gp::Custom2::Custom2()

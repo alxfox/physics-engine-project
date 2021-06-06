@@ -17,11 +17,13 @@ public:
 		gp::engine::Vector3f axes1[3];
 		gp::engine::Vector3f axes2[3];
 
+		gp::engine::Vector3f c2c;
 		boxAxes(box1, axes1);
 		boxAxes(box2, axes2);
 
+		c2c = center2center(box1, box2);
 		gp::engine::BoxProjection boxProjection1(axes1, box1.halfSize(), axes2, box2.halfSize(),
-			center2center(box1, box2));
+			c2c);
 
 		TS_ASSERT_DELTA(boxProjection1.overlapOnAxis(gp::engine::Vector3f(1, 0, 0)), 1., gp::engine::EPSILON);
 		TS_ASSERT_DELTA(boxProjection1.overlapOnAxis(gp::engine::Vector3f(1, 1, 0).normalized()), std::sqrt(2.), gp::engine::EPSILON);
@@ -29,24 +31,25 @@ public:
 		gp::engine::Box box3(1, gp::engine::Vector3f(0.5, 0.5, 0.5));
 		boxAxes(box3, axes2);
 
+		c2c = center2center(box1,box3);
 		gp::engine::BoxProjection boxProjection2(axes1, box1.halfSize(), axes2, box3.halfSize(),
-			center2center(box1, box3));
+			c2c);
 		TS_ASSERT_DELTA(boxProjection2.overlapOnAxis(gp::engine::Vector3f(1, 0, 0)), .5, gp::engine::EPSILON);
 
 		gp::engine::Box box4(1, gp::engine::Vector3f(0.5, 0.5, 1.), gp::engine::Vector3f(1, 0.5, 0.2));
 		boxAxes(box4, axes2);
 
+		c2c = center2center(box1, box4);
 		gp::engine::BoxProjection boxProjection4(axes1, box1.halfSize(), axes2, box4.halfSize(),
-			center2center(box1, box4));
+			c2c);
 
-
-		std::cout << "c2c \n"<< boxProjection4.m_center2center << std::endl;
+		//std::cout << "c2c \n"<< boxProjection4.m_center2center << std::endl;
 		TS_ASSERT_DELTA(boxProjection4.overlapOnAxis(gp::engine::Vector3f(1, 0, 0)), .5, gp::engine::EPSILON);
-		std::cout << "c2c \n"<< boxProjection4.m_center2center << std::endl;
+		//std::cout << "c2c \n"<< boxProjection4.m_center2center << std::endl;
 		TS_ASSERT_DELTA(boxProjection4.overlapOnAxis(gp::engine::Vector3f(0, 1, 0)), .25, gp::engine::EPSILON);
-		std::cout << "c2c \n"<< boxProjection4.m_center2center << std::endl;
+		//std::cout << "c2c \n"<< boxProjection4.m_center2center << std::endl;
 		TS_ASSERT_LESS_THAN(boxProjection4.overlapOnAxis(gp::engine::Vector3f(0, 0, 1)), 0.);
-		std::cout << "c2c \n"<< boxProjection4.m_center2center << std::endl;
+		//std::cout << "c2c \n"<< boxProjection4.m_center2center << std::endl;
 	}
 
 private:
