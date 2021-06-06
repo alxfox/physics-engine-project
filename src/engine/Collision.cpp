@@ -180,9 +180,6 @@ bool gp::engine::Collision::detectBoxBox()
 		}
 	}
 
-	std::cout << projectionNormal << std::endl;
-	std::cout << box1.position() << std::endl;
-	std::cout << box2.position() << std::endl;
 	std::cout << "overlap: " << minOverlap<< std::endl;
 	std::cout << "Overlapped!!!!" << std::endl;
 	m_interpenetrationDepth = minOverlap;

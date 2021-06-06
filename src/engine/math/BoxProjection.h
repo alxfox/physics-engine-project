@@ -55,11 +55,11 @@ public:
 	 */
 	float_t overlapOnAxis(const gp::engine::Vector3f axis)
 	{	
-		float_t maxProjectedCorner = std::numeric_limits<float_t>::min();
+		float_t maxProjectedCorner = -std::numeric_limits<float_t>::max();
 		float_t minProjectedCorner = std::numeric_limits<float_t>::max();
-		float_t maxProjectedCornerB1 = std::numeric_limits<float_t>::min();
+		float_t maxProjectedCornerB1 = -std::numeric_limits<float_t>::max();
 		float_t minProjectedCornerB1 = std::numeric_limits<float_t>::max();
-		float_t maxProjectedCornerB2 = std::numeric_limits<float_t>::min();
+		float_t maxProjectedCornerB2 = -std::numeric_limits<float_t>::max();
 		float_t minProjectedCornerB2 = std::numeric_limits<float_t>::max();
 		float_t projectedCorner1 = 0;
 		float_t projectedCorner2 = 0;
