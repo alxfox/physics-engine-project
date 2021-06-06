@@ -107,11 +107,88 @@ bool gp::engine::Collision::detectSphereBox()
 	return false;
 }
 
+void boxAxes(const gp::engine::Box &box, gp::engine::Vector3f axes[3])
+	{
+		axes[0] = box.modelMatrix().matrix().block<3, 1>(0, 0);
+		axes[1] = box.modelMatrix().matrix().block<3, 1>(0, 1);
+		axes[2] = box.modelMatrix().matrix().block<3, 1>(0, 2);
+	}
+
+gp::engine::Vector3f center2center(const gp::engine::Box &box1, const gp::engine::Box &box2)
+	{
+		return box2.position() - box1.position();
+	}
+
 bool gp::engine::Collision::detectBoxBox()
 {
 	// TODO
+	Box box1 = *dynamic_cast<Box*>(m_object1);
+	Box box2 = *dynamic_cast<Box*>(m_object2);
+
+	Vector3f axisBox1[3]; 
+	Vector3f axisBox2[3];
+
+	boxAxes(box1, axisBox1);
+	boxAxes(box2, axisBox2);
+
+	//std::cout << axisBox1[0] << std::endl;
+	//std::cout << axisBox2[0] << std::endl;
+	Vector3f c2c = center2center(box1, box2);
+	BoxProjection boxProj(axisBox1, box1.halfSize(), axisBox2, box2.halfSize(), c2c);
+
+	Vector3f projectionNormal;
+	float_t overlap;
+	float_t minOverlap = std::numeric_limits<float_t>::max();
+
+	//========================================Checking principal axes========================================
+	for (int i = 0; i < 3; i++){
+		projectionNormal = axisBox1[i];
+		overlap = boxProj.overlapOnAxis(projectionNormal);
+		//if(overlap < 0) {
+		//	std::cout << "\n=\n" << projectionNormal << "\n===\n" <<std::endl;
+		//}
+		//std::cout << overlap << std::endl;
+		if (overlap <= 0){
+			return false;
+		}
+		if(overlap < minOverlap){
+			minOverlap = overlap;
+		}
+	}
+	for (int i = 0; i < 3; i++){
+		projectionNormal = axisBox2[i];
+		overlap = boxProj.overlapOnAxis(projectionNormal);
+		if (overlap <= 0){
+			return false;
+		}
+		if(overlap < minOverlap){
+			minOverlap = overlap;
+		}
+	}
+	//========================================Checking 3x3 Combinations========================================
+	for (int i = 0; i < 3; i++){
+		for (int j = 0; j < 3; j++){
+			projectionNormal = axisBox1[i].cross(axisBox2[j] + c2c).normalized();
+			overlap = boxProj.overlapOnAxis(projectionNormal);
+			if (overlap <= 0){
+				return false;
+			}
+			if(overlap < minOverlap){
+				minOverlap = overlap;
+			}
+		}
+	}
+
+	std::cout << projectionNormal << std::endl;
+	std::cout << box1.position() << std::endl;
+	std::cout << box2.position() << std::endl;
+	std::cout << "overlap: " << minOverlap<< std::endl;
+	std::cout << "Overlapped!!!!" << std::endl;
+	m_interpenetrationDepth = minOverlap;
 	return false;
 }
+
+
 
 
 gp::engine::Collision::CollisionType gp::engine::Collision::getType(gp::engine::Object *o1, gp::engine::Object *o2)

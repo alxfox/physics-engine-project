@@ -16,7 +16,7 @@ namespace engine
  */
 class BoxProjection
 {
-public:
+private:
 	const gp::engine::Vector3f * const m_box1Axis;
 	const gp::engine::Vector3f &m_box1HalfSize;
 	const gp::engine::Vector3f * const m_box2Axis;
@@ -48,7 +48,7 @@ public:
 	 * @return value > 0 for an overlap, value < 0 for no overlap
 	 */
 	float_t overlapOnAxis(const gp::engine::Vector3f axis)
-	{
+	{	
 		float_t maxProjectedCorner = std::numeric_limits<float_t>::min();
 		float_t minProjectedCorner = std::numeric_limits<float_t>::max();
 		float_t maxProjectedCornerB1 = std::numeric_limits<float_t>::min();

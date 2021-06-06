@@ -65,12 +65,12 @@ void gp::Game::run()
     glfwPollEvents();
 
     m_cameraControl.moveCamera(m_window, m_scenarioControl, *camera);
-    /*
+    
     if (frameCounter % 600 == 0) { 
-      std::cout << "{" 
+      std::cout << "{Camera" 
         << scenario->camera().worldPosition().x << " " << scenario->camera().worldPosition().y << " " << scenario->camera().worldPosition().z 
         << "}" << std::endl; 
-    }*/
+    }
     scenario->synchronize();
 
     renderComponentMan->computeMatrices(camera->view, spotLight->depthVP);
