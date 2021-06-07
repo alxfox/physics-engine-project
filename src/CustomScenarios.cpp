@@ -49,7 +49,8 @@ gp::Custom1::Custom1()
     engine::Vector3f(1.0, 1.0, 0.0),
     engine::Vector3f::Ones()* 0.5,
     engine::Vector3f(0, 0, 0),
-	engine::Quaternion(M_PI, engine::Vector3f(0, 0, 1)));
+	engine::Quaternion(M_PI/4.0f, engine::Vector3f(1, 1, 1)));
+	//engine::Quaternion(M_PI, engine::Vector3f(0, 0, 1)));
 	//engine::Object* u = m_objectManager.engine.find(box2);
 	//u->setAngularVelocity(engine::Vector3f(0, 0, -M_PI));
 	setMaterial(box3, green);
@@ -58,10 +59,31 @@ gp::Custom1::Custom1()
     engine::Vector3f(1.1, 0.0, 0.0),
     engine::Vector3f::Ones()* 0.5,
     engine::Vector3f(0, 2.0f, 0),
-	engine::Quaternion(M_PI, engine::Vector3f(0, 0, 1)));
+	engine::Quaternion(M_PI/3.0f, engine::Vector3f(1, 1, 1)));
+	//engine::Quaternion(M_PI, engine::Vector3f(0, 0, 1)));
+
 	//engine::Object* u = m_objectManager.engine.find(box2);
 	//u->setAngularVelocity(engine::Vector3f(0, 0, -M_PI));
 	setMaterial(box4, blue);
+
+	Entity box5 = addBox(1, 
+    engine::Vector3f(-1.0, 1.0, 0.0),
+    engine::Vector3f::Ones()* 0.5,
+    engine::Vector3f(0, 0, 0),
+	engine::Quaternion(M_PI/4.0f, engine::Vector3f(0, 0, 1)));
+	//engine::Object* u = m_objectManager.engine.find(box2);
+	//u->setAngularVelocity(engine::Vector3f(0, 0, -M_PI));
+	setMaterial(box5, green);
+
+	Entity box6 = addBox(1, 
+    engine::Vector3f(-0.9, 0.0, 0.0),
+    engine::Vector3f::Ones()* 0.5,
+    engine::Vector3f(0, 2.0f, 0),
+	engine::Quaternion(M_PI*0.25f, engine::Vector3f(0, 0, 1))*engine::Quaternion(M_PI*0.5f, engine::Vector3f(0, 1, 0)));
+
+	engine::Object* u = m_objectManager.engine.find(box6);
+	u->setAngularVelocity(engine::Vector3f(0, 2*M_PI, 0));
+	setMaterial(box6, blue);
 }
 
 gp::Custom2::Custom2()

@@ -126,24 +126,25 @@ bool gp::engine::Collision::detectBoxBox()
 	Box box1 = *dynamic_cast<Box*>(m_object1);
 	Box box2 = *dynamic_cast<Box*>(m_object2);
 
-	Vector3f axisBox1[3]; 
-	Vector3f axisBox2[3];
+	Vector3f boxAxis1[3]; 
+	Vector3f boxAxis2[3];
 
-	boxAxes(box1, axisBox1);
-	boxAxes(box2, axisBox2);
+	boxAxes(box1, boxAxis1);
+	boxAxes(box2, boxAxis2);
 
-	//std::cout << axisBox1[0] << std::endl;
-	//std::cout << axisBox2[0] << std::endl;
+	//std::cout << boxAxis1[0] << std::endl;
+	//std::cout << boxAxis2[0] << std::endl;
 	Vector3f c2c = center2center(box1, box2);
-	BoxProjection boxProj(axisBox1, box1.halfSize(), axisBox2, box2.halfSize(), c2c);
+	BoxProjection boxProj(boxAxis1, box1.halfSize(), boxAxis2, box2.halfSize(), c2c);
 
 	Vector3f projectionNormal;
 	float_t overlap;
 	float_t minOverlap = std::numeric_limits<float_t>::max();
+	
 
 	//========================================Checking principal axes========================================
 	for (int i = 0; i < 3; i++){
-		projectionNormal = axisBox1[i];
+		projectionNormal = boxAxis1[i];
 		overlap = boxProj.overlapOnAxis(projectionNormal);
 		//if(overlap < 0) {
 		//	std::cout << "\n=\n" << projectionNormal << "\n===\n" <<std::endl;
@@ -154,35 +155,97 @@ bool gp::engine::Collision::detectBoxBox()
 		}
 		if(overlap < minOverlap){
 			minOverlap = overlap;
+			m_collisionNormal = projectionNormal;
 		}
 	}
 	for (int i = 0; i < 3; i++){
-		projectionNormal = axisBox2[i];
+		projectionNormal = boxAxis2[i];
 		overlap = boxProj.overlapOnAxis(projectionNormal);
 		if (overlap <= 0){
 			return false;
 		}
 		if(overlap < minOverlap){
 			minOverlap = overlap;
+			m_collisionNormal = projectionNormal;
 		}
 	}
 	//========================================Checking 3x3 Combinations========================================
 	for (int i = 0; i < 3; i++){
 		for (int j = 0; j < 3; j++){
-			projectionNormal = axisBox1[i].cross(axisBox2[j] + c2c).normalized();
+			projectionNormal = boxAxis1[i].cross(boxAxis2[j] + c2c).normalized();
 			overlap = boxProj.overlapOnAxis(projectionNormal);
 			if (overlap <= 0){
 				return false;
 			}
 			if(overlap < minOverlap){
 				minOverlap = overlap;
+				m_collisionNormal = projectionNormal;
 			}
 		}
 	}
 
-	std::cout << "overlap: " << minOverlap<< std::endl;
-	std::cout << "Overlapped!!!!" << std::endl;
+	//std::cout << "overlap: " << minOverlap<< std::endl;
+	//std::cout << "Overlapped!!!!" << std::endl;
 	m_interpenetrationDepth = minOverlap;
+	
+	//------------------->Assure collision normal points from o1 to o2---------------------
+	if((box2.position() - (box1.position() + m_collisionNormal*m_interpenetrationDepth)).norm()
+		> (box2.position() - (box1.position())).norm()){
+		m_collisionNormal = -m_collisionNormal;
+	}  
+
+
+	//std::cout <<"hey\n"<<m_collisionNormal<<std::endl;
+	//========================================Checking Collision Type========================================
+	bool isVertexPlane = false;
+	for(int i = 0; i < 3; i++){
+
+		float_t normalDotAxis = m_collisionNormal.dot(boxAxis1[i]);
+		if(normalDotAxis < EPSILON && normalDotAxis > -EPSILON){
+			//collisionNormal is perpendicular to a box axis, so it is perpendicular to a plane of the box
+			isVertexPlane = true;
+		}
+	}
+
+	for(int i = 0; i < 3; i++){
+
+		float_t normalDotAxis = m_collisionNormal.dot(boxAxis2[i]);
+		if(normalDotAxis < EPSILON && normalDotAxis > -EPSILON){
+			//collisionNormal is perpendicular to a box axis, so it is perpendicular to a plane of the box
+			isVertexPlane = true;
+		}
+	}
+
+	if(isVertexPlane){
+		for (int i = -1; i < 2; i+=2){
+			for (int j = -1; j < 2; j+=2){
+				for (int k = -1; k < 2; k+=2){
+					Vector3f bC1 = box1.position() + i*boxAxis1[0]*box1.halfSize().x() + j*boxAxis1[1]*box1.halfSize().y() + k*boxAxis1[2]*box1.halfSize().z();
+					Vector3f bC2 = box2.position() + i*boxAxis2[0]*box2.halfSize().x() + j*boxAxis2[1]*box2.halfSize().y() + k*boxAxis2[2]*box2.halfSize().z();
+					//Point inside iff all the coordinates are in absolute value smaller than the corresponding half size
+					bC1 = box2.invModelMatrix()*bC1;
+					if((abs(bC1(0)) < box2.halfSize()(0) && abs(bC1(1)) < box2.halfSize()(1) && abs(bC1(2)) < box2.halfSize()(2))){	
+						m_collisionPoint1 = box2.modelMatrix()*bC1;
+						m_collisionPoint2 = m_collisionPoint1 - m_collisionNormal*m_interpenetrationDepth; 
+					}
+					bC2 = box1.invModelMatrix()*bC2;
+					if((abs(bC2(0)) < box1.halfSize()(0) && abs(bC2(1)) < box1.halfSize()(1) && abs(bC2(2)) < box1.halfSize()(2))){							
+						m_collisionPoint2 = box1.modelMatrix()*bC2;
+						m_collisionPoint1 = m_collisionPoint2 + m_collisionNormal*m_interpenetrationDepth; 
+					}
+				}
+			}
+		}
+
+	return true;
+
+	}
+	else{
+		std::cout << "aleluyah" << std::endl;
+		//Line box1Line();
+	}
+
+
 	return false;
 }
 

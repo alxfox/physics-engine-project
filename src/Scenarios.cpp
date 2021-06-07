@@ -239,6 +239,7 @@ gp::StandardArena::StandardArena()
 	float arenaSize = 10.0f;
 	float arenaHeight = 4.0f;
 	float arenaOffset = -2.0f;
+	//float arenaThickness = 0.1f;
 	float arenaThickness = 0.04f;
 	Entity e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(-arenaSize/2.0, arenaOffset + arenaHeight/2.0, 0), engine::Vector3f(arenaThickness, arenaHeight, arenaSize));
 	setMaterial(e, orange);
