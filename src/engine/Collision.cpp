@@ -181,6 +181,7 @@ bool gp::engine::Collision::detectBoxBox()
 			if(overlap < minOverlap){
 				minOverlap = overlap;
 				m_collisionNormal = projectionNormal;
+				isEdge = true;
 			}
 		}
 	}
@@ -198,26 +199,26 @@ bool gp::engine::Collision::detectBoxBox()
 
 	//std::cout <<"hey\n"<<m_collisionNormal<<std::endl;
 	//========================================Checking Collision Type========================================
-	bool isVertexPlane = false;
-	for(int i = 0; i < 3; i++){
-
-		float_t normalDotAxis = m_collisionNormal.dot(boxAxis1[i]);
-		if(normalDotAxis < EPSILON && normalDotAxis > -EPSILON){
-			//collisionNormal is perpendicular to a box axis, so it is perpendicular to a plane of the box
-			isVertexPlane = true;
-		}
-	}
-
-	for(int i = 0; i < 3; i++){
-
-		float_t normalDotAxis = m_collisionNormal.dot(boxAxis2[i]);
-		if(normalDotAxis < EPSILON && normalDotAxis > -EPSILON){
-			//collisionNormal is perpendicular to a box axis, so it is perpendicular to a plane of the box
-			isVertexPlane = true;
-		}
-	}
-
-	if(isVertexPlane){
+	//bool isVertexPlane = false;
+	//for(int i = 0; i < 3; i++){
+//
+	//	float_t normalDotAxis = m_collisionNormal.dot(boxAxis1[i]);
+	//	if(normalDotAxis < EPSILON && normalDotAxis > -EPSILON){
+	//		//collisionNormal is perpendicular to a box axis, so it is perpendicular to a plane of the box
+	//		isVertexPlane = true;
+	//	}
+	//}
+//
+	//for(int i = 0; i < 3; i++){
+//
+	//	float_t normalDotAxis = m_collisionNormal.dot(boxAxis2[i]);
+	//	if(normalDotAxis < EPSILON && normalDotAxis > -EPSILON){
+	//		//collisionNormal is perpendicular to a box axis, so it is perpendicular to a plane of the box
+	//		isVertexPlane = true;
+	//	}
+	//}
+//
+	if(!isEdge){
 		for (int i = -1; i < 2; i+=2){
 			for (int j = -1; j < 2; j+=2){
 				for (int k = -1; k < 2; k+=2){
@@ -244,7 +245,7 @@ bool gp::engine::Collision::detectBoxBox()
 	else{
 		std::cout << "aleluyah" << std::endl;
 		//Line box1Line();
-
+		return true;
 	}
 
 
