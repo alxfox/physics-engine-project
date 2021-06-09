@@ -109,7 +109,68 @@ bool gp::engine::Collision::detectSphereBox()
 
 bool gp::engine::Collision::detectBoxBox()
 {
-	// TODO
+	Box* myBox1= dynamic_cast<Box*>(m_object1);
+	Box* myBox2= dynamic_cast<Box*>(m_object2);
+	Vector3f xAxis(1,0,0);
+	Vector3f yAxis(0,1,0);
+	Vector3f zAxis(0,0,1);
+	Vector3f box1Axis[]={myBox1->modelMatrix()*xAxis.normalized(),myBox1->modelMatrix()*yAxis.normalized(),myBox1->modelMatrix()*zAxis.normalized()};
+	Vector3f box2Axis[]={myBox2->modelMatrix()*xAxis.normalized(),myBox2->modelMatrix()*yAxis.normalized(),myBox2->modelMatrix()*zAxis.normalized()};
+	BoxProjection bp = BoxProjection(box1Axis,myBox1->halfSize(),box2Axis,myBox2->halfSize(),myBox2->position()-myBox1->position());
+	float_t minOverlap = std::numeric_limits<float_t>::max();
+	Vector3f minOverlapAxis;
+	Vector3f edge1;
+	Vector3f edge2;
+	bool isEdge = false; //whether the min overlap is an edge-edge collision
+	Vector3f currentAxis;
+	float_t currentOverlap;
+	// 6 = 3+3 | 3 axis per box to check
+	for (int i = 0; i < 3; i++)
+	{
+		currentAxis=box1Axis[i];
+		currentOverlap = bp.overlapOnAxis(currentAxis);
+		if(currentOverlap<minOverlap){
+			minOverlap = currentOverlap;
+			minOverlapAxis = currentAxis;
+			isEdge = false;
+			if(minOverlap<EPSILON) return false;
+		}
+
+		currentAxis=box2Axis[i];
+		currentOverlap = bp.overlapOnAxis(currentAxis);
+		if(currentOverlap<minOverlap){
+			minOverlap = currentOverlap;
+			minOverlapAxis = currentAxis;
+			isEdge = false;
+			if(minOverlap<EPSILON) return false;
+		}
+	}
+	// 9 = 3*3 | check cross products of all combinations of axis between the two boxes
+	for (int i = 0; i < 3; i++){
+		for (int k = 0; k < 3; k++){
+			currentAxis=(box1Axis[i].cross(box2Axis[k])).normalized();
+			currentOverlap = bp.overlapOnAxis(currentAxis);
+			if(currentOverlap<minOverlap){
+				minOverlap = currentOverlap;
+				minOverlapAxis = currentAxis;
+				isEdge = true;
+				edge1=box1Axis[i];
+				edge2=box2Axis[k];
+				if(minOverlap<EPSILON) return false;
+			}
+		}
+	}
+	//minOverlap > EPSILON
+	m_collisionNormal = minOverlapAxis;
+	/*if(!isEdge){//vertex-plane collision
+		
+	}*/
+
+
+
+
+
+
 	return false;
 }
 

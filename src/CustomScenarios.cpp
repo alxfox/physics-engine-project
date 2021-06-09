@@ -8,36 +8,70 @@
 gp::Custom1::Custom1()
 {	
 	
-	//shows that the Quaternion is working right
+	// //shows that the Quaternion is working right
 
-    //texture
-	gp::graphics::Material& welt = getMaterial("welt");
-	gp::graphics::Material& beton = getMaterial("beton");
-	beton.setTexture(gp::graphics::Material::Diffuse, "beton_3");
+    // //texture
+	// gp::graphics::Material& welt = getMaterial("welt");
+	// gp::graphics::Material& beton = getMaterial("beton");
+	// beton.setTexture(gp::graphics::Material::Diffuse, "beton_3");
     
-	//fixed sphere on top
-	Entity fixedSphere2 = addSphere(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0, 2, 0), 0.4);
-	setMaterial(fixedSphere2, beton);
+	// //fixed sphere on top
+	// Entity fixedSphere2 = addSphere(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0, 2, 0), 0.4);
+	// setMaterial(fixedSphere2, beton);
 	
-	//first box moving nomraly
-	Entity e = addBox(1, engine::Vector3f(0.0, 1.0, 0.0), engine::Vector3f::Ones()* 0.5,engine::Vector3f(0, 0, 0),
-	engine::Quaternion(M_PI, engine::Vector3f(0, 0, 1)));
-	engine::Object* o = m_objectManager.engine.find(e);
-	o->setAngularVelocity(engine::Vector3f(0, 0, M_PI));
-	setMaterial(e, welt);
+	// //first box moving nomraly
+	// Entity e = addBox(1, engine::Vector3f(0.0, 1.0, 0.0), engine::Vector3f::Ones()* 0.5,engine::Vector3f(0, 0, 0),
+	// engine::Quaternion(M_PI, engine::Vector3f(0, 0, 1)));
+	// engine::Object* o = m_objectManager.engine.find(e);
+	// o->setAngularVelocity(engine::Vector3f(0, 0, M_PI));
+	// setMaterial(e, welt);
 
-	//rope
-	addRope(fixedSphere2, e, 1.5f, engine::Vector3f(0.0f, 0.0f, 0.0f), engine::Vector3f(0.0f, 0.0f, 0.0f));
+	// //rope
+	// addRope(fixedSphere2, e, 1.5f, engine::Vector3f(0.0f, 0.0f, 0.0f), engine::Vector3f(0.0f, 0.0f, 0.0f));
 
-	//second box moving against standart direction
-	Entity box2 = addBox(1, engine::Vector3f(0.0, 0.0, 0.0), engine::Vector3f::Ones()* 0.5,engine::Vector3f(0, 0, 0),
-	engine::Quaternion(M_PI, engine::Vector3f(0, 0, 1)));
-	engine::Object* u = m_objectManager.engine.find(box2);
-	u->setAngularVelocity(engine::Vector3f(0, 0, -M_PI));
-	setMaterial(box2, welt);
+	// //second box moving against standart direction
+	// Entity box2 = addBox(1, engine::Vector3f(0.0, 0.0, 0.0), engine::Vector3f::Ones()* 0.5,engine::Vector3f(0, 0, 0),
+	// engine::Quaternion(M_PI, engine::Vector3f(0, 0, 1)));
+	// engine::Object* u = m_objectManager.engine.find(box2);
+	// u->setAngularVelocity(engine::Vector3f(0, 0, -M_PI));
+	// setMaterial(box2, welt);
 
-	//rope
-	addRope(e, box2, 1.5f, engine::Vector3f(0.0f, 0.0f, 0.0f), engine::Vector3f(0.0f, 0.0f, 0.0f));
+	// //rope
+	// addRope(e, box2, 1.5f, engine::Vector3f(0.0f, 0.0f, 0.0f), engine::Vector3f(0.0f, 0.0f, 0.0f));
+
+
+	// box box test
+
+	gp::graphics::Material& green = getMaterial("green");
+  green.diffuseColor = engine::Vector3f(0.0f, 1.0f, 0.5f);
+  gp::graphics::Material& blue = getMaterial("blue");
+  blue.diffuseColor = engine::Vector3f(0.0f, 0.5f, 1.0f);
+  
+	//Entity e = addBox(1.0f, engine::Vector3f(4.0f, -1.5f, 0.0f), engine::Vector3f::Ones(),engine::Vector3f(-1.f,10.f,0.f));
+    // setMaterial(e, blue);
+
+  Entity e;
+	e = addBox(1, engine::Vector3f(-3.0f, -1.5f, 0.0f), engine::Vector3f::Ones());
+  setMaterial(e, blue);
+	e = addBox(1, engine::Vector3f(-3.5f, 0.0f, 0.0f), engine::Vector3f::Ones(), engine::Vector3f(4.0, 1, 0), 
+    engine::Quaternion(M_PI * 0.25, engine::Vector3f(1, 0, 0)) * engine::Quaternion(M_PI * 0.25, engine::Vector3f(0, 0, 1)));
+  setMaterial(e, green);
+  
+	e = addBox(1, engine::Vector3f(-1.0f, -1.5f, 0.0f), engine::Vector3f::Ones());
+  setMaterial(e, blue);
+	e = addBox(1, engine::Vector3f(-1.0f, 0.0f, 0.0f), engine::Vector3f::Ones(), engine::Vector3f(-3.0, 3, 0), engine::Quaternion(M_PI * 0.125, engine::Vector3f(0, 0, 1)));
+  setMaterial(e, green);
+  
+	e = addBox(1, engine::Vector3f(1.0f, -1.5f, 0.0f), engine::Vector3f::Ones());
+  setMaterial(e, blue);
+	e = addBox(1, engine::Vector3f(1.0f, 0.0f, 0.0f), engine::Vector3f::Ones(), engine::Vector3f(3.0, 3, 0), engine::Quaternion(0.0f, engine::Vector3f(0, 0, 1)));
+  setMaterial(e, green);
+  
+	e = addBox(1, engine::Vector3f(3.0f, -1.5f, 0.0f), engine::Vector3f::Ones());
+  setMaterial(e, blue);
+	e = addBox(1, engine::Vector3f(3.0f, 0.0f, 0.0f), engine::Vector3f::Ones(), engine::Vector3f(-4.0, 1, 0),
+    engine::Quaternion(M_PI * 0.25, engine::Vector3f(1, 0, 0)) * engine::Quaternion(M_PI * 0.25, engine::Vector3f(0, 0, 1)));
+  setMaterial(e, green);
 
 
 

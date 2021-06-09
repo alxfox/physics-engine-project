@@ -80,7 +80,42 @@ public:
 	 */
 	bool closestPoints(const Line &other, Vector3f &pointOnLine1, Vector3f &pointOnLine2)
 	{
-		// TODO
+		//geting both lines u and v
+		Vector3f u = m_direction;
+		Vector3f v = other.m_direction;
+		Vector3f P_0 = m_point;
+		Vector3f Q_0 = other.m_point;
+
+		//looking if lines are parallel
+		if (abs(u.x()-v.x() < EPSILON) 
+			&& abs(u.y()-v.y() < EPSILON)
+			&& abs(u.z()- v.z() < EPSILON))
+		{
+			//if parallel return false
+			return false;
+		}
+		
+		//w_0 = P_0 - Q_0
+		Vector3f w_0 = P_0 - Q_0;
+
+		//getting closest points on u and v 
+		float_t a = u.dot(u);
+		float_t b = u.dot(v);
+		float_t c = v.dot(v);
+		float_t d = u.dot(w_0);
+		float_t e = v.dot(w_0);
+		float_t s_c = (b*e - c*d) / (a*c - b*b);
+		float_t t_c = (a*e - b*d) / (a*c - b*b);
+		pointOnLine1 = P_0 + u*s_c;
+		pointOnLine2 = Q_0 + v*t_c;
+
+		//w_c = w_0 + s_c * u - t_c * v
+		Vector3f w_c = w_0 + s_c * u - t_c * v;
+
+
+
+
+
 		return true;
 	}
 };
