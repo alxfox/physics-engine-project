@@ -142,7 +142,8 @@ bool gp::engine::Collision::detectBoxBox()
 	float_t minOverlap = std::numeric_limits<float_t>::max();
 	
 
-	//========================================Checking principal axes========================================
+	bool isEdge = false;
+	//========================================Checking principal axes 3+3========================================
 	for (int i = 0; i < 3; i++){
 		projectionNormal = boxAxis1[i];
 		overlap = boxProj.overlapOnAxis(projectionNormal);
@@ -172,7 +173,7 @@ bool gp::engine::Collision::detectBoxBox()
 	//========================================Checking 3x3 Combinations========================================
 	for (int i = 0; i < 3; i++){
 		for (int j = 0; j < 3; j++){
-			projectionNormal = boxAxis1[i].cross(boxAxis2[j] + c2c).normalized();
+			projectionNormal = boxAxis1[i].cross(boxAxis2[j]).normalized();
 			overlap = boxProj.overlapOnAxis(projectionNormal);
 			if (overlap <= 0){
 				return false;
@@ -243,6 +244,7 @@ bool gp::engine::Collision::detectBoxBox()
 	else{
 		std::cout << "aleluyah" << std::endl;
 		//Line box1Line();
+
 	}
 
 
