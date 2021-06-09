@@ -243,7 +243,7 @@ bool gp::engine::Collision::detectBoxBox()
 
 	}
 	else{
-		std::cout << "aleluyah" << std::endl;
+		//td::cout << "aleluyah" << std::endl;
 		//Line box1Line();
 		return true;
 	}

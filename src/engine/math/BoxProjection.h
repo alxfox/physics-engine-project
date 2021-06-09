@@ -58,7 +58,7 @@ public:
 		
 		//float_t box1ProjSize = projectToAxis(m_box1Axis, m_box1HalfSize, axis);
 		//float_t box2ProjSize = projectToAxis(m_box2Axis, m_box2HalfSize, axis);
-		//return box1ProjSize + box2ProjSize - m_center2center.dot(axis);
+		//return box1ProjSize + box2ProjSize - abs(m_center2center.dot(axis));
 
 		float_t maxProjectedCorner = -std::numeric_limits<float_t>::max();
 		float_t minProjectedCorner = std::numeric_limits<float_t>::max();
