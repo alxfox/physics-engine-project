@@ -49,8 +49,9 @@ public:
 	 */
 	float_t overlapOnAxis(const gp::engine::Vector3f axis)
 	{
-		// TODO
-		return 0;
+
+		return projectToAxis(m_box1Axis, m_box1HalfSize, axis) + projectToAxis(m_box2Axis, m_box2HalfSize, axis) - abs(m_center2center.dot(axis));
+
 	}
 
 private:
@@ -64,7 +65,26 @@ private:
 			const gp::engine::Vector3f axis)
 	{
 		// TODO
-		return 0;
+		assert(abs(boxAxis[0].norm() - 1) < EPSILON);
+		assert(abs(boxAxis[1].norm() - 1) < EPSILON);
+		assert(abs(boxAxis[2].norm() - 1) < EPSILON);
+		assert(abs(axis.norm() - 1) < EPSILON);
+
+		Vector3f diagonal1 = (boxAxis[0] * boxHalfSize(0) + boxAxis[1] * boxHalfSize(1) + boxAxis[2] * boxHalfSize(2));
+		Vector3f diagonal2 = (-boxAxis[0] * boxHalfSize(0) + boxAxis[1] * boxHalfSize(1) + boxAxis[2] * boxHalfSize(2));
+		Vector3f diagonal3 = (boxAxis[0] * boxHalfSize(0) - boxAxis[1] * boxHalfSize(1) + boxAxis[2] * boxHalfSize(2));
+		Vector3f diagonal4 = (boxAxis[0] * boxHalfSize(0) + boxAxis[1] * boxHalfSize(1) - boxAxis[2] * boxHalfSize(2));
+		
+
+
+		
+
+
+		auto ret = abs(diagonal1.dot(axis));
+		ret = std::max(ret, abs(diagonal2.dot(axis)));
+		ret = std::max(ret, abs(diagonal3.dot(axis)));
+		ret = std::max(ret, abs(diagonal4.dot(axis)));
+		return ret;
 	}
 };
 
