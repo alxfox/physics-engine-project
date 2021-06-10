@@ -234,7 +234,67 @@ bool gp::engine::Collision::detectBoxBox()
 		float_t minDistance = std::numeric_limits<float_t>::max();
 		Vector3f edge1 = boxAxis1[box1EdgeIndex];
 		Vector3f edge2 = boxAxis2[box2EdgeIndex];
-		for (int i = -1; i < 2; i+=2){
+
+		Vector3f axisAndHalfSize1Box1;
+		Vector3f axisAndHalfSize2Box1;
+		Vector3f axisAndHalfSize3Box1;
+
+		Vector3f axisAndHalfSize1Box2;
+		Vector3f axisAndHalfSize2Box2;
+		Vector3f axisAndHalfSize3Box2;
+		switch (box1EdgeIndex) {
+			case 0:
+			axisAndHalfSize1Box1 = boxAxis1[0]*box1.halfSize().x();
+			axisAndHalfSize2Box1 = boxAxis1[1]*box1.halfSize().y();
+			axisAndHalfSize3Box1 = boxAxis1[2]*box1.halfSize().z();
+			case 1:
+			axisAndHalfSize1Box1 = boxAxis1[1]*box1.halfSize().y();
+			axisAndHalfSize2Box1 = boxAxis1[0]*box1.halfSize().x();
+			axisAndHalfSize3Box1 = boxAxis1[2]*box1.halfSize().z();
+			case 2:
+			axisAndHalfSize1Box1 = boxAxis1[2]*box1.halfSize().z();
+			axisAndHalfSize2Box1 = boxAxis1[1]*box1.halfSize().y();
+			axisAndHalfSize3Box1 = boxAxis1[0]*box1.halfSize().x();
+		}
+		switch (box2EdgeIndex) {
+			case 0:
+			axisAndHalfSize1Box2 = boxAxis2[0]*box2.halfSize().x();
+			axisAndHalfSize2Box2 = boxAxis2[1]*box2.halfSize().y();
+			axisAndHalfSize3Box2 = boxAxis2[2]*box2.halfSize().z();
+			case 1:
+			axisAndHalfSize1Box2 = boxAxis2[1]*box2.halfSize().y();
+			axisAndHalfSize2Box2 = boxAxis2[0]*box2.halfSize().x();
+			axisAndHalfSize3Box2 = boxAxis2[2]*box2.halfSize().z();
+			case 2:
+			axisAndHalfSize1Box2 = boxAxis2[2]*box2.halfSize().z();
+			axisAndHalfSize2Box2 = boxAxis2[1]*box2.halfSize().y();
+			axisAndHalfSize3Box2 = boxAxis2[0]*box2.halfSize().x();
+		}
+		for (int j = -1; j < 2; j+=2){
+			for (int k = -1; k < 2; k+=2){
+				Vector3f bC1 = box1.position() + axisAndHalfSize1Box1 + j*axisAndHalfSize2Box1 + k*axisAndHalfSize3Box1;
+				Line box1Line(bC1, edge1);
+				for (int j2 = -1; j2 < 2; j2+=2){
+					for (int k2 = -1; k2 < 2; k2+=2){
+						Vector3f bC2 = box2.position() + axisAndHalfSize1Box2 + j2*axisAndHalfSize2Box2+ k2*axisAndHalfSize3Box2;
+						Line box2Line(bC2, edge2);
+						Vector3f point1;
+						Vector3f point2;
+						if(box1Line.closestPoints(box2Line, point1, point2)){							
+							if ((point1 - point2).norm() < minDistance){
+								minDistance = (point1 - point2).norm();
+								m_collisionPoint1 = point1;
+								m_collisionPoint2 = point2;
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+		
+		/*for (int i = -1; i < 2; i+=2){
 			for (int j = -1; j < 2; j+=2){
 				for (int k = -1; k < 2; k+=2){
 					Vector3f bC1 = box1.position() + i*boxAxis1[0]*box1.halfSize().x() + j*boxAxis1[1]*box1.halfSize().y() + k*boxAxis1[2]*box1.halfSize().z();
@@ -261,7 +321,7 @@ bool gp::engine::Collision::detectBoxBox()
 			}
 		}
 		return true;
-	}
+	}*/
 
 
 	return false;
