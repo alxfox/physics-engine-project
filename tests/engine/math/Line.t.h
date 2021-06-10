@@ -41,10 +41,12 @@ public:
 		TS_ASSERT_EQUALS(point1, gp::engine::Vector3f(1,0,0));
 		TS_ASSERT_EQUALS(point2, gp::engine::Vector3f(1,0,0));
 
-		//normal working test
-		gp::engine::Line line9(gp::engine::Vector3f(1,-1, 1), gp::engine::Vector3f(-1, 0, -1));
-		gp::engine::Line line10(gp::engine::Vector3f(1, 1, -1), gp::engine::Vector3f(-1, 0, 1));
+		//Random lines
+		gp::engine::Line line9(gp::engine::Vector3f::Zero(), gp::engine::Vector3f(0, 1, 1));
+		gp::engine::Line line10(gp::engine::Vector3f(10, 1, -1), gp::engine::Vector3f(1, 0, 0));
+
+		line9.closestPoints(line10, point1, point2);
 		TS_ASSERT_EQUALS(point1, gp::engine::Vector3f::Zero());
-		TS_ASSERT_EQUALS(point2, gp::engine::Vector3f::Zero());
+		TS_ASSERT_EQUALS(point2, gp::engine::Vector3f(0, 1, -1));
 	}
 };
