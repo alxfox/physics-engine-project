@@ -60,6 +60,7 @@ public:
 		//float_t box2ProjSize = projectToAxis(m_box2Axis, m_box2HalfSize, axis);
 		//return box1ProjSize + box2ProjSize - abs(m_center2center.dot(axis));
 
+		/*
 		float_t maxProjectedCorner = -std::numeric_limits<float_t>::max();
 		float_t minProjectedCorner = std::numeric_limits<float_t>::max();
 		float_t maxProjectedCornerB1 = -std::numeric_limits<float_t>::max();
@@ -115,7 +116,10 @@ public:
 		float_t b2ProjSize = std::abs(maxProjectedCornerB2 - minProjectedCornerB2);
 
 		return b1ProjSize + b2ProjSize - totalProjSize;
+		*/
 
+		float_t totalLength = abs(m_center2center.dot(axis));
+		return projectToAxis(m_box1Axis,m_box1HalfSize,axis)+projectToAxis(m_box2Axis,m_box2HalfSize,axis)-totalLength;
 	}
 
 private:
@@ -132,8 +136,14 @@ private:
 		assert(abs(boxAxis[0].norm() - 1) < EPSILON);
 		assert(abs(boxAxis[1].norm() - 1) < EPSILON);
 		assert(abs(boxAxis[2].norm() - 1) < EPSILON);
+		if (abs(axis.norm() - 1) >= EPSILON)  {
+			std::cout << "\n Axis: \n" << axis << std::endl;
+		}
+		std::cout << "\n Axis: \n" << axis << std::endl;
+		std::cout << "\n Axis norm: \n" << axis.norm()  << std::endl;
 		assert(abs(axis.norm() - 1) < EPSILON);
 
+		/*
 		float_t maxProjectedCorner = -std::numeric_limits<float_t>::max();
 		float_t minProjectedCorner = std::numeric_limits<float_t>::max();
 		float_t projectedCorner = 0;
@@ -151,7 +161,17 @@ private:
 				}
 			}
 		}
-		return std::abs(maxProjectedCorner - minProjectedCorner)/2.0f;
+		return std::abs(maxProjectedCorner - minProjectedCorner)/2.0f; */
+
+		Vector3f diag1 = (boxAxis[0]*boxHalfSize[0]+boxAxis[1]*boxHalfSize[1]+boxAxis[2]*boxHalfSize[2]);
+		Vector3f diag2 = (-boxAxis[0]*boxHalfSize[0]+boxAxis[1]*boxHalfSize[1]+boxAxis[2]*boxHalfSize[2]);
+		Vector3f diag3 = (boxAxis[0]*boxHalfSize[0]-boxAxis[1]*boxHalfSize[1]+boxAxis[2]*boxHalfSize[2]);
+		Vector3f diag4 = (boxAxis[0]*boxHalfSize[0]+boxAxis[1]*boxHalfSize[1]-boxAxis[2]*boxHalfSize[2]);
+		float_t ret = std::max(abs(diag1.dot(axis)),abs(diag2.dot(axis)));
+		ret = std::max(ret, abs(diag3.dot(axis)));
+		ret = std::max(ret, abs(diag4.dot(axis)));
+		return ret;
+		
 	}
 };
 
