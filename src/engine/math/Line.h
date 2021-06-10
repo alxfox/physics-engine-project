@@ -110,7 +110,7 @@ public:
 		pointOnLine2 = Q_0 + v*t_c;
 
 		//w_c = w_0 + s_c * u - t_c * v
-		Vector3f w_c = w_0 + s_c * u - t_c * v;
+		// Vector3f w_c = w_0 + s_c * u - t_c * v;
 
 
 

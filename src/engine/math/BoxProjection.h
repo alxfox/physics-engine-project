@@ -50,7 +50,11 @@ public:
 	float_t overlapOnAxis(const gp::engine::Vector3f axis)
 	{
 
-		return projectToAxis(m_box1Axis, m_box1HalfSize, axis) + projectToAxis(m_box2Axis, m_box2HalfSize, axis) - abs(m_center2center.dot(axis));
+		// return projectToAxis(m_box1Axis, m_box1HalfSize, axis) + projectToAxis(m_box2Axis, m_box2HalfSize, axis) - abs(m_center2center.dot(axis));
+
+		float_t totalLength = abs(m_center2center.dot(axis));
+		return projectToAxis(m_box1Axis,m_box1HalfSize,axis)+projectToAxis(m_box2Axis,m_box2HalfSize,axis)-totalLength;
+
 
 	}
 
@@ -68,23 +72,32 @@ private:
 		assert(abs(boxAxis[0].norm() - 1) < EPSILON);
 		assert(abs(boxAxis[1].norm() - 1) < EPSILON);
 		assert(abs(boxAxis[2].norm() - 1) < EPSILON);
-		assert(abs(axis.norm() - 1) < EPSILON);
-
-		Vector3f diagonal1 = (boxAxis[0] * boxHalfSize(0) + boxAxis[1] * boxHalfSize(1) + boxAxis[2] * boxHalfSize(2));
-		Vector3f diagonal2 = (-boxAxis[0] * boxHalfSize(0) + boxAxis[1] * boxHalfSize(1) + boxAxis[2] * boxHalfSize(2));
-		Vector3f diagonal3 = (boxAxis[0] * boxHalfSize(0) - boxAxis[1] * boxHalfSize(1) + boxAxis[2] * boxHalfSize(2));
-		Vector3f diagonal4 = (boxAxis[0] * boxHalfSize(0) + boxAxis[1] * boxHalfSize(1) - boxAxis[2] * boxHalfSize(2));
-		
-
+		if(abs(axis.norm() - 1) >= EPSILON){
+			return false;
+		}
 
 		
 
+		// Vector3f diagonal1 = (boxAxis[0] * boxHalfSize(0) + boxAxis[1] * boxHalfSize(1) + boxAxis[2] * boxHalfSize(2));
+		// Vector3f diagonal2 = (-boxAxis[0] * boxHalfSize(0) + boxAxis[1] * boxHalfSize(1) + boxAxis[2] * boxHalfSize(2));
+		// Vector3f diagonal3 = (boxAxis[0] * boxHalfSize(0) - boxAxis[1] * boxHalfSize(1) + boxAxis[2] * boxHalfSize(2));
+		// Vector3f diagonal4 = (boxAxis[0] * boxHalfSize(0) + boxAxis[1] * boxHalfSize(1) - boxAxis[2] * boxHalfSize(2));
 
-		auto ret = abs(diagonal1.dot(axis));
-		ret = std::max(ret, abs(diagonal2.dot(axis)));
-		ret = std::max(ret, abs(diagonal3.dot(axis)));
-		ret = std::max(ret, abs(diagonal4.dot(axis)));
+		// auto ret = abs(diagonal1.dot(axis));
+		// ret = std::max(ret, abs(diagonal2.dot(axis)));
+		// ret = std::max(ret, abs(diagonal3.dot(axis)));
+		// ret = std::max(ret, abs(diagonal4.dot(axis)));
+		// return ret;
+
+		Vector3f diag1 = (boxAxis[0]*boxHalfSize[0]+boxAxis[1]*boxHalfSize[1]+boxAxis[2]*boxHalfSize[2]);
+		Vector3f diag2 = (-boxAxis[0]*boxHalfSize[0]+boxAxis[1]*boxHalfSize[1]+boxAxis[2]*boxHalfSize[2]);
+		Vector3f diag3 = (boxAxis[0]*boxHalfSize[0]-boxAxis[1]*boxHalfSize[1]+boxAxis[2]*boxHalfSize[2]);
+		Vector3f diag4 = (boxAxis[0]*boxHalfSize[0]+boxAxis[1]*boxHalfSize[1]-boxAxis[2]*boxHalfSize[2]);
+		float_t ret = std::max(abs(diag1.dot(axis)),abs(diag2.dot(axis)));
+		ret = std::max(ret, abs(diag3.dot(axis)));
+		ret = std::max(ret, abs(diag4.dot(axis)));
 		return ret;
+
 	}
 };
 
