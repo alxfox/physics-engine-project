@@ -141,7 +141,7 @@ private:
 		//}
 		//std::cout << "\n Axis: \n" << axis << std::endl;
 		//std::cout << "\n Axis norm: \n" << axis.norm()  << std::endl;
-		//assert(abs(axis.norm() - 1) < EPSILON);
+		assert(abs(axis.norm() - 1) < EPSILON);
 
 		/*
 		float_t maxProjectedCorner = -std::numeric_limits<float_t>::max();

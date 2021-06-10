@@ -174,7 +174,13 @@ bool gp::engine::Collision::detectBoxBox()
 	int box1EdgeIndex, box2EdgeIndex;
 	for (int i = 0; i < 3; i++){
 		for (int j = 0; j < 3; j++){
-			projectionNormal = boxAxis1[i].cross(boxAxis2[j]).normalized();
+			projectionNormal = boxAxis1[i].cross(boxAxis2[j]);
+			if (projectionNormal != engine::Vector3f::Zero()){
+				projectionNormal.normalize();
+			}
+			else{
+				continue;
+			}
 			overlap = boxProj.overlapOnAxis(projectionNormal);
 			if (overlap <= 0){
 				return false;
@@ -190,8 +196,6 @@ bool gp::engine::Collision::detectBoxBox()
 		}
 	}
 
-	//std::cout << "overlap: " << minOverlap<< std::endl;
-	//std::cout << "Overlapped!!!!" << std::endl;
 	m_interpenetrationDepth = minOverlap;
 	
 	//------------------->Assure collision normal points from o1 to o2---------------------
