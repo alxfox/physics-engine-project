@@ -140,17 +140,6 @@ public:
 		TS_ASSERT_LESS_THAN(boxProjection13.overlapOnAxis(gp::engine::Vector3f(1, 0, 0).normalized()), 0.);
 	}
 
-	void testProjectToAxis(void){
-		//Normal Axis, normal projections
-
-		//Normal Axis, arbritrary projections
-
-		//Arbritrary Axis, normal projections
-
-		//Arbritrary Axis, arbritrary projections
-
-	}
-
 private:
 	static void boxAxes(const gp::engine::Box &box, gp::engine::Vector3f axes[3])
 	{
