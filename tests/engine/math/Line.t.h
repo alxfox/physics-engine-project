@@ -28,11 +28,11 @@ public:
 		TS_ASSERT_EQUALS(point1, gp::engine::Vector3f::Zero());
 		TS_ASSERT_EQUALS(point2, gp::engine::Vector3f(0, 1, -1));
 
-		//two parallel lines
-		// gp::engine::Line line5(gp::engine::Vector3f::Zero(), gp::engine::Vector3f(1, 0, 0));
-		// gp::engine::Line line6(gp::engine::Vector3f(0, 1, 0), gp::engine::Vector3f(1, 0, 0));
-		// //bool rueckgabe = line5.closestPoints(line6, point1, point2);
-		// //TS_ASSERT_EQUALS(rueckgabe, false);
+		// two parallel lines
+		gp::engine::Line line5(gp::engine::Vector3f::Zero(), gp::engine::Vector3f(1, 0, 0));
+		gp::engine::Line line6(gp::engine::Vector3f(0, 1, 0), gp::engine::Vector3f(1, 0, 0));
+		bool back = line5.closestPoints(line6, point1, point2);
+		TS_ASSERT_EQUALS(back, false);
 		
 		//two intersecting lines
 		gp::engine::Line line7(gp::engine::Vector3f::Zero(), gp::engine::Vector3f(1, 0, 0));
