@@ -63,7 +63,17 @@ public:
 		gp::engine::Collision coll2(o3, o4);
 		helperEEBoxBox(box3,box4,coll2);
 
-
+		//"Plane-Plane"(treated as Vertex-Plane but the collision points will be wrong because no vertex is in the other box)
+		gp::engine::Box box5(1, gp::engine::Vector3f(-3.5f, -1.48002934f, -3.f), gp::engine::Vector3f::Ones());
+	  	gp::engine::Box box6(1, gp::engine::Vector3f(-3.5f, -0.73335278f, -3.0f), gp::engine::Vector3f(2.0f, 0.5f, 0.3f));
+		gp::engine::Object* o5 = &box5;
+		gp::engine::Object* o6 = &box6;
+		gp::engine::Collision coll3(o5, o6);
+		bool ret = coll3.detect();
+		TS_ASSERT_EQUALS(ret,true);
+		//collisionNormal is normalized
+		TS_ASSERT_DELTA(coll3.collisionNormal().norm(),1.,gp::engine::EPSILON);
+		TS_ASSERT_DELTA(coll3.collisionNormal().y(),-1.f,gp::engine::EPSILON);
 	}
 	private:
 	static void helperVPBoxBox(const gp::engine::Box &box1,const gp::engine::Box &box2, gp::engine::Collision coll)
@@ -73,12 +83,12 @@ public:
 		//collisionNormal is normalized
 		TS_ASSERT_DELTA(coll.collisionNormal().norm(),1.,gp::engine::EPSILON);
 
-		gp::engine::Vector3f normal = coll.collisionPoint2()-coll.collisionPoint1();
+		gp::engine::Vector3f normal = coll.collisionPoint1()-coll.collisionPoint2();
 		float_t interpen = normal.norm();
 		//interpentration depth is distance between collision points
 		TS_ASSERT_DELTA(coll.interpenetrationDepth(),interpen,gp::engine::EPSILON);
 
-		//normal points from point 1 to point 2
+		//normal points from point 2 to point 1
 		normal.normalize();
 		TS_ASSERT_DELTA(coll.collisionNormal().x(),normal.x(),gp::engine::EPSILON);
 		//std::cout <<"Hello World: "<<coll.collisionPoint2()<<" htest "<<coll.collisionPoint1()<< coll.collisionNormal().y() << " "<<normal.y()<<" end of world"<<std::endl;
@@ -133,17 +143,17 @@ public:
 		//collisionNormal is normalized
 		TS_ASSERT_DELTA(coll.collisionNormal().norm(),1.,gp::engine::EPSILON);
 		//std::cout <<"Hello World: "<<std::endl<<"P2"<<std::endl<<coll.collisionPoint2()<<std::endl<<"P1"<<std::endl<<coll.collisionPoint1()<<" end of world"<<std::endl;
-		gp::engine::Vector3f normal = coll.collisionPoint2()-coll.collisionPoint1();
+		gp::engine::Vector3f normal = coll.collisionPoint1()-coll.collisionPoint2();
 		float_t interpen = normal.norm();
 		//interpentration depth is distance between collision points
 		TS_ASSERT_DELTA(coll.interpenetrationDepth(),interpen,gp::engine::EPSILON);
-
-		//normal points from point 1 to point 2
+/*
+		//normal points from point 2 to point 1
 		normal.normalize();
 		TS_ASSERT_DELTA(coll.collisionNormal().x(),normal.x(),gp::engine::EPSILON);
 		TS_ASSERT_DELTA(coll.collisionNormal().y(),normal.y(),gp::engine::EPSILON);
 		TS_ASSERT_DELTA(coll.collisionNormal().z(),normal.z(),gp::engine::EPSILON);
-
+*/
 		//both collision points are on an edge of a box
 		gp::engine::Vector3f coll1inBox1 = box1.invModelMatrix()*coll.collisionPoint1();
 		gp::engine::Vector3f coll2inBox1 = box1.invModelMatrix()*coll.collisionPoint2();

@@ -170,6 +170,8 @@ gp::Custom2::Custom2()
 
 gp::Custom3::Custom3()
 {
+
+  
 	//shows interaction with ropes and the impulse towards two spheres and in different directions with rope
 
   //textures
@@ -181,7 +183,7 @@ gp::Custom3::Custom3()
   
 	//Entity e = addBox(1.0f, engine::Vector3f(4.0f, -1.5f, 0.0f), engine::Vector3f::Ones(),engine::Vector3f(-1.f,10.f,0.f));
     // setMaterial(e, blue);
-
+/*
   Entity e;
 	e = addBox(1, engine::Vector3f(-3.0f, -1.5f, 0.0f), engine::Vector3f::Ones());
   setMaterial(e, blue);
@@ -204,7 +206,7 @@ gp::Custom3::Custom3()
 	e = addBox(1, engine::Vector3f(3.0f, 0.0f, 0.0f), engine::Vector3f::Ones(), engine::Vector3f(-4.0, 1, 0),
     engine::Quaternion(M_PI * 0.25, engine::Vector3f(1, 0, 0)) * engine::Quaternion(M_PI * 0.25, engine::Vector3f(0, 0, 1)));
   setMaterial(e, green);
-
+*/
 //gp::graphics::Material& blue = getMaterial("blue");
 //	blue.diffuseColor = engine::Vector3f(0.0f, 0.0f, 1.0f);
 //	blue.shininess = 10.0f;
@@ -256,5 +258,8 @@ gp::Custom3::Custom3()
 //
 //	 //rope
 //	 addRope(r, e, 3, engine::Vector3f(0.0f, 0, 0.0f),engine::Vector3f(0.0f, 0, 0.0f));
-	 
+	 	Entity e = addBox(1, engine::Vector3f(-3.5f, -1.5f, -3.f), engine::Vector3f::Ones());
+    setMaterial(e, blue);
+	  e = addBox(1, engine::Vector3f(-3.5f, 0.0f, -3.0f), engine::Vector3f(2.0f, 0.5f, 0.3f));
+    setMaterial(e, green);
 }

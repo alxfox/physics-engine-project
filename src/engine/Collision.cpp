@@ -242,6 +242,7 @@ bool gp::engine::Collision::detectBoxBox()
 		Vector3f axisAndHalfSize1Box2;
 		Vector3f axisAndHalfSize2Box2;
 		Vector3f axisAndHalfSize3Box2;
+		//these switch statements are optimization (so we only have to check 16 instead of 64 edge combinations) the (hopefully^^) clearer code is commented below
 		switch (box1EdgeIndex) {
 			case 0:
 			axisAndHalfSize1Box1 = boxAxis1[0]*box1.halfSize().x();
