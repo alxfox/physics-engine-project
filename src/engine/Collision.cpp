@@ -182,6 +182,7 @@ bool gp::engine::Collision::detectBoxBox()
 			if(overlap < minOverlap){
 				minOverlap = overlap;
 				m_collisionNormal = projectionNormal;
+				//Saving data for edge-edge collision
 				isEdge = true;
 				box1EdgeIndex = i;
 				box2EdgeIndex = j;	
@@ -200,27 +201,7 @@ bool gp::engine::Collision::detectBoxBox()
 	}  
 
 
-	//std::cout <<"hey\n"<<m_collisionNormal<<std::endl;
-	//========================================Checking Collision Type========================================
-	//bool isVertexPlane = false;
-	//for(int i = 0; i < 3; i++){
-//
-	//	float_t normalDotAxis = m_collisionNormal.dot(boxAxis1[i]);
-	//	if(normalDotAxis < EPSILON && normalDotAxis > -EPSILON){
-	//		//collisionNormal is perpendicular to a box axis, so it is perpendicular to a plane of the box
-	//		isVertexPlane = true;
-	//	}
-	//}
-//
-	//for(int i = 0; i < 3; i++){
-//
-	//	float_t normalDotAxis = m_collisionNormal.dot(boxAxis2[i]);
-	//	if(normalDotAxis < EPSILON && normalDotAxis > -EPSILON){
-	//		//collisionNormal is perpendicular to a box axis, so it is perpendicular to a plane of the box
-	//		isVertexPlane = true;
-	//	}
-	//}
-//
+	//========================================Collision Types========================================
 	if(!isEdge){
 		for (int i = -1; i < 2; i+=2){
 			for (int j = -1; j < 2; j+=2){
@@ -246,8 +227,6 @@ bool gp::engine::Collision::detectBoxBox()
 
 	}
 	else{
-		//td::cout << "aleluyah" << std::endl;
-		//Line box1Line();
 		float_t minDistance = std::numeric_limits<float_t>::max();
 		Vector3f edge1 = boxAxis1[box1EdgeIndex];
 		Vector3f edge2 = boxAxis2[box2EdgeIndex];
