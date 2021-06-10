@@ -250,7 +250,7 @@ bool gp::engine::Collision::detectBoxBox()
 									if ((point1 - point2).norm() < minDistance){
 										minDistance = (point1 - point2).norm();
 										m_collisionPoint1 = point1;
-										m_collisionPoint1 = point2;
+										m_collisionPoint2 = point2;
 									}
 								}
 							}
