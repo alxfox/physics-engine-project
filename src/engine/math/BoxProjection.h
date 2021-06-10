@@ -54,70 +54,7 @@ public:
 	 * @return value > 0 for an overlap, value < 0 for no overlap
 	 */
 	float_t overlapOnAxis(const gp::engine::Vector3f axis)
-	{	
-		
-		//float_t box1ProjSize = projectToAxis(m_box1Axis, m_box1HalfSize, axis);
-		//float_t box2ProjSize = projectToAxis(m_box2Axis, m_box2HalfSize, axis);
-		//return box1ProjSize + box2ProjSize - abs(m_center2center.dot(axis));
-
-		/*
-		float_t maxProjectedCorner = -std::numeric_limits<float_t>::max();
-		float_t minProjectedCorner = std::numeric_limits<float_t>::max();
-		float_t maxProjectedCornerB1 = -std::numeric_limits<float_t>::max();
-		float_t minProjectedCornerB1 = std::numeric_limits<float_t>::max();
-		float_t maxProjectedCornerB2 = -std::numeric_limits<float_t>::max();
-		float_t minProjectedCornerB2 = std::numeric_limits<float_t>::max();
-		float_t projectedCorner1 = 0;
-		float_t projectedCorner2 = 0;
-		for (int i = -1; i < 2; i+=2){
-			for (int j = -1; j < 2; j+=2){
-				for (int k = -1; k < 2; k+=2){
-					Vector3f boxCorner1 = i*m_box1Axis[0]*m_box1HalfSize.x() + j*m_box1Axis[1]*m_box1HalfSize.y() + k*m_box1Axis[2]*m_box1HalfSize.z();
-					Vector3f boxCorner2 = m_center2center + i*m_box2Axis[0]*m_box2HalfSize.x() + j*m_box2Axis[1]*m_box2HalfSize.y() + k*m_box2Axis[2]*m_box2HalfSize.z();
-
-
-					//std::cout << "bC2 \n"<< boxCorner2<< std::endl;
-					//std::cout << "bC2 - c2c \n"<< boxCorner2 - m_center2center<< std::endl;
-					//std::cout << "c2c \n"<< m_center2center<< std::endl;
-
-					projectedCorner1 = boxCorner1.dot(axis);
-					projectedCorner2 = boxCorner2.dot(axis);
-					if(projectedCorner1 > maxProjectedCorner) {
-						maxProjectedCorner = projectedCorner1;
-					}
-					if(projectedCorner1 > maxProjectedCornerB1) {
-						maxProjectedCornerB1 = projectedCorner1;
-					}
-					if(projectedCorner2 > maxProjectedCorner) {
-						maxProjectedCorner = projectedCorner2;
-					}
-					if(projectedCorner2 > maxProjectedCornerB2) {
-						maxProjectedCornerB2 = projectedCorner2;
-					}
-
-					if(projectedCorner1 < minProjectedCorner) {
-						minProjectedCorner = projectedCorner1;
-					}
-					if(projectedCorner1 < minProjectedCornerB1) {
-						minProjectedCornerB1 = projectedCorner1;
-					}
-					if(projectedCorner2 < minProjectedCorner) {
-						minProjectedCorner = projectedCorner2;
-					}
-					if(projectedCorner2 < minProjectedCornerB2) {
-						minProjectedCornerB2 = projectedCorner2;
-					}
-				}
-			}
-		}
-		//std::cout << maxProjectedCorner << " " << minProjectedCorner << std::endl;
-		float_t totalProjSize = std::abs(maxProjectedCorner - minProjectedCorner);
-		float_t b1ProjSize = std::abs(maxProjectedCornerB1 - minProjectedCornerB1);
-		float_t b2ProjSize = std::abs(maxProjectedCornerB2 - minProjectedCornerB2);
-
-		return b1ProjSize + b2ProjSize - totalProjSize;
-		*/
-
+	{
 		float_t totalLength = abs(m_center2center.dot(axis));
 		return projectToAxis(m_box1Axis,m_box1HalfSize,axis)+projectToAxis(m_box2Axis,m_box2HalfSize,axis)-totalLength;
 	}
@@ -136,32 +73,7 @@ private:
 		assert(abs(boxAxis[0].norm() - 1) < EPSILON);
 		assert(abs(boxAxis[1].norm() - 1) < EPSILON);
 		assert(abs(boxAxis[2].norm() - 1) < EPSILON);
-		//if (abs(axis.norm() - 1) >= EPSILON)  {
-		//	std::cout << "\n Axis: \n" << axis << std::endl;
-		//}
-		//std::cout << "\n Axis: \n" << axis << std::endl;
-		//std::cout << "\n Axis norm: \n" << axis.norm()  << std::endl;
 		assert(abs(axis.norm() - 1) < EPSILON);
-
-		/*
-		float_t maxProjectedCorner = -std::numeric_limits<float_t>::max();
-		float_t minProjectedCorner = std::numeric_limits<float_t>::max();
-		float_t projectedCorner = 0;
-		for (int i = -1; i < 2; i+=2){
-			for (int j = -1; j < 2; j+=2){
-				for (int k = -1; k < 2; k+=2){
-					Vector3f boxCorner = i*boxAxis[0]*boxHalfSize.x() + j*boxAxis[1]*boxHalfSize.y() + k*boxAxis[2]*boxHalfSize.z();
-					projectedCorner = boxCorner.dot(axis);
-					if(projectedCorner > maxProjectedCorner) {
-						maxProjectedCorner = projectedCorner;
-					}
-					if(projectedCorner < minProjectedCorner) {
-						minProjectedCorner = projectedCorner;
-					}
-				}
-			}
-		}
-		return std::abs(maxProjectedCorner - minProjectedCorner)/2.0f; */
 
 		Vector3f diag1 = (boxAxis[0]*boxHalfSize[0]+boxAxis[1]*boxHalfSize[1]+boxAxis[2]*boxHalfSize[2]);
 		Vector3f diag2 = (-boxAxis[0]*boxHalfSize[0]+boxAxis[1]*boxHalfSize[1]+boxAxis[2]*boxHalfSize[2]);
@@ -171,7 +83,6 @@ private:
 		ret = std::max(ret, abs(diag3.dot(axis)));
 		ret = std::max(ret, abs(diag4.dot(axis)));
 		return ret;
-		
 	}
 };
 

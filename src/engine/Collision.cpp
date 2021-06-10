@@ -122,7 +122,6 @@ gp::engine::Vector3f center2center(const gp::engine::Box &box1, const gp::engine
 
 bool gp::engine::Collision::detectBoxBox()
 {
-	// TODO
 	Box box1 = *dynamic_cast<Box*>(m_object1);
 	Box box2 = *dynamic_cast<Box*>(m_object2);
 
@@ -326,8 +325,11 @@ bool gp::engine::Collision::detectBoxBox()
 
 
 	return false;
-}
 
+
+
+  
+}
 
 
 
