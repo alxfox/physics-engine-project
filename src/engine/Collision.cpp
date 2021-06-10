@@ -171,6 +171,7 @@ bool gp::engine::Collision::detectBoxBox()
 		}
 	}
 	//========================================Checking 3x3 Combinations========================================
+	int box1EdgeIndex, box2EdgeIndex;
 	for (int i = 0; i < 3; i++){
 		for (int j = 0; j < 3; j++){
 			projectionNormal = boxAxis1[i].cross(boxAxis2[j]).normalized();
@@ -182,6 +183,8 @@ bool gp::engine::Collision::detectBoxBox()
 				minOverlap = overlap;
 				m_collisionNormal = projectionNormal;
 				isEdge = true;
+				box1EdgeIndex = i;
+				box2EdgeIndex = j;	
 			}
 		}
 	}
@@ -245,6 +248,35 @@ bool gp::engine::Collision::detectBoxBox()
 	else{
 		//td::cout << "aleluyah" << std::endl;
 		//Line box1Line();
+		float_t minDistance = std::numeric_limits<float_t>::max();
+		Vector3f edge1 = boxAxis1[box1EdgeIndex];
+		Vector3f edge2 = boxAxis2[box2EdgeIndex];
+		for (int i = -1; i < 2; i+=2){
+			for (int j = -1; j < 2; j+=2){
+				for (int k = -1; k < 2; k+=2){
+					Vector3f bC1 = box1.position() + i*boxAxis1[0]*box1.halfSize().x() + j*boxAxis1[1]*box1.halfSize().y() + k*boxAxis1[2]*box1.halfSize().z();
+					Line box1Line(bC1, edge1);
+					for (int i2 = -1; i2 < 2; i2+=2){
+						for (int j2 = -1; j2 < 2; j2+=2){
+							for (int k2 = -1; k2 < 2; k2+=2){
+								Vector3f bC2 = box2.position() + i2*boxAxis2[0]*box2.halfSize().x() + j2*boxAxis2[1]*box2.halfSize().y() + k2*boxAxis2[2]*box2.halfSize().z();
+								Line box2Line(bC2, edge2);
+								Vector3f point1;
+								Vector3f point2;
+								if(box1Line.closestPoints(box2Line, point1, point2)){							
+									if ((point1 - point2).norm() < minDistance){
+										minDistance = (point1 - point2).norm();
+										m_collisionPoint1 = point1;
+										m_collisionPoint1 = point2;
+									}
+								}
+							}
+						}
+					}
+
+				}
+			}
+		}
 		return true;
 	}
 

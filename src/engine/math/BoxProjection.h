@@ -136,12 +136,12 @@ private:
 		assert(abs(boxAxis[0].norm() - 1) < EPSILON);
 		assert(abs(boxAxis[1].norm() - 1) < EPSILON);
 		assert(abs(boxAxis[2].norm() - 1) < EPSILON);
-		if (abs(axis.norm() - 1) >= EPSILON)  {
-			std::cout << "\n Axis: \n" << axis << std::endl;
-		}
-		std::cout << "\n Axis: \n" << axis << std::endl;
-		std::cout << "\n Axis norm: \n" << axis.norm()  << std::endl;
-		assert(abs(axis.norm() - 1) < EPSILON);
+		//if (abs(axis.norm() - 1) >= EPSILON)  {
+		//	std::cout << "\n Axis: \n" << axis << std::endl;
+		//}
+		//std::cout << "\n Axis: \n" << axis << std::endl;
+		//std::cout << "\n Axis norm: \n" << axis.norm()  << std::endl;
+		//assert(abs(axis.norm() - 1) < EPSILON);
 
 		/*
 		float_t maxProjectedCorner = -std::numeric_limits<float_t>::max();
