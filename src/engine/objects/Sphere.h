@@ -35,7 +35,8 @@ private:
 	{
 		Matrix3f rotationalInertia;
 		rotationalInertia.setZero();
-
+		rotationalInertia.setIdentity();
+		rotationalInertia *= (2.f/5.f)*mass*radius*radius;
 		// TODO
 
 		return rotationalInertia;

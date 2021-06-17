@@ -72,12 +72,14 @@ public:
 
 	Vector3f computeCollisionPoint1() const {
 		//To be changed in later worksheet
-		return m_object1.position();
+		return m_object1.modelMatrix()*m_objPoint1;
+		//return m_object1.position();
 	}
 
 	Vector3f computeCollisionPoint2() const {
 		//To be changed in later worksheet
-		return m_object2.position();
+		return m_object2.modelMatrix()*m_objPoint2;
+		//return m_object2.position();
 	}
 
 };

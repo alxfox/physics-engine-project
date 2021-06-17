@@ -218,8 +218,12 @@ public:
 		m_position += step * m_velocity + ((acceleration * step * step) / 2); // Stroemer Verlet (respects conservation of energy)
 
 		// Update the rotation
-		m_rotation.rotate(step * m_angularVelocity);
-
+		//m_rotation.rotate(step * m_angularVelocity);
+		float_t i = (step/2.f) * m_angularVelocity(0);
+		float_t j = (step/2.f) * m_angularVelocity(1);
+		float_t k = (step/2.f) * m_angularVelocity(2);
+		Quaternion w{i,j,k,0};
+		m_rotation = m_rotation + (w * m_rotation);
 		// Cache the model matrix
 		updateModelMatrix();
 	}

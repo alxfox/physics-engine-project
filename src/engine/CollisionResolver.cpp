@@ -148,6 +148,38 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 void gp::engine::CollisionResolver::applyCollisionImpulseWithoutFriction()
 {
 	// TODO
+	applyCollisionImpulseWithoutRotationFriction();
+
+	Object* obj1 = m_collision.object1();
+	Object* obj2 = m_collision.object2();
+//=========================================Applying the impulses==============================================
+	//Getting V, Cr and m^-1 
+	Vector3f v1 = obj1->velocity();
+	Vector3f v2 = obj2->velocity();
+	float_t COF = fmin(obj1->restitutionCoefficient(), obj2->restitutionCoefficient());
+	float_t invM1 = obj1->invMass();
+	float_t invM2 = obj2->invMass();
+	//Collisions between unmovable objects shouldn't exist
+	if(!obj1->isMovable()&&!obj2->isMovable())
+		return;
+	//COF = 1.0f;
+	float_t massFraction1 = invM1/(invM1+invM2);
+	float_t massFraction2 = invM2/(invM1+invM2);
+	Vector3f xM1 = obj1->invModelMatrix() * m_collision.collisionPoint1(); //vector from center of mass to collsion point
+	Vector3f xM2 = obj2->invModelMatrix() * m_collision.collisionPoint2();
+	Vector3f w1 = obj1->angularVelocity();
+	Vector3f w2 = obj2->angularVelocity();
+	Vector3f pV1 = v1 + w1.cross(xM1);//total velocity of collision point
+	Vector3f pV2 = v2 + w2.cross(xM2);
+	//Getting the Vc component that is parallel to the collision normal direction
+	//Vector3f vC = (v1-v2).dot(m_collision.collisionNormal())*m_collision.collisionNormal();
+
+	//Updating velocities
+	/*Vector3f v1New = -(1 + COF) * massFraction1 * vC;
+	Vector3f v2New = (1 + COF) * massFraction2 * vC;
+	obj1->changeVelocity(v1New);
+	obj2->changeVelocity(v2New);*/
+	
 }
 
 void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()

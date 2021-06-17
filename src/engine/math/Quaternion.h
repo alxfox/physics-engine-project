@@ -39,11 +39,11 @@ public:
 	{
 		rotate(angle, axis);
 	}
-
-private:
-	Quaternion(float_t i, float_t j, float_t k, float_t w)
+Quaternion(float_t i, float_t j, float_t k, float_t w)
 		: m_i(i), m_j(j), m_k(k), m_w(w)
 	{ }
+private:
+	
 
 public:
 	float_t i() const
@@ -65,7 +65,27 @@ public:
 	{
 		return m_w;
 	}
+	Quaternion operator+(const Quaternion &q) const
+	{
+		float_t w1 = m_w;
+		float_t i1 = m_i;
+		float_t j1 = m_j;
+		float_t k1 = m_k;
+		float_t w2 = q.w();
+		float_t i2 = q.i();
+		float_t j2 = q.j();
+		float_t k2 = q.k();
 
+		//Each component of the quaternion product
+		float_t w = w1+w2;
+		float_t i = i1+i2;
+		float_t j = j1+j2;
+		float_t k = k1+k2;
+
+		Quaternion p(i,j,k,w);
+
+		return p;
+	}
 	Quaternion operator*(const Quaternion &q) const
 	{
 		float_t w1 = m_w;

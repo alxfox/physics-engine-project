@@ -33,9 +33,13 @@ public:
 private:
 	static Matrix3f rotationalInertia(float_t mass, const Vector3f &size)
 	{
+		//size 0 = width, 1 = height, 2 = depth
 		Matrix3f rotationalInertia;
 		rotationalInertia.setZero();
-
+		rotationalInertia.setIdentity();
+		rotationalInertia(0,0) = (1.f/12.f)*mass*(size(0)*size(0)+size(2)*size(2)); //height
+		rotationalInertia(1,1) = (1.f/12.f)*mass*(size(1)*size(1)+size(2)*size(2));	//width
+		rotationalInertia(2,2) = (1.f/12.f)*mass*(size(1)*size(1)+size(0)*size(0));	//depth
 		// TODO
 
 		return rotationalInertia;
