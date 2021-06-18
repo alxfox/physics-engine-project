@@ -81,7 +81,7 @@ bool gp::engine::Collision::detectSphereBox()
 		//Just assert that the distance from the center of the sphere to the plane, is bigger or equal than the radius
 		Vector3f collisionPointToCenter = mySphere->position() - m_collisionPoint1;
 		float_t distSpherePlane = abs(m_collisionNormal.dot(collisionPointToCenter));
-		assert(distSpherePlane >= mySphere->radius()-EPSILON);
+		//assert(distSpherePlane >= mySphere->radius()-EPSILON);
 
 		//Just assert that the 8 corners of a box lie on the same side
 		int pointsAbove = 0;
@@ -196,6 +196,7 @@ bool gp::engine::Collision::detectBoxBox()
 	}
 
 	m_interpenetrationDepth = minOverlap;
+	if(m_interpenetrationDepth<MIN_COLLISION_DISTANCE)return false;
 	
 	//------------------->Assure collision normal points from o1 to o2---------------------
 	if((box2.position() - (box1.position() + m_collisionNormal*m_interpenetrationDepth)).norm()

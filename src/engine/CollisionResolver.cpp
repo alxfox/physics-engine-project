@@ -148,7 +148,7 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 void gp::engine::CollisionResolver::applyCollisionImpulseWithoutFriction()
 {
 	// TODO
-	applyCollisionImpulseWithoutRotationFriction();
+	//applyCollisionImpulseWithoutRotationFriction();
 
 	Object* obj1 = m_collision.object1();
 	Object* obj2 = m_collision.object2();
@@ -162,24 +162,71 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutFriction()
 	//Collisions between unmovable objects shouldn't exist
 	if(!obj1->isMovable()&&!obj2->isMovable())
 		return;
+	/*if(!obj1->isMovable()||!obj2->isMovable()){
+		applyCollisionImpulseWithoutRotationFriction();
+		return;
+	}*/
+	/*if((!obj1->isMovable()&&obj2->boundingRadius()>0.9f) || (!obj2->isMovable() && obj1->boundingRadius()>0.9f)){
+		std::cout << "P1: "<<m_collision.collisionPoint1().x() <<m_collision.collisionPoint1().y()<<m_collision.collisionPoint1().z()<<
+		 std::endl<<"P2: " << m_collision.collisionPoint2().x() <<m_collision.collisionPoint2().y()<<m_collision.collisionPoint2().z() << 
+		 std::endl << "normal: "<<m_collision.collisionNormal().x()<<m_collision.collisionNormal().y()<<m_collision.collisionNormal().z()<<std::endl;
+	}*/
 	//COF = 1.0f;
-	float_t massFraction1 = invM1/(invM1+invM2);
-	float_t massFraction2 = invM2/(invM1+invM2);
-	Vector3f xM1 = obj1->invModelMatrix() * m_collision.collisionPoint1(); //vector from center of mass to collsion point
-	Vector3f xM2 = obj2->invModelMatrix() * m_collision.collisionPoint2();
+	Vector3f r1 = m_collision.collisionPoint1()-obj1->position();
+	Vector3f r2 = m_collision.collisionPoint2()-obj2->position();
 	Vector3f w1 = obj1->angularVelocity();
 	Vector3f w2 = obj2->angularVelocity();
-	Vector3f pV1 = v1 + w1.cross(xM1);//total velocity of collision point
-	Vector3f pV2 = v2 + w2.cross(xM2);
+	Vector3f pV1 = v1 + w1.cross(r1);//total velocity of collision point
+	Vector3f pV2 = v2 + w2.cross(r2);
+	Vector3f normal = m_collision.collisionNormal();
+	
+	Matrix3f inertia1World;
+	if(obj1->isMovable()){
+		inertia1World = (obj1->modelMatrix().linear() * obj1->rotationalInverseInertia().inverse() * obj1->modelMatrix().linear().transpose()).inverse();
+		//inertia1World = obj1->modelMatrix()*obj1->rotationalInverseInertia()*obj1->modelMatrix().linear().transpose();
+	} else inertia1World = Matrix3f::Zero();
+	Matrix3f inertia2World; 
+	if(obj2->isMovable()){
+		//inertia2World = obj2->invModelMatrix().linear().transpose()*obj2->rotationalInverseInertia()*obj2->invModelMatrix().linear();
+		inertia2World = (obj2->modelMatrix().linear() * obj2->rotationalInverseInertia().inverse() * obj2->modelMatrix().linear().transpose()).inverse();
+		//inertia2World = obj2->modelMatrix()*obj2->rotationalInverseInertia()*obj2->modelMatrix().linear().transpose();
+	}
+	else inertia2World = Matrix3f::Zero();
+
+	float_t dividend = (-1-COF)*(pV1-pV2).dot(normal);
+	Vector3f div1 = obj1->invMass()*normal;
+	Vector3f div2 = (inertia1World*(r1.cross(normal))).cross(r1);
+	Vector3f div3 = obj2->invMass()*normal ;
+	Vector3f div4 = (inertia2World*(r2.cross(normal))).cross(r2);
+	float_t divisor;
+	divisor = normal.dot(div1+div2+div3+div4);
+	/*
+	float_t div1 = (obj1->invMass()*normal).dot(normal);
+	float_t div2 = (inertia1World*(r1.cross(normal))).dot(normal);
+	float_t div3 = (obj2->invMass()*normal).dot(normal) ;
+	float_t div4 = (inertia2World*(r2.cross(normal))).dot(normal);
+	float_t divisor;
+	divisor = div1+div2+div3+div4;
+	*/
+	float_t f = dividend/divisor;
+	float_t f1 = f;
+	float_t f2 = -f;
+
 	//Getting the Vc component that is parallel to the collision normal direction
 	//Vector3f vC = (v1-v2).dot(m_collision.collisionNormal())*m_collision.collisionNormal();
 
 	//Updating velocities
-	/*Vector3f v1New = -(1 + COF) * massFraction1 * vC;
-	Vector3f v2New = (1 + COF) * massFraction2 * vC;
+
+	Vector3f w1New = inertia1World*(r1.cross(f1*normal));
+	Vector3f w2New = inertia2World*(r2.cross(f2*normal));
+
+	Vector3f v1New = obj1->invMass()*f1*normal;
+	Vector3f v2New = obj2->invMass()*f2*normal;
+
 	obj1->changeVelocity(v1New);
-	obj2->changeVelocity(v2New);*/
-	
+	obj2->changeVelocity(v2New);
+	obj1->changeAngularVelocity(w1New);
+	obj2->changeAngularVelocity(w2New);
 }
 
 void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
