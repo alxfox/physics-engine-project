@@ -196,7 +196,7 @@ bool gp::engine::Collision::detectBoxBox()
 	}
 
 	m_interpenetrationDepth = minOverlap;
-	if(m_interpenetrationDepth<MIN_COLLISION_DISTANCE)return false;
+	//if(m_interpenetrationDepth<MIN_COLLISION_DISTANCE)return false;
 	
 	//------------------->Assure collision normal points from o1 to o2---------------------
 	if((box2.position() - (box1.position() + m_collisionNormal*m_interpenetrationDepth)).norm()
