@@ -148,38 +148,40 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 void gp::engine::CollisionResolver::applyCollisionImpulseWithoutFriction()
 {
 	// TODO
-	//applyCollisionImpulseWithoutRotationFriction();
-
 	Object* obj1 = m_collision.object1();
 	Object* obj2 = m_collision.object2();
-//=========================================Applying the impulses==============================================
-	//Getting V, Cr and m^-1 
-	Vector3f v1 = obj1->velocity();
-	Vector3f v2 = obj2->velocity();
-	float_t COF = fmin(obj1->restitutionCoefficient(), obj2->restitutionCoefficient());
 	//Collisions between unmovable objects shouldn't exist
 	if(!obj1->isMovable()&&!obj2->isMovable())
 		return;
+
+//=========================================Collecting Data==============================================
+	Vector3f v1 = obj1->velocity();
+	Vector3f v2 = obj2->velocity();
+	float_t COF = fmin(obj1->restitutionCoefficient(), obj2->restitutionCoefficient());
+
 	Vector3f r1 = m_collision.collisionPoint1()-obj1->position();
 	Vector3f r2 = m_collision.collisionPoint2()-obj2->position();
 	Vector3f w1 = obj1->angularVelocity();
 	Vector3f w2 = obj2->angularVelocity();
+
 	Vector3f pV1 = v1 + w1.cross(r1);//total velocity of collision point
 	Vector3f pV2 = v2 + w2.cross(r2);
 	Vector3f normal = m_collision.collisionNormal();
 	
+//=========================================Inverse Inertia Matrices==============================================
 	Matrix3f inertia1World;
 	if(obj1->isMovable()){
 		inertia1World = obj1->invModelMatrix().linear().transpose()*obj1->rotationalInverseInertia()*obj1->invModelMatrix().linear();
-		//inertia1World = (obj1->modelMatrix().linear() * obj1->rotationalInverseInertia().inverse() * obj1->modelMatrix().linear().transpose()).inverse();
-	} else inertia1World = Matrix3f::Zero();
+	} 
+	else inertia1World = Matrix3f::Zero();
+
 	Matrix3f inertia2World; 
 	if(obj2->isMovable()){
 		inertia2World = obj2->invModelMatrix().linear().transpose()*obj2->rotationalInverseInertia()*obj2->invModelMatrix().linear();
-		//inertia2World = (obj2->modelMatrix().linear() * obj2->rotationalInverseInertia().inverse() * obj2->modelMatrix().linear().transpose()).inverse();
 	}
 	else inertia2World = Matrix3f::Zero();
 
+//=========================================Computing f from the equation==============================================
 	float_t dividend = (-1-COF)*(pV1-pV2).dot(normal);
 	Vector3f div1 = obj1->invMass()*normal;
 	Vector3f div2 = (inertia1World*(r1.cross(normal))).cross(r1);
@@ -191,7 +193,7 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutFriction()
 	float_t f1 = f;
 	float_t f2 = -f;
 
-	//Updating velocities
+//=========================================Velocity updates==============================================
 
 	Vector3f w1New = inertia1World*(r1.cross(f1*normal));
 	Vector3f w2New = inertia2World*(r2.cross(f2*normal));
