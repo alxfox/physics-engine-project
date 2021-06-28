@@ -210,4 +210,69 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutFriction()
 void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 {
 	// TODO
+	if (!m_collision.applyFriction()){
+		applyCollisionImpulseWithoutFriction();
+	}
+	else{
+		Object* obj1 = m_collision.object1();
+		Object* obj2 = m_collision.object2();
+
+		//Collisions between unmovable objects shouldn't exist
+		if(!obj1->isMovable()&&!obj2->isMovable())
+			return;
+
+	//=========================================Collecting Data==============================================
+		Vector3f v1 = obj1->velocity();
+		Vector3f v2 = obj2->velocity();
+		float_t COF = fmin(obj1->restitutionCoefficient(), obj2->restitutionCoefficient());
+		float_t mA_inv = obj1->invMass();
+		float_t mB_inv = obj2->invMass();
+
+		Vector3f r1 = m_collision.collisionPoint1()-obj1->position();
+		Vector3f r2 = m_collision.collisionPoint2()-obj2->position();
+		Vector3f w1 = obj1->angularVelocity();
+		Vector3f w2 = obj2->angularVelocity();
+
+		Vector3f pVA = v1 + w1.cross(r1);//total velocity of collision point
+		Vector3f pVB = v2 + w2.cross(r2);
+		Vector3f normal = m_collision.collisionNormal();
+		Vector3f C = pVA - pVB;
+
+
+	//=========================================Inverse Inertia Matrices==============================================
+		Matrix3f inertia1World;
+		if(obj1->isMovable()){
+			inertia1World = obj1->invModelMatrix().linear().transpose()*obj1->rotationalInverseInertia()*obj1->invModelMatrix().linear();
+		} 
+		else inertia1World = Matrix3f::Zero();
+
+		Matrix3f inertia2World; 
+		if(obj2->isMovable()){
+			inertia2World = obj2->invModelMatrix().linear().transpose()*obj2->rotationalInverseInertia()*obj2->invModelMatrix().linear();
+		}
+		else inertia2World = Matrix3f::Zero();
+
+
+	//=========================================T matrices==============================================
+		Matrix3f diagA = (mA_inv*Vector3f::Ones()).asDiagonal(); 
+		Matrix3f diagB = (mB_inv*Vector3f::Ones()).asDiagonal(); 
+		Matrix3f skewRA; SkewSymmetricMatrix::createSkeySymmetricMatrix(r1, skewRA);
+		Matrix3f skewRB; SkewSymmetricMatrix::createSkeySymmetricMatrix(r2, skewRB);
+
+		Matrix3f TA = diagA - skewRA*inertia1World*skewRA;
+		Matrix3f TB = -diagB + skewRB*inertia1World*skewRB;
+		Matrix3f T = TA - TB;
+
+	//=========================================B matrix==============================================
+		Vector3f t1;
+		Vector3f t2;
+		if(normal(0)== 0.0f && normal(2) == 0.0f){
+			t1 = engine::Vector3f(1.0f, 0.0f, 0.0f);
+		}
+		else{
+			float_t k1 = 1.0f / std::sqrt(normal(0)*normal(0) +normal(2)*normal(2) );
+			t1 = engine::Vector3f(normal(2), 0.0f, -normal(0));
+		}
+		t2 = normal.cross(t1);
+	}
 }
