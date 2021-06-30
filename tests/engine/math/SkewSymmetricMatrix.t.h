@@ -14,7 +14,7 @@ public:
 			-2, 1, 0;
 
 		gp::engine::Matrix3f res;
-		gp::engine::SkewSymmetricMatrix::createSkeySymmetricMatrix(v1, res);
+		gp::engine::SkewSymmetricMatrix::createSkewSymmetricMatrix(v1, res);
 
 		TS_ASSERT_EQUALS(res, m1);
 	}

@@ -19,9 +19,16 @@ public:
 	 * @param vector The vector for creating the skew-symmetric matrix
 	 * @param[out] matrix The resulting skew-symmetric matrix
 	 */
-	static void createSkeySymmetricMatrix(const Vector3f &vector, Matrix3f &matrix)
+	static void createSkewSymmetricMatrix(const Vector3f &vector, Matrix3f &matrix)
 	{
-		// TODO
+		matrix.setZero();
+		
+		matrix(0,1) = -vector.z();
+		matrix(0,2) = vector.y();
+		matrix(1,0) = vector.z();
+		matrix(1,2) = -vector.x();
+		matrix(2,0) = -vector.y();
+		matrix(2,1) = vector.x();
 	}
 };
 
