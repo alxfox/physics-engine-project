@@ -237,6 +237,7 @@ void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 		Vector3f pVB = v2 + w2.cross(r2);
 		Vector3f normal = m_collision.collisionNormal();
 		Vector3f C = pVA - pVB;
+		assert(std::abs(normal.norm() - 1) < EPSILON);
 
 
 	//=========================================Inverse Inertia Matrices==============================================
@@ -270,9 +271,77 @@ void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 			t1 = engine::Vector3f(1.0f, 0.0f, 0.0f);
 		}
 		else{
-			float_t k1 = 1.0f / std::sqrt(normal(0)*normal(0) +normal(2)*normal(2) );
-			t1 = engine::Vector3f(normal(2), 0.0f, -normal(0));
+			float_t sqrt1 = 1.0f / std::sqrt(normal(0)*normal(0) +normal(2)*normal(2));
+			t1 = sqrt1 * engine::Vector3f(normal(2), 0.0f, -normal(0));
 		}
 		t2 = normal.cross(t1);
+
+		Matrix3f B;
+		B << 	normal(0), t1(0), t2(0),
+				normal(1), t1(1), t2(1),
+				normal(2), t1(2), t2(2);
+
+		//=========================================Static friction test============================================
+		Vector3f C_star = B.transpose() * C; 
+		Vector3f deltaV_star(C_star);
+		deltaV_star*=(-1);
+		deltaV_star(0)*= (1+COF);
+
+		Vector3f deltaP_star = (B.transpose() * T * B).inverse() * deltaV_star;
+		std::cout << (B.transpose() * T * B).inverse() << std::endl;
+
+		//static friction constraint
+		float_t testSquareRoot = std::sqrt(deltaP_star(1)*deltaP_star(1) + deltaP_star(2)*deltaP_star(2));
+		float_t woodMuStatic = 0.7f;
+		if (testSquareRoot > woodMuStatic * std::abs(deltaP_star(0))){		
+		//=========================================Dynamic friction============================================
+			float_t woodMuDynamic = 0.3f;
+			Vector2f K = (1.0f / testSquareRoot) * Vector2f(deltaP_star(1), deltaP_star(2));
+			Matrix3f BtTB = B.transpose() * T * B;
+			float_t deltaP_star_star_x = -(1+COF)*C_star(0) / (BtTB(0,0) + woodMuDynamic * BtTB(0,1) * K(0) + woodMuDynamic * BtTB(0,2) * K(1));
+			float_t x;
+			float_t y;
+			if (deltaP_star_star_x >= 0) {
+				//x = BtTB(1,0) + woodMuDynamic*BtTB(1,1)*deltaP_star_star_x*K(0) + woodMuDynamic*BtTB(1,2)*deltaP_star_star_x*K(1);
+				//y = BtTB(2,0) + woodMuDynamic*BtTB(2,1)*deltaP_star_star_x*K(0) + woodMuDynamic*BtTB(2,2)*deltaP_star_star_x*K(1);
+			}
+			else{
+				deltaP_star_star_x = -(1+COF)*C_star(0) / (BtTB(0,0) - woodMuDynamic * BtTB(0,1) * K(0) - woodMuDynamic * BtTB(0,2) * K(1));
+				//x = BtTB(1,0)*deltaP_star_star_x - woodMuDynamic*BtTB(1,1)*deltaP_star_star_x*K(0) - woodMuDynamic*BtTB(1,2)*deltaP_star_star_x*K(1);
+				//y = BtTB(2,0)*deltaP_star_star_x - woodMuDynamic*BtTB(2,1)*deltaP_star_star_x*K(0) - woodMuDynamic*BtTB(2,2)*deltaP_star_star_x*K(1);
+			}
+			Vector3f deltaP_star_star = Vector3f(deltaP_star_star_x, woodMuDynamic*std::abs(deltaP_star_star_x)*K(0), woodMuDynamic*std::abs(deltaP_star_star_x)*K(1));
+			Vector3f w1New = inertia1World*(r1.cross(deltaP_star_star));
+			Vector3f w2New = -inertia2World*(r2.cross(deltaP_star_star));
+
+			Vector3f v1New = obj1->invMass()*deltaP_star_star;
+			Vector3f v2New = -obj2->invMass()*deltaP_star_star;
+
+			obj1->changeVelocity(v1New);
+			obj2->changeVelocity(v2New);
+			obj1->changeAngularVelocity(w1New);
+			obj2->changeAngularVelocity(w2New);
+
+		}
+		else{
+			//=========================================Static friction ============================================
+
+
+			Vector3f w1New = inertia1World*(r1.cross(deltaP_star));
+			Vector3f w2New = -inertia2World*(r2.cross(deltaP_star));
+
+			Vector3f v1New = obj1->invMass()*deltaP_star;
+			Vector3f v2New = -obj2->invMass()*deltaP_star;
+
+			obj1->changeVelocity(v1New);
+			obj2->changeVelocity(v2New);
+			obj1->changeAngularVelocity(w1New);
+			obj2->changeAngularVelocity(w2New);
+		}
+
 	}
+
+
+
+
 }
