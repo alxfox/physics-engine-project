@@ -307,11 +307,13 @@ void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 				deltaP_star_star_x = -(1+COF)*C_star(0) / (BtTB(0,0) - woodMuDynamic * BtTB(0,1) * K(0) - woodMuDynamic * BtTB(0,2) * K(1));
 			}
 			Vector3f deltaP_star_star = Vector3f(deltaP_star_star_x, woodMuDynamic*std::abs(deltaP_star_star_x)*K(0), woodMuDynamic*std::abs(deltaP_star_star_x)*K(1));
-			Vector3f w1New = inertia1World*(r1.cross(B*deltaP_star_star));
-			Vector3f w2New = -inertia2World*(r2.cross(B*deltaP_star_star));
 
-			Vector3f v1New = obj1->invMass()*(B*deltaP_star_star);
-			Vector3f v2New = -obj2->invMass()*(B*deltaP_star_star);
+			Vector3f deltaP = B*deltaP_star_star;
+			Vector3f w1New = inertia1World*(r1.cross(deltaP));
+			Vector3f w2New = -inertia2World*(r2.cross(deltaP));
+
+			Vector3f v1New = obj1->invMass()*(deltaP);
+			Vector3f v2New = -obj2->invMass()*(deltaP);
 
 			obj1->changeVelocity(v1New);
 			obj2->changeVelocity(v2New);
@@ -323,11 +325,12 @@ void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 			//=========================================Static friction ============================================
 
 
-			Vector3f w1New = inertia1World*(r1.cross(B*deltaP_star));
-			Vector3f w2New = -inertia2World*(r2.cross(B*deltaP_star));
+			Vector3f deltaP = B*deltaP_star;
+			Vector3f w1New = inertia1World*(r1.cross(deltaP));
+			Vector3f w2New = -inertia2World*(r2.cross(deltaP));
 
-			Vector3f v1New = obj1->invMass()*(B*deltaP_star);
-			Vector3f v2New = -obj2->invMass()*(B*deltaP_star);
+			Vector3f v1New = obj1->invMass()*(deltaP);
+			Vector3f v2New = -obj2->invMass()*(deltaP);
 
 			obj1->changeVelocity(v1New);
 			obj2->changeVelocity(v2New);
