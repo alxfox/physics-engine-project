@@ -261,7 +261,7 @@ void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 		Matrix3f skewRB; SkewSymmetricMatrix::createSkeySymmetricMatrix(r2, skewRB);
 
 		Matrix3f TA = diagA - skewRA*inertia1World*skewRA;
-		Matrix3f TB = -diagB + skewRB*inertia1World*skewRB;
+		Matrix3f TB = -diagB + skewRB*inertia2World*skewRB;
 		Matrix3f T = TA - TB;
 
 	//=========================================B matrix==============================================
@@ -276,6 +276,9 @@ void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 		}
 		t2 = normal.cross(t1);
 
+
+		assert(std::abs(t1.norm() - 1) < EPSILON);
+		assert(std::abs(t2.norm() - 1) < EPSILON);
 		Matrix3f B;
 		B << 	normal(0), t1(0), t2(0),
 				normal(1), t1(1), t2(1),
@@ -288,7 +291,6 @@ void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 		deltaV_star(0)*= (1+COF);
 
 		Vector3f deltaP_star = (B.transpose() * T * B).inverse() * deltaV_star;
-		std::cout << (B.transpose() * T * B).inverse() << std::endl;
 
 		//static friction constraint
 		float_t testSquareRoot = std::sqrt(deltaP_star(1)*deltaP_star(1) + deltaP_star(2)*deltaP_star(2));
@@ -301,21 +303,15 @@ void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 			float_t deltaP_star_star_x = -(1+COF)*C_star(0) / (BtTB(0,0) + woodMuDynamic * BtTB(0,1) * K(0) + woodMuDynamic * BtTB(0,2) * K(1));
 			float_t x;
 			float_t y;
-			if (deltaP_star_star_x >= 0) {
-				//x = BtTB(1,0) + woodMuDynamic*BtTB(1,1)*deltaP_star_star_x*K(0) + woodMuDynamic*BtTB(1,2)*deltaP_star_star_x*K(1);
-				//y = BtTB(2,0) + woodMuDynamic*BtTB(2,1)*deltaP_star_star_x*K(0) + woodMuDynamic*BtTB(2,2)*deltaP_star_star_x*K(1);
-			}
-			else{
+			if (deltaP_star_star_x < 0) {
 				deltaP_star_star_x = -(1+COF)*C_star(0) / (BtTB(0,0) - woodMuDynamic * BtTB(0,1) * K(0) - woodMuDynamic * BtTB(0,2) * K(1));
-				//x = BtTB(1,0)*deltaP_star_star_x - woodMuDynamic*BtTB(1,1)*deltaP_star_star_x*K(0) - woodMuDynamic*BtTB(1,2)*deltaP_star_star_x*K(1);
-				//y = BtTB(2,0)*deltaP_star_star_x - woodMuDynamic*BtTB(2,1)*deltaP_star_star_x*K(0) - woodMuDynamic*BtTB(2,2)*deltaP_star_star_x*K(1);
 			}
 			Vector3f deltaP_star_star = Vector3f(deltaP_star_star_x, woodMuDynamic*std::abs(deltaP_star_star_x)*K(0), woodMuDynamic*std::abs(deltaP_star_star_x)*K(1));
-			Vector3f w1New = inertia1World*(r1.cross(deltaP_star_star));
-			Vector3f w2New = -inertia2World*(r2.cross(deltaP_star_star));
+			Vector3f w1New = inertia1World*(r1.cross(B*deltaP_star_star));
+			Vector3f w2New = -inertia2World*(r2.cross(B*deltaP_star_star));
 
-			Vector3f v1New = obj1->invMass()*deltaP_star_star;
-			Vector3f v2New = -obj2->invMass()*deltaP_star_star;
+			Vector3f v1New = obj1->invMass()*(B*deltaP_star_star);
+			Vector3f v2New = -obj2->invMass()*(B*deltaP_star_star);
 
 			obj1->changeVelocity(v1New);
 			obj2->changeVelocity(v2New);
@@ -327,11 +323,11 @@ void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 			//=========================================Static friction ============================================
 
 
-			Vector3f w1New = inertia1World*(r1.cross(deltaP_star));
-			Vector3f w2New = -inertia2World*(r2.cross(deltaP_star));
+			Vector3f w1New = inertia1World*(r1.cross(B*deltaP_star));
+			Vector3f w2New = -inertia2World*(r2.cross(B*deltaP_star));
 
-			Vector3f v1New = obj1->invMass()*deltaP_star;
-			Vector3f v2New = -obj2->invMass()*deltaP_star;
+			Vector3f v1New = obj1->invMass()*(B*deltaP_star);
+			Vector3f v2New = -obj2->invMass()*(B*deltaP_star);
 
 			obj1->changeVelocity(v1New);
 			obj2->changeVelocity(v2New);
