@@ -34,7 +34,7 @@ enum CollisionImpulseType
 	REALISTIC
 };
 /** Collision impulse algortihm in use */
-const CollisionImpulseType COLLISION_IMPULSE_ALGORITHM = NOFRICTION;
+const CollisionImpulseType COLLISION_IMPULSE_ALGORITHM = REALISTIC;
 
 /** Values below this threshold are considered zero */
 const float_t EPSILON = 0.000001;

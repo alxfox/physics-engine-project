@@ -209,5 +209,115 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutFriction()
 
 void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 {
-	// TODO
+	if(!m_collision.applyFriction()){
+		applyCollisionImpulseWithoutFriction();
+		return;
+	}
+
+	Object* obj1 = m_collision.object1();
+	Object* obj2 = m_collision.object2();
+	//Collisions between unmovable objects shouldn't exist
+	if(!obj1->isMovable()&&!obj2->isMovable())
+		return;
+
+//=========================================Collecting Data==============================================
+	Vector3f v1 = obj1->velocity();
+	Vector3f v2 = obj2->velocity();
+	float_t COF = fmin(obj1->restitutionCoefficient(), obj2->restitutionCoefficient());
+	float_t invM1 = obj1->invMass();
+	float_t invM2 = obj2->invMass();
+
+	Vector3f r1 = m_collision.collisionPoint1()-obj1->position();
+	Vector3f r2 = m_collision.collisionPoint2()-obj2->position();
+	Vector3f w1 = obj1->angularVelocity();
+	Vector3f w2 = obj2->angularVelocity();
+
+	Vector3f pV1 = v1 + w1.cross(r1);//total velocity of collision point
+	Vector3f pV2 = v2 + w2.cross(r2);
+	Vector3f normal = m_collision.collisionNormal();
+	Vector3f closing = pV1-pV2;
+
+	float_t sFriction = fmax(obj1->staticFrictionCoefficient(),obj2->staticFrictionCoefficient());
+	float_t dFriction = fmax(obj1->dynamicFrictionCoefficient(),obj2->dynamicFrictionCoefficient());
+//=========================================Inverse Inertia Matrices==============================================
+	Matrix3f inertia1World;
+	if(obj1->isMovable()){
+		inertia1World = obj1->invModelMatrix().linear().transpose()*obj1->rotationalInverseInertia()*obj1->invModelMatrix().linear();
+	} 
+	else inertia1World = Matrix3f::Zero();
+
+	Matrix3f inertia2World; 
+	if(obj2->isMovable()){
+		inertia2World = obj2->invModelMatrix().linear().transpose()*obj2->rotationalInverseInertia()*obj2->invModelMatrix().linear();
+	}
+	else inertia2World = Matrix3f::Zero();
+
+	//Base ChangeMatrix
+	Vector3f orth;
+	if(abs(normal.x())<EPSILON)
+		orth=Vector3f(1,0,0);
+	else{
+		float_t x = normal.x();
+		float_t z = normal.z();
+		orth = (1/sqrt(x*x+z*z))*Vector3f(z,0,-x);
+	}
+	Vector3f orth2 = orth.cross(normal);
+	Matrix3f base;
+	base.col(0) = normal;
+	base.col(1) = orth;
+	base.col(2) = orth2;
+
+	//T-Matrix
+	SkewSymmetricMatrix skew;
+	Matrix3f sRa;
+	Matrix3f sRb;
+	skew.createSkewSymmetricMatrix(r1,sRa);
+	skew.createSkewSymmetricMatrix(r2,sRb);
+	Matrix3f diagMa = Matrix3f::Identity()*invM1;
+	Matrix3f diagMb = Matrix3f::Identity()*invM2;
+	Matrix3f tA = diagMa-sRa*inertia1World*sRa;
+	Matrix3f tB = -diagMb+sRb*inertia2World*sRb;
+	Matrix3f T = tA-tB;
+	//Static Friction
+	Vector3f cStar = base.transpose()*closing;
+	Vector3f vStar((-1+COF)*cStar.x(), -cStar.y(),-cStar.z());
+	Vector3f pStar = (base.transpose()*T*base).inverse()*vStar;
+	float_t helper = sqrt(pStar.y()*pStar.y()+pStar.z()*pStar.z());
+	if(helper>sFriction*abs(pStar.x()))//no static friction => dynamic friction
+	{
+		float_t k1 = (1/helper)*pStar.y();
+		float_t k2 = (1/helper)*pStar.z();
+		Matrix3f mat = base.transpose()*T*base;
+		//assume p**x is positive
+		float_t pX = vStar.x()/(mat(0,0) + mat(0,1)*dFriction*k1 + mat(0,2)*dFriction*k2);
+		if(pX<0){
+			//if pX was negative, assume negative instead
+			pX=vStar.x()/(mat(0,0) - mat(0,1)*dFriction*k1 - mat(0,2)*dFriction*k2);
+		}
+		Vector3f pStarStar(pX, abs(pX)*k1*dFriction, abs(pX)*k2*dFriction);
+
+		pStarStar = base*pStarStar;
+		Vector3f w1New = inertia1World*(r1.cross(pStarStar));
+		Vector3f w2New = -inertia2World*(r2.cross(pStarStar));
+
+		Vector3f v1New = obj1->invMass()*pStarStar;
+		Vector3f v2New = -obj2->invMass()*pStarStar;
+
+		obj1->changeVelocity(v1New);
+		obj2->changeVelocity(v2New);
+		obj1->changeAngularVelocity(w1New);
+		obj2->changeAngularVelocity(w2New);
+	}else{	//apply static friction if condition is fulfilled
+		pStar = base*pStar;//convert back to world space
+		Vector3f w1New = inertia1World*(r1.cross(pStar));
+		Vector3f w2New = -inertia2World*(r2.cross(pStar));
+
+		Vector3f v1New = obj1->invMass()*pStar;
+		Vector3f v2New = -obj2->invMass()*pStar;
+
+		obj1->changeVelocity(v1New);
+		obj2->changeVelocity(v2New);
+		obj1->changeAngularVelocity(w1New);
+		obj2->changeAngularVelocity(w2New);
+	}
 }
