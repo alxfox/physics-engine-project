@@ -10,6 +10,9 @@
 
 void gp::engine::CollisionResolver::resolveInterpenetration()
 {
+	if(m_collision.isShot()){
+		return;
+	}
 	// TODO
 	Object* obj1 = m_collision.object1();
 	Object* obj2 = m_collision.object2();
@@ -36,6 +39,10 @@ void gp::engine::CollisionResolver::resolveInterpenetration()
 
 void gp::engine::CollisionResolver::applyCollisionImpulse()
 {
+	if(m_collision.isShot()){
+		//apply some impulse here
+		return;
+	}
 	switch (COLLISION_IMPULSE_ALGORITHM) {
 	case SIMPLE:
 		applyCollisionImpulseWithoutRotationFriction();

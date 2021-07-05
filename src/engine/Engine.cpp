@@ -13,7 +13,7 @@
 void gp::engine::Engine::start()
 {
 	m_running = true;
-
+	m_shooting = false;
 	// The clock running with 60 Hz
 	m_clock.start(UPDATE_INTERVAL);
 
@@ -95,6 +95,15 @@ void gp::engine::Engine::handleMessage(const gp::messages::Message& message)
 		return;
 	}
 
+	if(gp::messages::isType<messages::ShootMessage>(message)){
+		//add an object or sth (dummy class?) that can be called during collision detection
+		const messages::ShootMessage& shootMessage = static_cast<const messages::ShootMessage&>(message);
+		m_shootingDir=shootMessage.direction();
+		m_shootingPos=shootMessage.source();
+		m_shooting=true;
+		return;
+	}
+
 	std::cerr << "Engine Warning: Received unknown message." << std::endl;
 }
 
@@ -147,7 +156,19 @@ void gp::engine::Engine::detectCollisions()
 				m_collisions.emplace_back(collision);
 		}
 	}
-
+	if(m_shooting){
+		for (std::vector<Object*>::const_iterator it1 = objects.cbegin();
+			it1 != objects.cend(); ++it1) {
+			Object* o1 = *it1;
+			if(o1->isMovable()){
+				Collision coll(o1,m_shootingPos,m_shootingDir);
+				if(coll.detect()){
+					m_collisions.emplace_back(coll);
+					}
+			}
+		}
+	}
+	m_shooting=false;
 	// Get additional constraints
 	const std::vector<HardConstraint*> constraints = m_constraintManager->objects();
 

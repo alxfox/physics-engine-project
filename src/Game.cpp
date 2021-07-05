@@ -9,7 +9,7 @@
 #include "gui/graphics/RenderComponentManager.h"
 #include "gui/graphics/Camera.h"
 #include "gui/graphics/TextureManager.h"
-
+#include "engine/messages/ControlMessage.h"
 
 void* gp::runEngine(void* data)
 {
@@ -65,7 +65,16 @@ void gp::Game::run()
     glfwPollEvents();
 
     m_cameraControl.moveCamera(m_window, m_scenarioControl, *camera);
-    
+    if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS&&!m_scenarioControl.interactsWithMouse()) {
+      glm::vec3 pos = camera->worldPosition();
+      gp::engine::Vector3f posV(pos.x,pos.y,pos.z);
+      glm::quat q = camera->rotation();
+      glm::vec3 lookAt = q*glm::vec3(0,0,1);
+      gp::engine::Vector3f towards(lookAt.x,lookAt.y,-lookAt.z);//why do i need the -?
+      towards.normalize();
+			m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards));
+		}
+
     //if (frameCounter % 600 == 0) { 
     //  std::cout << "{" 
     //    << scenario->camera().worldPosition().x << " " << scenario->camera().worldPosition().y << " " << scenario->camera().worldPosition().z 

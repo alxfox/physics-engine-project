@@ -101,6 +101,11 @@ public:
 
 		return true;
 	}
+
+	float_t distPointLine(const Vector3f &point, Vector3f &pointOnLine){
+		pointOnLine = point + ((m_point-point).cross(m_direction))/m_direction.norm();// 50/50 that this is a correct guess, else swap + to -
+		return ((m_point-point).cross(m_direction)).norm()/m_direction.norm();
+	}
 };
 
 }

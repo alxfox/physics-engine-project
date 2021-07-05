@@ -46,6 +46,10 @@ private:
 	/** True if the engine shall do a single time step */
 	bool m_step = false;
 
+	/** True if the player is shooting on this iteration **/
+	bool m_shooting = false;
+	Vector3f m_shootingPos;
+	Vector3f m_shootingDir;
 	/** The collision of the current time step */
 	std::vector<Collision> m_collisions;
 

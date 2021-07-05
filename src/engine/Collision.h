@@ -32,7 +32,8 @@ public:
 		SPHERE_BOX,
 		BOX_BOX,
 		/** Special collision type for "external" constraints */
-		CONSTRAINT
+		CONSTRAINT,
+		SHOT
 	};
 
 private:
@@ -65,6 +66,9 @@ private:
 	/** The interpenetration depth */
 	float_t m_interpenetrationDepth;
 
+	Vector3f m_shotSource;
+	Vector3f m_shotDirection;
+
 public:
 	Collision(Object* object1, Object* object2)
 		: m_type(getType(object1, object2)),
@@ -84,7 +88,15 @@ public:
 		m_object2(&constraint.object2()),
 		m_interpenetrationDepth(std::numeric_limits<float_t>::signaling_NaN())
 	{ }
-
+	Collision(Object* object1, Vector3f position, Vector3f direction)
+		: m_type(SHOT),
+		m_constraint(0L),
+		m_object1(object1),
+		m_object2(object1),// !! filling both with obj1 !!
+		m_interpenetrationDepth(std::numeric_limits<float_t>::signaling_NaN()),
+		m_shotSource(position),
+		m_shotDirection(direction)
+	{ }
 	/**
 	 * @brief Detects a collision and fills the data structure
 	 *
@@ -98,7 +110,9 @@ public:
 	 *  data has to be valid!
 	 */
 	bool detect();
-
+	bool isShot() const{
+		return m_type==SHOT;
+	}
 	/**
 	 * @return The first object of the collision
 	 */
@@ -161,6 +175,7 @@ public:
 	}
 
 private:
+	bool detectShot();
 	/**
 	 * @brief Detect sphere-sphere collisions
 	 */

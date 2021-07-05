@@ -41,6 +41,27 @@ class StepMessage : public gp::messages::Message
 public:
 	StepMessage() : gp::messages::Message(type_id<StepMessage>()) { }
 };
+class ShootMessage : public gp::messages::Message
+{
+private:
+	Vector3f m_source;
+	Vector3f m_direction;
+  
+
+public:
+	ShootMessage(Vector3f source, Vector3f direction)
+		: gp::messages::Message(type_id<ShootMessage>()),
+		m_source(source),
+		m_direction(direction)
+	{ }
+
+	Vector3f source() const {
+		return m_source;
+	}
+	Vector3f direction() const {
+		return m_direction;
+	}
+};
 
 }
 

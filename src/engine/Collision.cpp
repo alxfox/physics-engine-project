@@ -33,11 +33,34 @@ bool gp::engine::Collision::detect()
 		ret = m_constraint->collision(m_collisionNormal, m_collisionPoint1, m_collisionPoint2,
 			m_interpenetrationDepth);
 		break;
+	case SHOT:
+		ret = detectShot();
+		return ret;
 	}
 
 	assert(!ret || !std::isnan(m_interpenetrationDepth));
 
 	return ret;
+}
+
+bool gp::engine::Collision::detectShot(){
+	if (dynamic_cast<Sphere*>(m_object1)) {
+		Sphere* mySphere = dynamic_cast<Sphere*>(m_object1);
+		Line line(m_shotSource,m_shotDirection);
+		Vector3f pointOnLine;
+		float_t a = line.distPointLine(mySphere->position(),pointOnLine);
+		if(a>mySphere->radius())return false;
+		float_t c = mySphere->radius();
+		float_t b = sqrt(c*c-a*a);
+		m_collisionPoint1 = pointOnLine - b * m_shotDirection;
+		m_collisionNormal = m_shotDirection.normalized();
+		std::cout << m_collisionPoint1.x() << " "<< m_collisionPoint1.y() << " "<< m_collisionPoint1.z() << std::endl;
+		return true;
+	}
+	else{
+		Box* myBox = dynamic_cast<Box*>(m_object1);
+		return false;
+	}
 }
 
 bool gp::engine::Collision::detectSphereSphere()
