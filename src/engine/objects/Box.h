@@ -37,6 +37,9 @@ private:
 		Matrix3f rotationalInertia;
 		rotationalInertia.setZero();
 		rotationalInertia.setIdentity();
+		//rotationalInertia(0,0) = (1.f/12.f)*mass*(size(0)*size(0)+size(2)*size(2)); //height
+		//rotationalInertia(1,1) = (1.f/12.f)*mass*(size(1)*size(1)+size(2)*size(2));	//width
+		//rotationalInertia(2,2) = (1.f/12.f)*mass*(size(1)*size(1)+size(0)*size(0));	//depth
 		rotationalInertia(0,0) = (1.f/12.f)*mass*(size(1)*size(1)+size(2)*size(2)); //height
 		rotationalInertia(1,1) = (1.f/12.f)*mass*(size(0)*size(0)+size(2)*size(2));	//width
 		rotationalInertia(2,2) = (1.f/12.f)*mass*(size(0)*size(0)+size(1)*size(1));	//depth
