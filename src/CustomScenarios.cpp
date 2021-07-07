@@ -289,7 +289,7 @@ gp::Custom3::Custom3()
     setMaterial(e, blue);
 	  e = addBox(1, engine::Vector3f(-3.5f, 0.0f, -3.0f), engine::Vector3f(2.0f, 0.5f, 0.3f));
     setMaterial(e, green);
-    e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.5f, 0.25f, 0.0f), engine::Vector3f(4.0f, 0.25f, 2.0f), engine::Vector3f::Zero(),
+    e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.5f, 0.25f, 0.0f), engine::Vector3f(.2f, 0.2f, 0.2f), engine::Vector3f::Zero(),
 		engine::Quaternion(), true);
     setMaterial(e, blue);
     e = addSphere(1.0f, engine::Vector3f(0.75f, 2.0f, -0.9f), 0.7f);

@@ -104,6 +104,13 @@ void gp::engine::Engine::handleMessage(const gp::messages::Message& message)
 		return;
 	}
 
+	if(gp::messages::isType<messages::PlayerPositionMessage>(message)){
+		//add an object or sth (dummy class?) that can be called during collision detection
+		const messages::PlayerPositionMessage& playerMessage = static_cast<const messages::PlayerPositionMessage&>(message);
+		m_playerPos = playerMessage.playerPosition();
+		return;
+	}
+
 	std::cerr << "Engine Warning: Received unknown message." << std::endl;
 }
 
@@ -169,6 +176,13 @@ void gp::engine::Engine::detectCollisions()
 		}
 	}
 	m_shooting=false;
+	for (std::vector<Object*>::const_iterator it1 = objects.cbegin();
+		it1 != objects.cend(); ++it1) {
+		Object* o1 = *it1;
+		if(o1->isTrigger()){
+			o1->setPosition(engine::Vector3f(m_playerPos.x(), m_playerPos.y(), m_playerPos.z()));
+		}
+	}
 	// Get additional constraints
 	const std::vector<HardConstraint*> constraints = m_constraintManager->objects();
 

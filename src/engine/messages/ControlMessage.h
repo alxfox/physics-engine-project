@@ -63,6 +63,24 @@ public:
 	}
 };
 
+
+class PlayerPositionMessage: public gp::messages::Message
+{
+private:
+	Vector3f m_playerPosition;
+  
+
+public:
+	PlayerPositionMessage(Vector3f playerPosition)
+		: gp::messages::Message(type_id<PlayerPositionMessage>()),
+		m_playerPosition(playerPosition)
+	{ }
+
+	Vector3f playerPosition() const {
+		return m_playerPosition;
+	}
+};
+
 }
 
 }

@@ -75,6 +75,14 @@ void gp::Game::run()
 			m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards));
 		}
 
+    if (frameCounter % 2 == 0) {
+      glm::quat q = camera->rotation();
+      glm::vec3 lookAt = q*glm::vec3(0,0,1);
+      gp::engine::Vector3f towards(lookAt.x,lookAt.y,-lookAt.z);//why do i need the -?
+      glm::vec3 pos = camera->worldPosition();
+      gp::engine::Vector3f camPos(pos.x,pos.y,pos.z);
+			m_vis2engine.push(gp::engine::messages::PlayerPositionMessage(camPos - towards*0.15f));
+    }
     //if (frameCounter % 600 == 0) { 
     //  std::cout << "{" 
     //    << scenario->camera().worldPosition().x << " " << scenario->camera().worldPosition().y << " " << scenario->camera().worldPosition().z 

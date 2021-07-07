@@ -50,6 +50,8 @@ private:
 	bool m_shooting = false;
 	Vector3f m_shootingPos;
 	Vector3f m_shootingDir;
+
+	Vector3f m_playerPos;
 	/** The collision of the current time step */
 	std::vector<Collision> m_collisions;
 
