@@ -33,7 +33,8 @@ public:
 		BOX_BOX,
 		/** Special collision type for "external" constraints */
 		CONSTRAINT,
-		SHOT
+		SHOT,
+		TRIGGER
 	};
 
 private:

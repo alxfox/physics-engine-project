@@ -79,14 +79,14 @@ public:
 	 */
 	Entity addBox(float_t mass = 1, const engine::Vector3f &position = engine::Vector3f::Zero(),
 		const engine::Vector3f &size = engine::Vector3f::Ones(), const engine::Vector3f &velocity = engine::Vector3f::Zero(),
-		const engine::Quaternion &rotation = engine::Quaternion());
+		const engine::Quaternion &rotation = engine::Quaternion(), bool trig = false);
 
 	/**
 	 * @return The entity of the new sphere
 	 */
 	Entity addSphere(float_t mass = 1, const engine::Vector3f &position = engine::Vector3f::Zero(),
 		float_t radius = 1, const engine::Vector3f &velocity = engine::Vector3f::Zero(),
-		const engine::Quaternion &rotation = engine::Quaternion());
+		const engine::Quaternion &rotation = engine::Quaternion(), bool trig = false);
 
 	/**
 	 * Add a visualization object

@@ -8,18 +8,36 @@
 #include "math/SkewSymmetricMatrix.h"
 #include "utils.h"
 
+float binPos =  -50;
+
 void gp::engine::CollisionResolver::resolveInterpenetration()
 {
 	if(m_collision.isShot()){
 		return;
 	}
+
 	// TODO
 	Object* obj1 = m_collision.object1();
 	Object* obj2 = m_collision.object2();
-
+	
 	//Collisions between unmovable objects shouldn't exist
 	if(!obj1->isMovable()&&!obj2->isMovable())
 		return;
+
+	if(obj1->isTrigger()){
+		std::cout << "I'm triggered" << std::endl;
+		obj2->setPosition(Vector3f(0, binPos, 0));
+		binPos -= 10;
+		return;
+	}
+
+	if(obj2->isTrigger()){
+		std::cout << "I'm triggered" << std::endl;
+		obj1->setPosition(Vector3f(0, binPos, 0));
+		binPos -= 10;
+		return;
+	}
+
 
 	//Separate the objects along the collision normal by *interpenetrationDepth* distance
 	Vector3f moveDistance = m_collision.collisionNormal()*m_collision.interpenetrationDepth();
@@ -63,6 +81,9 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 	Object* obj1 = m_collision.object1();
 	Object* obj2 = m_collision.object2();
 
+	if(obj1->isTrigger() || obj2->isTrigger()){
+		return;
+	}
 	//Collisions between unmovable objects shouldn't exist
 	if(!obj1->isMovable()&&!obj2->isMovable())
 		return;
@@ -161,6 +182,9 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutFriction()
 	if(!obj1->isMovable()&&!obj2->isMovable())
 		return;
 
+	if(obj1->isTrigger() || obj2->isTrigger()){
+		return;
+	}
 //=========================================Collecting Data==============================================
 	Vector3f v1 = obj1->velocity();
 	Vector3f v2 = obj2->velocity();
@@ -223,6 +247,10 @@ void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 
 	Object* obj1 = m_collision.object1();
 	Object* obj2 = m_collision.object2();
+
+	if(obj1->isTrigger() || obj2->isTrigger()){
+		return;
+	}
 	//Collisions between unmovable objects shouldn't exist
 	if(!obj1->isMovable()&&!obj2->isMovable())
 		return;

@@ -358,7 +358,8 @@ bool gp::engine::Collision::detectBoxBox()
 
 
 gp::engine::Collision::CollisionType gp::engine::Collision::getType(gp::engine::Object *o1, gp::engine::Object *o2)
-{
+{	
+
 	if (dynamic_cast<Sphere*>(o1)) {
 		if (dynamic_cast<Sphere*>(o2))
 			return SPHERE_SPHERE;

@@ -9,25 +9,25 @@
 #include "glm/gtx/string_cast.hpp"
 
 gp::Entity gp::Scenario::addBox(float_t mass, const engine::Vector3f &position, const engine::Vector3f &size,
-		const engine::Vector3f &velocity, const engine::Quaternion &rotation)
+		const engine::Vector3f &velocity, const engine::Quaternion &rotation, bool trig)
 {
 	// Create the visualization object
 	Entity entity = addVisObject(gp::graphics::Cube, position, 0.5*size, rotation);
 
 	// Set engine manifestation
-	m_objectManager.engine.add(entity, gp::engine::Box(mass, position, size, velocity, rotation));
+	m_objectManager.engine.add(entity, gp::engine::Box(mass, position, size, velocity, rotation, trig));
 
 	return entity;
 }
 
 gp::Entity gp::Scenario::addSphere(float_t mass, const gp::engine::Vector3f &position, float_t radius,
-		const gp::engine::Vector3f &velocity, const engine::Quaternion &rotation)
+		const gp::engine::Vector3f &velocity, const engine::Quaternion &rotation, bool trig)
 {
 	// Create the visualization object
 	Entity entity = addVisObject(gp::graphics::Sphere, position, engine::Vector3f(radius, radius, radius), rotation);
 
 	// Set engine manifestation
-	m_objectManager.engine.add(entity, gp::engine::Sphere(mass, position, radius, velocity, rotation));
+	m_objectManager.engine.add(entity, gp::engine::Sphere(mass, position, radius, velocity, rotation, trig));
 
 	return entity;
 }

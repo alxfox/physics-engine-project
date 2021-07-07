@@ -21,6 +21,9 @@ private:
 	/** Name of the object (can be used for debugging) */
 	std::string m_name;
 
+	/** The object is not a rigid body but a trigger **/
+	bool m_isTrigger;
+
 	/** 1/mass of the object */
 	const float_t m_invMass;
 
@@ -63,14 +66,15 @@ private:
 	const float_t m_boundingRadius;
 
 protected:
-	Object(float_t mass, const Vector3f &position, const Vector3f &velocity, const Quaternion &rotation, const Matrix3f &rotationalInertia, float_t boundingRadius)
+	Object(float_t mass, const Vector3f &position, const Vector3f &velocity, const Quaternion &rotation, const Matrix3f &rotationalInertia, float_t boundingRadius, bool trigger = false)
 		: m_invMass(1./mass), m_position(position), m_rotation(rotation), m_velocity(velocity),
 		m_angularVelocity(Vector3f::Zero()),
 		m_restitutionCoefficient(0.3),
 		m_staticFriction(0.4),
 		m_dynamicFriction(0.3),
 		m_rotationalInverseInertia(rotationalInertia.inverse()),
-		m_boundingRadius(boundingRadius)
+		m_boundingRadius(boundingRadius),
+		m_isTrigger(trigger)
 	{
 		updateModelMatrix();
 	}
@@ -119,6 +123,14 @@ public:
 	bool isMovable() const
 	{
 		return m_invMass != INV_UNMOVABLE_MASS;
+	}
+
+	/**
+	 * @return True, if the object is a trigger 
+	 */
+	bool isTrigger() const
+	{
+		return m_isTrigger;
 	}
 
 	/**
