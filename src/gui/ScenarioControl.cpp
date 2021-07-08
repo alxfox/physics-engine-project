@@ -28,9 +28,9 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	gui->addGroup("Pause Game (P)");
 	Widget* simulation = new Widget(nanoguiWindow.get());
 	simulation->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle));
-	m_playPause = new Button(simulation, "");
-	m_playPause->setIcon(ENTYPO_ICON_PAUS);
-	m_playPause->setCallback(std::bind(&ScenarioControl::toggleEngine, this));
+	//m_playPause = new Button(simulation, "");
+	// m_playPause->setIcon(ENTYPO_ICON_PAUS);
+	// m_playPause->setCallback(std::bind(&ScenarioControl::toggleEngine, this));
 	// m_nextFrame = new Button(simulation, "");
 	// m_nextFrame->setIcon(ENTYPO_ICON_TO_END);
 	// m_nextFrame->setEnabled(false);
@@ -63,8 +63,11 @@ void gp::gui::ScenarioControl::toggleEngine()
 	m_paused = !m_paused;
 	if (!m_paused) {
 		m_playPause->setIcon(ENTYPO_ICON_PAUS);
+		//===========================================einfügen dass sich das menü öffnet=========================================================
+
 	} else {
 		m_playPause->setIcon(ENTYPO_ICON_PLAY);
+		//===========================================einfügen dass sich das menü schließt=========================================================
 	}
 	// m_nextFrame->setEnabled(m_paused);
 	m_vis2engine.push(gp::engine::messages::ControlMessage(m_paused));
@@ -90,11 +93,16 @@ bool gp::gui::ScenarioControl::keyboardEvent(int key, int scancode, int action, 
 	if (!handled) {
 		if (key == GLFW_KEY_P && action == GLFW_PRESS) {
 			toggleEngine();
+			//===========Menu opens,Closes when pressing Pause========================
+			Widget::setVisible(!visible());
 			handled = true;
-		} else if (key == GLFW_KEY_COMMA && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-			stepEngine();
-			handled = true;
-		} else if (key == GLFW_KEY_H && action == GLFW_PRESS) {
+		} 
+		// geting pictur after pictur
+		// else if (key == GLFW_KEY_COMMA && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		// 	stepEngine();
+		// 	handled = true;
+		// }
+		 else if (key == GLFW_KEY_H && action == GLFW_PRESS) {
 			Widget::setVisible(!visible());
 			handled = true;
 		}
@@ -106,4 +114,6 @@ bool gp::gui::ScenarioControl::interactsWithMouse()
 {
 	nanogui::Widget const* widget = findWidget(mousePos());
 	return widget != nullptr && widget != this;
+
+
 }
