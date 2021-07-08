@@ -3,66 +3,66 @@
 #include <sstream>
 gp::Scenario1::Scenario1()
 {
-	gp::graphics::Material& blue = getMaterial("blue");
-	blue.diffuseColor = engine::Vector3f(0.0f, 0.0f, 1.0f);
-	blue.shininess = 10.0f;
-	blue.specularColor = engine::Vector3f(0.2f, 1.0f, 1.0f);
-	gp::graphics::Material& green = getMaterial("green");
-	green.diffuseColor = engine::Vector3f(0.0f, 1.0f, 0.5f);
-	green.setTexture(gp::graphics::Material::Diffuse, "beton_3");
-	green.setTexture(gp::graphics::Material::NormalMap, "beton_3Normal");
-	gp::graphics::Material& orange = getMaterial("orange");
-	orange.diffuseColor = engine::Vector3f(1.0f, 0.64f, 0.0f);
+	// gp::graphics::Material& blue = getMaterial("blue");
+	// blue.diffuseColor = engine::Vector3f(0.0f, 0.0f, 1.0f);
+	// blue.shininess = 10.0f;
+	// blue.specularColor = engine::Vector3f(0.2f, 1.0f, 1.0f);
+	// gp::graphics::Material& green = getMaterial("green");
+	// green.diffuseColor = engine::Vector3f(0.0f, 1.0f, 0.5f);
+	// green.setTexture(gp::graphics::Material::Diffuse, "beton_3");
+	// green.setTexture(gp::graphics::Material::NormalMap, "beton_3Normal");
+	// gp::graphics::Material& orange = getMaterial("orange");
+	// orange.diffuseColor = engine::Vector3f(1.0f, 0.64f, 0.0f);
 
-	gp::graphics::Material& boden = getMaterial("boden");
-	boden.setTexture(gp::graphics::Material::Diffuse, "boden_12");
-	gp::graphics::Material& white = getMaterial("white");
-	gp::graphics::Material& welt = getMaterial("welt");
+	// gp::graphics::Material& boden = getMaterial("boden");
+	// boden.setTexture(gp::graphics::Material::Diffuse, "boden_12");
+	// gp::graphics::Material& white = getMaterial("white");
+	// gp::graphics::Material& welt = getMaterial("welt");
 
 
-	Entity e = addBox(1, engine::Vector3f::Zero());
-	setMaterial(e, green);
-	setName(e, "green box");
+	// Entity e = addBox(1, engine::Vector3f::Zero());
+	// setMaterial(e, green);
+	// setName(e, "green box");
 
-	e = addSphere(1, engine::Vector3f(0.0, 2.0, 0.0), 0.3);
-	setMaterial(e, white);
-	setName(e, "white ball");
+	// e = addSphere(1, engine::Vector3f(0.0, 2.0, 0.0), 0.3);
+	// setMaterial(e, white);
+	// setName(e, "white ball");
 
-	e = addBox(1, engine::Vector3f(-1.7, 0, 1.7), engine::Vector3f::Ones()*0.5, engine::Vector3f(2, 0, 0),
-		engine::Quaternion(M_PI * 0.25, engine::Vector3f(0, 0, 1)));
-	engine::Object* o = m_objectManager.engine.find(e);
-	o->setAngularVelocity(engine::Vector3f(M_PI, 0, 0));
-	setMaterial(e, welt);
-	setName(e, "red box");
+	// e = addBox(1, engine::Vector3f(-1.7, 0, 1.7), engine::Vector3f::Ones()*0.5, engine::Vector3f(2, 0, 0),
+	// 	engine::Quaternion(M_PI * 0.25, engine::Vector3f(0, 0, 1)));
+	// engine::Object* o = m_objectManager.engine.find(e);
+	// o->setAngularVelocity(engine::Vector3f(M_PI, 0, 0));
+	// setMaterial(e, welt);
+	// setName(e, "red box");
 
-	e = addSphere(1, engine::Vector3f(2.7, 0, 0), 0.3, engine::Vector3f(0, 0, 0));
-	setMaterial(e, welt);
-	setName(e, "blue ball");
+	// e = addSphere(1, engine::Vector3f(2.7, 0, 0), 0.3, engine::Vector3f(0, 0, 0));
+	// setMaterial(e, welt);
+	// setName(e, "blue ball");
 
-	e = addSphere(1, engine::Vector3f(2.7, 3, 0), 0.5, engine::Vector3f(0, 0, 0));
-	setMaterial(e, welt);
-	setName(e, "red ball");
+	// e = addSphere(1, engine::Vector3f(2.7, 3, 0), 0.5, engine::Vector3f(0, 0, 0));
+	// setMaterial(e, welt);
+	// setName(e, "red ball");
 
-	e = addBox(1, engine::Vector3f(0.5, 5, 0), engine::Vector3f::Ones()*0.5, engine::Vector3f(0, 0, 0),
-		engine::Quaternion(M_PI * 0.25, engine::Vector3f(0, 0, 1)));
-	setMaterial(e, orange);
-	setName(e, "orange box");
+	// e = addBox(1, engine::Vector3f(0.5, 5, 0), engine::Vector3f::Ones()*0.5, engine::Vector3f(0, 0, 0),
+	// 	engine::Quaternion(M_PI * 0.25, engine::Vector3f(0, 0, 1)));
+	// setMaterial(e, orange);
+	// setName(e, "orange box");
 
-	Entity fixedSphere = addSphere(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0, 3, -4), 0.4);
-	setMaterial(fixedSphere, white);
+	// Entity fixedSphere = addSphere(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0, 3, -4), 0.4);
+	// setMaterial(fixedSphere, white);
 
-	e = addSphere(1, engine::Vector3f(0.2, 1.5, -4), 0.4);
-	setMaterial(e, green);
+	// e = addSphere(1, engine::Vector3f(0.2, 1.5, -4), 0.4);
+	// setMaterial(e, green);
 
-	addRope(fixedSphere, e, 2, engine::Vector3f(0.0f, -0.4f, 0.0f), engine::Vector3f(0.0f, 0.4f, 0.0f));
+	// addRope(fixedSphere, e, 2, engine::Vector3f(0.0f, -0.4f, 0.0f), engine::Vector3f(0.0f, 0.4f, 0.0f));
 
-	Entity fixedSphere2 = addSphere(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(1, 3, -4), 0.4);
-	setMaterial(fixedSphere2, white);
+	// Entity fixedSphere2 = addSphere(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(1, 3, -4), 0.4);
+	// setMaterial(fixedSphere2, white);
 
-	e = addBox(1, engine::Vector3f(3.2, 1.5, -4));
-	setMaterial(e, green);
+	// e = addBox(1, engine::Vector3f(3.2, 1.5, -4));
+	// setMaterial(e, green);
 
-	addRope(fixedSphere2, e, 1.5f, engine::Vector3f(0.0f, -0.4f, 0.0f), engine::Vector3f::Ones() * 0.5f);
+	// addRope(fixedSphere2, e, 1.5f, engine::Vector3f(0.0f, -0.4f, 0.0f), engine::Vector3f::Ones() * 0.5f);
 }
 
 gp::BoxBoxTest::BoxBoxTest()
