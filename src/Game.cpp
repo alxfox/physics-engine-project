@@ -72,6 +72,7 @@ void gp::Game::run()
       glm::vec3 lookAt = q*glm::vec3(0,0,1);
       gp::engine::Vector3f towards(lookAt.x,lookAt.y,-lookAt.z);//why do i need the -?
       towards.normalize();
+      scenario->addSphere(gp::engine::Object::UNMOVABLE_MASS,posV + towards, 0.01f);
 			m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards));
 		}
 
@@ -83,11 +84,13 @@ void gp::Game::run()
       gp::engine::Vector3f camPos(pos.x,pos.y,pos.z);
 			m_vis2engine.push(gp::engine::messages::PlayerPositionMessage(camPos - towards*0.15f));
     }
-    //if (frameCounter % 600 == 0) { 
-    //  std::cout << "{" 
-    //    << scenario->camera().worldPosition().x << " " << scenario->camera().worldPosition().y << " " << scenario->camera().worldPosition().z 
-    //    << "}" << std::endl; 
-    //}
+    if (frameCounter % 600 == 0) { 
+
+      scenario->addSphere(1.0f, engine::Vector3f(0.75f, 2.0f, -0.9f), 0.7f);
+      std::cout << "{" 
+        << scenario->camera().worldPosition().x << " " << scenario->camera().worldPosition().y << " " << scenario->camera().worldPosition().z 
+        << "}" << std::endl; 
+    }
     scenario->synchronize();
 
     renderComponentMan->computeMatrices(camera->view, spotLight->depthVP);
