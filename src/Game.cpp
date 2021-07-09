@@ -68,8 +68,9 @@ void gp::Game::run()
     if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS&&!m_scenarioControl.interactsWithMouse()) {
       glm::vec3 pos = camera->worldPosition();
       gp::engine::Vector3f posV(pos.x,pos.y,pos.z);
-      glm::quat q = glm::normalize(camera->rotation());
-      //glm::mat3 m = glm::mat3_cast(q);
+      /**This also works**/
+      //glm::quat q = glm::inverse(glm::normalize(camera->rotation()));
+      //glm::vec3 lookAt = q*glm::vec3(0,0,1);
       glm::mat4 m = camera->view;
       glm::vec3 lookAt(m[0][2],m[1][2],m[2][2]);
       gp::engine::Vector3f towards(-lookAt.x,-lookAt.y,-lookAt.z);
