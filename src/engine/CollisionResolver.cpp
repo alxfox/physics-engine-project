@@ -26,14 +26,14 @@ void gp::engine::CollisionResolver::resolveInterpenetration()
 
 	if(obj1->isTrigger()){
 		std::cout << "I'm triggered" << std::endl;
-		obj2->setPosition(Vector3f(0, binPos, 0));
+		obj2->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
 		return;
 	}
 
 	if(obj2->isTrigger()){
 		std::cout << "I'm triggered" << std::endl;
-		obj1->setPosition(Vector3f(0, binPos, 0));
+		obj1->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
 		return;
 	}

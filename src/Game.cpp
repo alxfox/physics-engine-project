@@ -10,6 +10,7 @@
 #include "gui/graphics/Camera.h"
 #include "gui/graphics/TextureManager.h"
 #include "engine/messages/ControlMessage.h"
+#include <GLFW/glfw3.h>
 
 void* gp::runEngine(void* data)
 {
@@ -65,32 +66,38 @@ void gp::Game::run()
     glfwPollEvents();
 
     m_cameraControl.moveCamera(m_window, m_scenarioControl, *camera);
-    if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS&&!m_scenarioControl.interactsWithMouse()) {
+
+
+    //if (glfwGetKey(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS&&!m_scenarioControl.interactsWithMouse()) {
+	  if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+    //if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS&&!m_scenarioControl.interactsWithMouse()) {
       glm::vec3 pos = camera->worldPosition();
       gp::engine::Vector3f posV(pos.x,pos.y,pos.z);
-      glm::quat q = camera->rotation();
-      glm::vec3 lookAt = q*glm::vec3(0,0,1);
-      gp::engine::Vector3f towards(lookAt.x,lookAt.y,-lookAt.z);//why do i need the -?
+      glm::quat q = glm::normalize(camera->rotation());
+      //glm::mat3 m = glm::mat3_cast(q);
+      glm::mat4 m = camera->view;
+      glm::vec3 lookAt(m[0][2],m[1][2],m[2][2]);
+      gp::engine::Vector3f towards(-lookAt.x,-lookAt.y,-lookAt.z);
       towards.normalize();
-      scenario->addSphere(gp::engine::Object::UNMOVABLE_MASS,posV + towards, 0.01f);
+      //scenario->addSphere(gp::engine::Object::UNMOVABLE_MASS,posV + towards, 0.01f);
 			m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards));
 		}
 
-    if (frameCounter % 2 == 0) {
-      glm::quat q = camera->rotation();
-      glm::vec3 lookAt = q*glm::vec3(0,0,1);
-      gp::engine::Vector3f towards(lookAt.x,lookAt.y,-lookAt.z);//why do i need the -?
-      glm::vec3 pos = camera->worldPosition();
-      gp::engine::Vector3f camPos(pos.x,pos.y,pos.z);
-			m_vis2engine.push(gp::engine::messages::PlayerPositionMessage(camPos - towards*0.15f));
-    }
-    if (frameCounter % 600 == 0) { 
+    glm::mat4 m = camera->view;
+    glm::vec3 lookAt(m[0][2],m[1][2],m[2][2]);
+    gp::engine::Vector3f towards(-lookAt.x,-lookAt.y,-lookAt.z);
+    towards.normalize();
+    glm::vec3 pos = camera->worldPosition();
+    gp::engine::Vector3f camPos(pos.x,pos.y,pos.z);
+		m_vis2engine.push(gp::engine::messages::PlayerPositionMessage(camPos - towards*0.2f));
 
-      scenario->addSphere(1.0f, engine::Vector3f(0.75f, 2.0f, -0.9f), 0.7f);
-      std::cout << "{" 
-        << scenario->camera().worldPosition().x << " " << scenario->camera().worldPosition().y << " " << scenario->camera().worldPosition().z 
-        << "}" << std::endl; 
-    }
+    //if (frameCounter % 6000 == 0) { 
+
+    //  scenario->addSphere(1.0f, engine::Vector3f(0.75f, 2.0f, -0.9f), 0.7f);
+    //  std::cout << "{" 
+    //    << scenario->camera().worldPosition().x << " " << scenario->camera().worldPosition().y << " " << scenario->camera().worldPosition().z 
+    //    << "}" << std::endl; 
+    //}
     scenario->synchronize();
 
     renderComponentMan->computeMatrices(camera->view, spotLight->depthVP);

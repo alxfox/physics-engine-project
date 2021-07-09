@@ -48,6 +48,8 @@ private:
 
 public:
 	bool enableConstraintsRendering = true;
+	nanogui::Window* m_aimingReticle = nullptr;
+	nanogui::Window* m_nanoguiWindow = nullptr;
 // 	gp::messages::Queue<gp::messages::Message> engineMessages;
 
 	ScenarioControl(GLFWwindow* window, gp::messages::Queue<gp::messages::Message>& vis2engine);
@@ -64,6 +66,7 @@ public:
 	virtual bool keyboardEvent(int key, int scancode, int action, int modifiers);
 
 	bool interactsWithMouse();
+	bool isPaused();
 };
 
 }

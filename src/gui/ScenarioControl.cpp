@@ -11,41 +11,83 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 {
 	initialize(window, true);
 
-	FormHelper *gui = new FormHelper(this);
-	ref<Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Menu");
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
 
-  gui->addGroup("Choose difficulty");
+
+	FormHelper *aimingReticleHelper = new FormHelper(this);
+	m_aimingReticle = aimingReticleHelper->addWindow(Eigen::Vector2i(width/2.0f-20, height/2.0f-10), "");
+	//aimingReticle->setSize(Eigen::Vector2i(1, 1));
+	//aimingReticleHelper->setFixedSize(Eigen::Vector2i(1, 1));
+	//Widget* aimRet = new Widget(aimingReticle.get());
+	//aimRet->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Middle));
+	//nanogui::Label* aR1 = new Label(aimRet, "  |  ", "sans", 8);
+	//nanogui::Label* aR2 = new Label(aimRet, "-- --", "sans", 8);
+	//nanogui::Label* aR3 = new Label(aimRet, "  |  ", "sans", 8);
+	//aimRet->setFixedWidth(40);
+	//aimRet->setFixedHeight(40);
+	//aimingReticleHelper->addWidget("", aimRet);
+
+
+	FormHelper *gui = new FormHelper(this);
+	m_nanoguiWindow = gui->addWindow(Eigen::Vector2i(1, height-60), "");
+
+
+
+
+	Widget* games = new Widget(m_nanoguiWindow);
+	games->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle));
+	nanogui::Button* g1 = new Button(games, "G1");
+	nanogui::Button* g2 = new Button(games, "G2");
+	nanogui::Button* g3 = new Button(games, "G3");
+	g1->setCallback([this]() { loadScenario<gp::Custom1>(); });
+	g2->setCallback([this]() { loadScenario<gp::Custom2>(); });
+	g3->setCallback([this]() { loadScenario<gp::Custom3>(); });
+	//nanogui::Label* pause = new Label(games, "Pause Game (P)", "sans", 24);
+	Widget* instructions = new Widget(games);
+	instructions->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
+	nanogui::Label* instr = new Label(instructions, "  Press W, A, S, D to move and Left Mouseclick to shoot.");
+	nanogui::Label* instr1 = new Label(instructions, "  Try to shoot the flying objects as far away from you as possible so that they disappear.");
+	nanogui::Label* instr2 = new Label(instructions, "  Press H to hide the Menue. Press Esc to pause the game");
+	games->setFixedWidth(width-1);
+	games->setFixedHeight(50);
+	gui->addWidget("",games);
+//  gui->setFixedSize(Eigen::Vector2i(width-100, height));
+//  gui->addGroup("Choose difficulty");
 //   gui->addButton("Scenario 1", [this]() { loadScenario<gp::Scenario1>(); });
 //   gui->addButton("Box box test", [this]() { loadScenario<gp::BoxBoxTest>(); });
 //   gui->addButton("Many spheres", [this]() { loadScenario<gp::ManySpheres>(); });
 //   gui->addButton("Many cubes", [this]() { loadScenario<gp::ManyCubes>(); });
 //   gui->addButton("Hanging bridge", [this]() { loadScenario<gp::HangingBridge>(); });
 //   gui->addButton("Pendulum", [this]() { loadScenario<gp::Pendulum>(); });
-  gui->addButton("Easy peasy", [this]() { loadScenario<gp::Custom1>(); });
-  gui->addButton("Normal", [this]() { loadScenario<gp::Custom2>(); });
-  gui->addButton("Insane", [this]() { loadScenario<gp::Custom3>(); });
+//  gui->addButton("Easy peasy", [this]() { loadScenario<gp::Custom1>(); });
+//  gui->addButton("Normal", [this]() { loadScenario<gp::Custom2>(); });
+//  gui->addButton("Insane", [this]() { loadScenario<gp::Custom3>(); });
 
-	gui->addGroup("Pause Game (P)");
-	Widget* simulation = new Widget(nanoguiWindow.get());
-	simulation->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle));
+	//gui->addGroup("Pause Game (P)");
+	//Widget* simulation = new Widget(nanoguiWindow.get());
+	//simulation->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle));
+	//simulation->setFixedWidth(100);
 	//m_playPause = new Button(simulation, "");
 	// m_playPause->setIcon(ENTYPO_ICON_PAUS);
 	// m_playPause->setCallback(std::bind(&ScenarioControl::toggleEngine, this));
-	// m_nextFrame = new Button(simulation, "");
-	// m_nextFrame->setIcon(ENTYPO_ICON_TO_END);
-	// m_nextFrame->setEnabled(false);
+	 //m_nextFrame = new Button(simulation, "");
+	 //m_nextFrame->setIcon(ENTYPO_ICON_TO_END);
+	 //m_nextFrame->setEnabled(false);
 	// m_nextFrame->setCallback(std::bind(&ScenarioControl::stepEngine, this));
-	gui->addWidget("", simulation);
+	//gui->addWidget("", simulation);
 
 	// gui->addGroup("Render options");
 	// gui->addVariable("Ropes", enableConstraintsRendering);
 
-	nanogui::Label *instructions = new nanogui::Label(nanoguiWindow.get(),
-		 "Press W, A, S, D to move and Left Mouseclick to shoot. \n \nTry to shoot the flying objects as far away from you as possible so that they disappear. \n \n Press H to hide the Menue.");
-	instructions->setFixedWidth(150);
-	gui->addGroup("Instructions");
-	gui->addWidget("", instructions);
+	//nanogui::Label *instructions = new nanogui::Label(nanoguiWindow.get(),
+	//	 "Press W, A, S, D to move and Left Mouseclick to shoot. \n \nTry to shoot the flying objects as far away from you as possible so that they disappear. \n \n Press H to hide the Menue.");
+	////instructions->setFixedWidth(width-100);
+	////instructions->setFixedHeight(150);
+	//gui->addGroup("Instructions");
+	//gui->addWidget("", instructions);
 
+  	//gui->setFixedSize(Eigen::Vector2i(width-100, height));
 	setVisible(true);
 	performLayout();
 }
@@ -61,15 +103,15 @@ gp::gui::ScenarioControl::~ScenarioControl()
 void gp::gui::ScenarioControl::toggleEngine()
 {
 	m_paused = !m_paused;
-	if (!m_paused) {
-		m_playPause->setIcon(ENTYPO_ICON_PAUS);
-		//===========================================einfügen dass sich das menü öffnet=========================================================
+	//if (!m_paused) {
+	//	m_playPause->setIcon(ENTYPO_ICON_PAUS);
+	//	//===========================================einfügen dass sich das menü öffnet=========================================================
 
-	} else {
-		m_playPause->setIcon(ENTYPO_ICON_PLAY);
-		//===========================================einfügen dass sich das menü schließt=========================================================
-	}
-	// m_nextFrame->setEnabled(m_paused);
+	//} else {
+	//	m_playPause->setIcon(ENTYPO_ICON_PLAY);
+	//	//===========================================einfügen dass sich das menü schließt=========================================================
+	//}
+	//m_nextFrame->setEnabled(m_paused);
 	m_vis2engine.push(gp::engine::messages::ControlMessage(m_paused));
 }
 
@@ -91,10 +133,10 @@ bool gp::gui::ScenarioControl::keyboardEvent(int key, int scancode, int action, 
 {
 	bool handled = Screen::keyboardEvent(key, scancode, action, modifiers);
 	if (!handled) {
-		if (key == GLFW_KEY_P && action == GLFW_PRESS) {
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 			toggleEngine();
 			//===========Menu opens,Closes when pressing Pause========================
-			Widget::setVisible(!visible());
+			//Widget::setVisible(!visible());
 			handled = true;
 		} 
 		// geting pictur after pictur
@@ -114,6 +156,12 @@ bool gp::gui::ScenarioControl::interactsWithMouse()
 {
 	nanogui::Widget const* widget = findWidget(mousePos());
 	return widget != nullptr && widget != this;
+
+
+}
+bool gp::gui::ScenarioControl::isPaused()
+{
+	return m_paused;
 
 
 }
