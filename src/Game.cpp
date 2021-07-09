@@ -68,9 +68,11 @@ void gp::Game::run()
     if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS&&!m_scenarioControl.interactsWithMouse()) {
       glm::vec3 pos = camera->worldPosition();
       gp::engine::Vector3f posV(pos.x,pos.y,pos.z);
-      glm::quat q = camera->rotation();
-      glm::vec3 lookAt = q*glm::vec3(0,0,1);
-      gp::engine::Vector3f towards(lookAt.x,lookAt.y,-lookAt.z);//why do i need the -?
+      glm::quat q = glm::normalize(camera->rotation());
+      //glm::mat3 m = glm::mat3_cast(q);
+      glm::mat4 m = camera->view;
+      glm::vec3 lookAt(m[0][2],m[1][2],m[2][2]);
+      gp::engine::Vector3f towards(-lookAt.x,-lookAt.y,-lookAt.z);
       towards.normalize();
       scenario->addSphere(gp::engine::Object::UNMOVABLE_MASS,posV + towards, 0.01f);
 			m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards));
