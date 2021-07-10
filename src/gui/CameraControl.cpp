@@ -56,7 +56,7 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
 
   float speed = 0.05f;
   //camera.translate(glm::vec3( (A-D) * speed, (Q-E) * speed, (W-S) * speed ));
-  camera.translate(glm::vec3( (A-D) * speed, 0*(Q-E) * speed, (W-S) * speed ));
+  camera.translateCC(glm::vec3( (A-D) * speed, 0*(Q-E) * speed, (W-S) * speed ));
 
   glm::vec3 yAxis = glm::vec3(0.0, 1.0, 0.0);
   glm::vec3 xAxis = glm::vec3(1.0, 0.0, 0.0);
