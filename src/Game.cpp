@@ -75,7 +75,7 @@ void gp::Game::run()
       glm::vec3 lookAt(m[0][2],m[1][2],m[2][2]);
       gp::engine::Vector3f towards(-lookAt.x,-lookAt.y,-lookAt.z);
       towards.normalize();
-      scenario->addSphere(gp::engine::Object::UNMOVABLE_MASS,posV + towards, 0.01f);
+      //scenario->addSphere(gp::engine::Object::UNMOVABLE_MASS,posV + towards, 0.01f);
 			m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards));
 		}
 

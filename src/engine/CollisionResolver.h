@@ -51,6 +51,11 @@ private:
 	 * @brief Apply realistic collision impulse
 	 */
 	void applyRealisticCollisionImpulse();
+	
+	/**
+	 * @brief Apply collision Impulse for a shot
+	 */
+	void applyCollisionImpulseForRay();
 
 private:
 	/**

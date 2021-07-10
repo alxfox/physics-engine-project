@@ -13,6 +13,7 @@ float binPos =  -50;
 void gp::engine::CollisionResolver::resolveInterpenetration()
 {
 	if(m_collision.isShot()){
+		// no resolving needed, the ray is not an object
 		return;
 	}
 
@@ -59,6 +60,7 @@ void gp::engine::CollisionResolver::applyCollisionImpulse()
 {
 	if(m_collision.isShot()){
 		//apply some impulse here
+		applyCollisionImpulseForRay();
 		return;
 	}
 	switch (COLLISION_IMPULSE_ALGORITHM) {
@@ -75,7 +77,59 @@ void gp::engine::CollisionResolver::applyCollisionImpulse()
 		; // Do nothing
 	}
 }
+void gp::engine::CollisionResolver::applyCollisionImpulseForRay()
+{
+	Object* obj1 = m_collision.object1();
+	//Collisions between unmovable objects shouldn't exist
+	if(!obj1->isMovable())
+		return;
 
+	if(obj1->isTrigger()){
+		return;
+	}
+//=========================================Collecting Data==============================================
+	Vector3f v1 = obj1->velocity();
+	Vector3f v2 = m_collision.collisionNormal()*m_collision.interpenetrationDepth();
+	float_t COF = obj1->restitutionCoefficient();
+
+	Vector3f r1 = m_collision.collisionPoint1()-obj1->position();
+	//Vector3f r2 = m_collision.collisionPoint2()-obj2->position();
+	Vector3f w1 = obj1->angularVelocity();
+	//Vector3f w2 = obj2->angularVelocity();
+
+	Vector3f pV1 = v1 + w1.cross(r1);//total velocity of collision point
+	Vector3f pV2 = v2;
+	Vector3f normal = m_collision.collisionNormal();
+	
+//=========================================Inverse Inertia Matrices==============================================
+	Matrix3f inertia1World;
+	if(obj1->isMovable()){
+		inertia1World = obj1->invModelMatrix().linear().transpose()*obj1->rotationalInverseInertia()*obj1->invModelMatrix().linear();
+	} 
+	else inertia1World = Matrix3f::Zero();
+
+	Matrix3f inertia2World = Matrix3f::Zero();
+
+//=========================================Computing f from the equation==============================================
+	float_t dividend = (-1-COF)*(pV1-pV2).dot(normal);
+	Vector3f div1 = obj1->invMass()*normal;
+	Vector3f div2 = (inertia1World*(r1.cross(normal))).cross(r1);
+	//Vector3f div4 = 0
+	float_t divisor;
+	divisor = normal.dot(div1+div2);
+	float_t f = dividend/divisor;
+	float_t f1 = f;
+	float_t f2 = -f;
+
+//=========================================Velocity updates==============================================
+
+	Vector3f w1New = inertia1World*(r1.cross(f1*normal));
+
+	Vector3f v1New = obj1->invMass()*f1*normal;
+
+	obj1->changeVelocity(v1New);
+	obj1->changeAngularVelocity(w1New);
+}
 void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction()
 {
 	Object* obj1 = m_collision.object1();
