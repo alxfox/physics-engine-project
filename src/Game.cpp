@@ -6,6 +6,7 @@
 #include "engine/messages/ScenarioMessage.h"
 #include "engine/objects/Box.h"
 #include "engine/Engine.h"
+#include "engine/utils.h"
 #include "gui/graphics/RenderComponentManager.h"
 #include "gui/graphics/Camera.h"
 #include "gui/graphics/TextureManager.h"
@@ -39,6 +40,7 @@ gp::Game::~Game()
 	// Send stop message to game engine thread
 	m_vis2engine.push(gp::messages::StopMessage());
 
+
 	// Wait for the engine thread to finish
 	pthread_join(m_engineThread, 0L);
 }
@@ -61,6 +63,7 @@ void gp::Game::run()
       camera = &scenario->camera();
       renderComponentMan = &scenario->renderObjectManager();
       constraintMan = &scenario->renderConstraintManager();
+
     }
     // Check if any events have been activated (key pressed, mouse moved etc.) and call corresponding response functions
     glfwPollEvents();
@@ -82,7 +85,22 @@ void gp::Game::run()
       towards.normalize();
       //scenario->addSphere(gp::engine::Object::UNMOVABLE_MASS,posV + towards, 0.01f);
 			m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards));
+
+      m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 8;
+      gp::engine::Vector4f shootColor(255.0f, 0.0f, .0f, 955.0f);
+      m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
+      m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
+      m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillFocused = nanogui::Color(shootColor);
+      m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillFocused = nanogui::Color(shootColor);
 		}
+    else{
+      m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 4;
+      m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
+      m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
+      m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillFocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
+      m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillFocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
+
+    }
 
     glm::mat4 m = camera->view;
     glm::vec3 lookAt(m[0][2],m[1][2],m[2][2]);

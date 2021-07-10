@@ -48,7 +48,8 @@ private:
 
 public:
 	bool enableConstraintsRendering = true;
-	nanogui::Window* m_aimingReticle = nullptr;
+	nanogui::Window* m_aimingReticleHor = nullptr;
+	nanogui::Window* m_aimingReticleVer = nullptr;
 	nanogui::Window* m_nanoguiWindow = nullptr;
 // 	gp::messages::Queue<gp::messages::Message> engineMessages;
 

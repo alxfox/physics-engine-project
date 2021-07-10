@@ -15,8 +15,27 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	glfwGetWindowSize(window, &width, &height);
 
 
-	FormHelper *aimingReticleHelper = new FormHelper(this);
-	m_aimingReticle = aimingReticleHelper->addWindow(Eigen::Vector2i(width/2.0f-20, height/2.0f-10), "");
+	FormHelper *aimingReticleHor = new FormHelper(this);
+	m_aimingReticleHor = aimingReticleHor->addWindow(Eigen::Vector2i(width/2.0f-20, height/2.0f), "");
+	//m_aimingReticle->setSize(Eigen::Vector2i(width/2.0f-20, 100000));
+	m_aimingReticleHor->setFixedWidth(20);
+	m_aimingReticleHor->setFixedHeight(-1);
+	FormHelper *aimingReticleVer = new FormHelper(this);
+	m_aimingReticleVer = aimingReticleVer->addWindow(Eigen::Vector2i(width/2.0f-10, height/2.0f-10), "");
+	//m_aimingReticle->setSize(Eigen::Vector2i(width/2.0f-20, 100000));
+	m_aimingReticleVer->setFixedWidth(-1.f);
+	m_aimingReticleVer->setFixedHeight(18);
+	NVGcontext* cont = this->nvgContext();
+	Theme* base = new Theme(cont);
+	m_aimingReticleHor->setTheme(base);
+	m_aimingReticleVer->setTheme(base);
+	m_aimingReticleHor->theme()->mWindowDropShadowSize = 10;
+	m_aimingReticleHor->theme()->mWindowCornerRadius = 4;
+	m_aimingReticleHor->theme()->mWindowFillUnfocused = Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
+	m_aimingReticleVer->theme()->mWindowFillUnfocused = Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
+	m_aimingReticleHor->theme()->mWindowFillFocused = Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
+	m_aimingReticleVer->theme()->mWindowFillFocused = Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
+	//m_aimingReticle->setHeight(1000);
 	//aimingReticle->setSize(Eigen::Vector2i(1, 1));
 	//aimingReticleHelper->setFixedSize(Eigen::Vector2i(1, 1));
 	//Widget* aimRet = new Widget(aimingReticle.get());
@@ -32,6 +51,9 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	FormHelper *gui = new FormHelper(this);
 	m_nanoguiWindow = gui->addWindow(Eigen::Vector2i(1, height-60), "");
 
+	//m_nanoguiWindow->theme()->mWindowFillUnfocused = Color(engine::Vector4f(0.0f, 0.0f, 200.0f, 255.0f));
+	//m_nanoguiWindow->theme()->mWindowFillFocused = Color(engine::Vector4f(21.0f, 101.0f, 192.0f, 255.0f));
+	
 
 
 
@@ -49,8 +71,9 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	nanogui::Label* instr = new Label(instructions, "  Press W, A, S, D to move and Left Mouseclick to shoot.");
 	nanogui::Label* instr1 = new Label(instructions, "  Try to shoot the flying objects as far away from you as possible so that they disappear.");
 	nanogui::Label* instr2 = new Label(instructions, "  Press H to hide the Menue. Press Esc to pause the game");
-	games->setFixedWidth(width-1);
+	games->setFixedWidth(width-10);
 	games->setFixedHeight(50);
+	//games->theme()->mWindowFillUnfocused = Color(engine::Vector4f(255.0f, 255.0f, 0.0f, 255.0f));
 	gui->addWidget("",games);
 //  gui->setFixedSize(Eigen::Vector2i(width-100, height));
 //  gui->addGroup("Choose difficulty");
@@ -136,7 +159,7 @@ bool gp::gui::ScenarioControl::keyboardEvent(int key, int scancode, int action, 
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 			toggleEngine();
 			//===========Menu opens,Closes when pressing Pause========================
-			//Widget::setVisible(!visible());
+			m_nanoguiWindow->setVisible(m_paused);
 			handled = true;
 		} 
 		// geting pictur after pictur
