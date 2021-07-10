@@ -6,7 +6,6 @@
 
 #include "utils.h"
 #include "engine/objects/Box.h"
-
 namespace gp
 {
 
@@ -51,6 +50,37 @@ public:
 			}
 		}
 		return projection;
+	}
+	bool collideRay(const Vector3f &point, const Vector3f &dir, Vector3f &ret){
+		//for each axis check -1 and 1
+		//x-axis
+		bool foundOne = false;
+		float_t lowestDistance = std::numeric_limits<float_t>::max();
+		for(int axis = 0; axis<3;axis++){
+			for(int i = -1; i<2;i+=2){
+				float_t t = ((i) - point[axis])/dir[axis];
+				if(abs(point[axis]+t*dir[axis] - (i))<EPSILON){
+					Vector3f current = point+t*dir;
+					//check if point is the one closest to the source so far
+					float_t curDist = (point-current).norm();
+					if(curDist < lowestDistance)
+					{
+						//point is on the plane and closest, next check if it's within the bounds of the box
+						int ax1 = (axis+1)%3;
+						int ax2 = (axis+2)%3;
+						if(current[ax1]<=m_box.halfSize()(ax1) && current[ax1]>=-m_box.halfSize()(ax1) 
+						&& current[ax2]<=m_box.halfSize()(ax2) && current[ax2]>=-m_box.halfSize()(ax2)){
+							lowestDistance = curDist;
+							ret.x()=current.x();
+							ret.y()=current.y();
+							ret.z()=current.z();
+							foundOne = true;
+						}
+					}
+				}
+			}
+		}
+		return foundOne;
 	}
 };
 

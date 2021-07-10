@@ -54,11 +54,23 @@ bool gp::engine::Collision::detectShot(){
 		float_t b = sqrt(c*c-a*a);
 		m_collisionPoint1 = pointOnLine - b * m_shotDirection;
 		m_collisionNormal = m_shotDirection.normalized();
+		m_interpenetrationDepth = 10.f;
 		std::cout << m_collisionPoint1.x() << " "<< m_collisionPoint1.y() << " "<< m_collisionPoint1.z() << std::endl;
 		return true;
 	}
 	else{
 		Box* myBox = dynamic_cast<Box*>(m_object1);
+		Vector3f pos = myBox->invModelMatrix() * m_shotSource;
+		Vector3f dir = myBox->invModelMatrix().linear() * m_shotDirection;
+		AABox aaBox(*myBox);
+		Vector3f result(0,0,0);
+		if(aaBox.collideRay(pos,dir,result)){
+			m_collisionPoint1=myBox->modelMatrix()*result;
+			m_collisionNormal = m_shotDirection.normalized();
+			m_interpenetrationDepth = 10.f;
+			std::cout << m_collisionPoint1.x() << " "<< m_collisionPoint1.y() << " "<< m_collisionPoint1.z() << std::endl;
+			return true;
+		}
 		return false;
 	}
 }
