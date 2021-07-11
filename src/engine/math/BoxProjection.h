@@ -70,10 +70,10 @@ private:
 			const gp::engine::Vector3f axis)
 	{
 		// TODO
-		assert(abs(boxAxis[0].norm() - 1) < EPSILON);
-		assert(abs(boxAxis[1].norm() - 1) < EPSILON);
-		assert(abs(boxAxis[2].norm() - 1) < EPSILON);
-		assert(abs(axis.norm() - 1) < EPSILON);
+		//assert(abs(boxAxis[0].norm() - 1) < EPSILON);
+		//assert(abs(boxAxis[1].norm() - 1) < EPSILON);
+		//assert(abs(boxAxis[2].norm() - 1) < EPSILON);
+		//assert(abs(axis.norm() - 1) < EPSILON);
 
 		Vector3f diag1 = (boxAxis[0]*boxHalfSize[0]+boxAxis[1]*boxHalfSize[1]+boxAxis[2]*boxHalfSize[2]);
 		Vector3f diag2 = (-boxAxis[0]*boxHalfSize[0]+boxAxis[1]*boxHalfSize[1]+boxAxis[2]*boxHalfSize[2]);

@@ -54,6 +54,7 @@ void gp::Game::run()
   gp::graphics::ConstraintManager* constraintMan = nullptr;
 
   GLuint64 frameCounter = 0;
+  float time = 0;
   // Game loop
   while (!glfwWindowShouldClose(m_window)) {
     if (m_scenarioControl.hasNewScenario()) {
@@ -108,7 +109,7 @@ void gp::Game::run()
     towards.normalize();
     glm::vec3 pos = camera->worldPosition();
     gp::engine::Vector3f camPos(pos.x,pos.y,pos.z);
-		m_vis2engine.push(gp::engine::messages::PlayerPositionMessage(camPos - towards*0.2f));
+		m_vis2engine.push(gp::engine::messages::PlayerPositionMessage(camPos - towards*0.4f));
 
     //if (frameCounter % 6000 == 0) { 
 
@@ -127,7 +128,9 @@ void gp::Game::run()
 
     char buffer[512];
     if (frameCounter % 60 == 0) {
-      sprintf(buffer, "Game physics lab. Render %.2lf ms.", m_render.lastGPUTime() * 1.0e-6);
+      float secs = m_render.lastGPUTime();
+      time += secs;
+      sprintf(buffer, "Game physics lab. Render %.2lf ms. %.2lf", secs* 1.0e-6, time*1.0e-6);
       glfwSetWindowTitle(m_window, buffer);
 
     }

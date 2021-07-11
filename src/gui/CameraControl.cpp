@@ -38,7 +38,10 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
      return;
    }
-
+   if (inside && xpos > width/2 + width/4 || xpos < width/2 - width/4 || ypos > height/2 + height/4 || ypos < height/2 - height/4){
+     glfwSetCursorPos(window, width / 2.0f, height / 2.0f);
+     glfwGetCursorPos(window, &m_lastXPos, &m_lastYPos);
+   }
 	//if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
     //double xpos, ypos;
 

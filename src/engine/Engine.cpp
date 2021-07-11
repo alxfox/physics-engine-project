@@ -9,6 +9,7 @@
 #include "messages/ControlMessage.h"
 #include "messages/ScenarioMessage.h"
 #include "common/messages/StopMessage.h"
+#include "utils.h"
 
 void gp::engine::Engine::start()
 {
@@ -181,6 +182,14 @@ void gp::engine::Engine::detectCollisions()
 		Object* o1 = *it1;
 		if(o1->isTrigger()){
 			o1->setPosition(engine::Vector3f(m_playerPos.x(), m_playerPos.y(), m_playerPos.z()));
+		}
+		else{
+			engine::Vector3f objToCam = m_playerPos - o1->position();
+			if (objToCam.norm() > o1->distToCam()){
+				o1->setVelocity(objToCam*1.0f);
+				//o1->setDistToCam(objToCam.norm());
+			}
+			//o1->setVelocity(o1->velocity() + (-o1->position() + m_playerPos)*0.01f);
 		}
 	}
 	// Get additional constraints

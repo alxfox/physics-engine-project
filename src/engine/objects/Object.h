@@ -65,6 +65,8 @@ private:
 	/** Bounding radius for quick collision detection (an upper bound of the size) */
 	const float_t m_boundingRadius;
 
+	float_t m_distToCam; 
+
 protected:
 	Object(float_t mass, const Vector3f &position, const Vector3f &velocity, const Quaternion &rotation, const Matrix3f &rotationalInertia, float_t boundingRadius, bool trigger = false)
 		: m_invMass(1./mass), m_position(position), m_rotation(rotation), m_velocity(velocity),
@@ -74,7 +76,8 @@ protected:
 		m_dynamicFriction(0.3),
 		m_rotationalInverseInertia(rotationalInertia.inverse()),
 		m_boundingRadius(boundingRadius),
-		m_isTrigger(trigger)
+		m_isTrigger(trigger),
+		m_distToCam(8)
 	{
 		updateModelMatrix();
 	}
@@ -83,6 +86,15 @@ public:
 	virtual ~Object()
 	{ }
 
+	float_t distToCam() const
+	{
+		return m_distToCam;
+	}
+
+	void setDistToCam(float_t dToCam)
+	{
+		m_distToCam = dToCam;
+	}
 	/**
 	 * @return The name of the object or an empty string if no name was set
 	 */
