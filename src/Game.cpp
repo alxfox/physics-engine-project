@@ -11,8 +11,11 @@
 #include "gui/graphics/Camera.h"
 #include "gui/graphics/TextureManager.h"
 #include "engine/messages/ControlMessage.h"
+<<<<<<< HEAD
 #include <GLFW/glfw3.h>
 
+=======
+>>>>>>> origin/rayCollision
 void* gp::runEngine(void* data)
 {
 	EngineData* engineData = static_cast<EngineData*>(data);
@@ -145,8 +148,13 @@ void gp::Game::setupNewScenario()
 	m_vis2engine.push(gp::engine::messages::ScenarioMessage(
 		m_scenarioControl.peekScenario()->engineObjectManager(),
 		m_scenarioControl.peekScenario()->engineConstraintManager()));
-	/// \todo general message handler
-	m_engine2vis.waitAndPop();
+	/// \todo general message handler+
+  while (true){
+  gp::messages::Message message = m_engine2vis.waitAndPop();
+  if(gp::messages::isType<gp::engine::messages::ScenarioLoadedMessage>(message))
+    break;
+  }
+	
 
   m_scenarioControl.swapScenario();
   m_cameraControl.reset();
