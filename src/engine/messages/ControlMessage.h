@@ -41,6 +41,8 @@ class StepMessage : public gp::messages::Message
 public:
 	StepMessage() : gp::messages::Message(type_id<StepMessage>()) { }
 };
+
+
 class ShootMessage : public gp::messages::Message
 {
 private:

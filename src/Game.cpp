@@ -10,7 +10,6 @@
 #include "gui/graphics/Camera.h"
 #include "gui/graphics/TextureManager.h"
 #include "engine/messages/ControlMessage.h"
-
 void* gp::runEngine(void* data)
 {
 	EngineData* engineData = static_cast<EngineData*>(data);
@@ -78,7 +77,7 @@ void gp::Game::run()
       //scenario->addSphere(gp::engine::Object::UNMOVABLE_MASS,posV + towards, 0.01f);
 			m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards));
 		}
-
+  //TODO receive messages here (pop m_engine2vis)
     if (frameCounter % 2 == 0) {
       glm::quat q = camera->rotation();
       glm::vec3 lookAt = q*glm::vec3(0,0,1);
@@ -119,8 +118,13 @@ void gp::Game::setupNewScenario()
 	m_vis2engine.push(gp::engine::messages::ScenarioMessage(
 		m_scenarioControl.peekScenario()->engineObjectManager(),
 		m_scenarioControl.peekScenario()->engineConstraintManager()));
-	/// \todo general message handler
-	m_engine2vis.waitAndPop();
+	/// \todo general message handler+
+  while (true){
+  gp::messages::Message message = m_engine2vis.waitAndPop();
+  if(gp::messages::isType<gp::engine::messages::ScenarioLoadedMessage>(message))
+    break;
+  }
+	
 
   m_scenarioControl.swapScenario();
   m_cameraControl.reset();
