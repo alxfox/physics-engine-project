@@ -11,11 +11,8 @@
 #include "gui/graphics/Camera.h"
 #include "gui/graphics/TextureManager.h"
 #include "engine/messages/ControlMessage.h"
-<<<<<<< HEAD
 #include <GLFW/glfw3.h>
 
-=======
->>>>>>> origin/rayCollision
 void* gp::runEngine(void* data)
 {
 	EngineData* engineData = static_cast<EngineData*>(data);
