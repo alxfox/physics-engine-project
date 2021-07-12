@@ -66,6 +66,7 @@ private:
 	const float_t m_boundingRadius;
 
 	float_t m_distToCam; 
+	
 
 protected:
 	Object(float_t mass, const Vector3f &position, const Vector3f &velocity, const Quaternion &rotation, const Matrix3f &rotationalInertia, float_t boundingRadius, bool trigger = false)
@@ -77,7 +78,7 @@ protected:
 		m_rotationalInverseInertia(rotationalInertia.inverse()),
 		m_boundingRadius(boundingRadius),
 		m_isTrigger(trigger),
-		m_distToCam(8)
+		m_distToCam(10)
 	{
 		updateModelMatrix();
 	}
