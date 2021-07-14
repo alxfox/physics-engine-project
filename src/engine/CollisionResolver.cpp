@@ -10,6 +10,27 @@
 
 float binPos =  -50;
 
+void gp::engine::CollisionResolver::resolveTriggers(engine::Vector3f &info){
+
+	Object* obj1 = m_collision.object1();
+	Object* obj2 = m_collision.object2();
+
+	if(obj1->objType() == Object::TRIGGER_PLAYER){
+		std::cout << "I'm triggered" << std::endl;
+		obj2->setPosition(Vector3f(binPos, -10, 0));
+		binPos -= 10;
+		return;
+	}
+
+	if(obj2->objType() == Object::TRIGGER_PLAYER){
+		std::cout << "I'm triggered" << std::endl;
+		obj1->setPosition(Vector3f(binPos, -10, 0));
+		binPos -= 10;
+		return;
+	}
+
+}
+
 void gp::engine::CollisionResolver::resolveInterpenetration()
 {
 	if(m_collision.isShot()){
@@ -25,20 +46,9 @@ void gp::engine::CollisionResolver::resolveInterpenetration()
 	if(!obj1->isMovable()&&!obj2->isMovable())
 		return;
 
-	if(obj1->isTrigger()){
-		std::cout << "I'm triggered" << std::endl;
-		obj2->setPosition(Vector3f(binPos, -10, 0));
-		binPos -= 10;
+	if(obj1->objType() != Object::DEFAULT || obj2->objType() != Object::DEFAULT){
 		return;
 	}
-
-	if(obj2->isTrigger()){
-		std::cout << "I'm triggered" << std::endl;
-		obj1->setPosition(Vector3f(binPos, -10, 0));
-		binPos -= 10;
-		return;
-	}
-
 
 	//Separate the objects along the collision normal by *interpenetrationDepth* distance
 	Vector3f moveDistance = m_collision.collisionNormal()*m_collision.interpenetrationDepth();
@@ -84,7 +94,7 @@ void gp::engine::CollisionResolver::applyCollisionImpulseForRay()
 	if(!obj1->isMovable())
 		return;
 
-	if(obj1->isTrigger()){
+	if(obj1->objType() != Object::DEFAULT){
 		return;
 	}
 //=========================================Collecting Data==============================================
@@ -135,7 +145,7 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction
 	Object* obj1 = m_collision.object1();
 	Object* obj2 = m_collision.object2();
 
-	if(obj1->isTrigger() || obj2->isTrigger()){
+	if(obj1->objType() != Object::DEFAULT || obj2->objType() != Object::DEFAULT){
 		return;
 	}
 	//Collisions between unmovable objects shouldn't exist
@@ -236,7 +246,7 @@ void gp::engine::CollisionResolver::applyCollisionImpulseWithoutFriction()
 	if(!obj1->isMovable()&&!obj2->isMovable())
 		return;
 
-	if(obj1->isTrigger() || obj2->isTrigger()){
+	if(obj1->objType() != Object::DEFAULT || obj2->objType() != Object::DEFAULT){
 		return;
 	}
 //=========================================Collecting Data==============================================
@@ -302,7 +312,7 @@ void gp::engine::CollisionResolver::applyRealisticCollisionImpulse()
 	Object* obj1 = m_collision.object1();
 	Object* obj2 = m_collision.object2();
 
-	if(obj1->isTrigger() || obj2->isTrigger()){
+	if(obj1->objType() != Object::DEFAULT || obj2->objType() != Object::DEFAULT){
 		return;
 	}
 	//Collisions between unmovable objects shouldn't exist

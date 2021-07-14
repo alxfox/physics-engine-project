@@ -2,6 +2,7 @@
 #define GP_ENGINE_COLLISIONRESOLVER_H
 
 #include "Collision.h"
+#include "utils.h"
 
 namespace gp
 {
@@ -25,6 +26,11 @@ public:
 	CollisionResolver(const Collision &collision)
 		: m_collision(collision)
 	{ }
+	/**
+
+	 * @brief Resolve the possible triggers 
+	 */
+	void resolveTriggers(engine::Vector3f &info);
 
 	/**
 	 * @brief Resolve the interpenetration

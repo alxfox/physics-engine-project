@@ -95,6 +95,11 @@ private:
 	void resolveInterpenetrations();
 
 	/**
+	 * @brief Resolve interpenetration by moving objects
+	 */
+	void resolveTriggers();
+
+	/**
 	 * @brief Apply the collision impulse to all collisions
 	 */
 	void applyCollisionImpulse();

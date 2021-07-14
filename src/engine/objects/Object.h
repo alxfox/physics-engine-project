@@ -21,8 +21,7 @@ private:
 	/** Name of the object (can be used for debugging) */
 	std::string m_name;
 
-	/** The object is not a rigid body but a trigger **/
-	bool m_isTrigger;
+
 
 	/** 1/mass of the object */
 	const float_t m_invMass;
@@ -66,10 +65,25 @@ private:
 	const float_t m_boundingRadius;
 
 	float_t m_distToCam; 
-	
+
 
 protected:
-	Object(float_t mass, const Vector3f &position, const Vector3f &velocity, const Quaternion &rotation, const Matrix3f &rotationalInertia, float_t boundingRadius, bool trigger = false)
+
+public:
+
+	enum ObjectType 
+	{
+		DEFAULT,
+		DEFAULT_ENEMY,
+		DEFAULT_POWER_UP,
+		TRIGGER_PLAYER,
+		TRIGGER_ZONE_0,
+		TRIGGER_ZONE_1
+	};	
+	/** The object is not a rigid body but a trigger **/
+	ObjectType m_type;
+
+	Object(float_t mass, const Vector3f &position, const Vector3f &velocity, const Quaternion &rotation, const Matrix3f &rotationalInertia, float_t boundingRadius, ObjectType type = DEFAULT)
 		: m_invMass(1./mass), m_position(position), m_rotation(rotation), m_velocity(velocity),
 		m_angularVelocity(Vector3f::Zero()),
 		m_restitutionCoefficient(0.3),
@@ -77,13 +91,12 @@ protected:
 		m_dynamicFriction(0.3),
 		m_rotationalInverseInertia(rotationalInertia.inverse()),
 		m_boundingRadius(boundingRadius),
-		m_isTrigger(trigger),
+		m_type(type),
 		m_distToCam(10)
 	{
 		updateModelMatrix();
 	}
 
-public:
 	virtual ~Object()
 	{ }
 
@@ -141,9 +154,9 @@ public:
 	/**
 	 * @return True, if the object is a trigger 
 	 */
-	bool isTrigger() const
+	ObjectType objType() const
 	{
-		return m_isTrigger;
+		return m_type;
 	}
 
 	/**

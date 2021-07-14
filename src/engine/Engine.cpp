@@ -47,6 +47,9 @@ void gp::engine::Engine::start()
 			// resolveInterpentrations by moving objects
 			resolveInterpenetrations();
 
+			//resolveTriggers by sending proper messages to UI 
+			resolveTriggers();
+
 			for (unsigned int i = 1; i < COLLISION_RESOLVES_PER_STEP; i++) {
 				detectCollisions();
 				if (m_collisions.empty())
@@ -180,7 +183,7 @@ void gp::engine::Engine::detectCollisions()
 	for (std::vector<Object*>::const_iterator it1 = objects.cbegin();
 		it1 != objects.cend(); ++it1) {
 		Object* o1 = *it1;
-		if(o1->isTrigger()){
+		if(o1->objType() == Object::TRIGGER_PLAYER){
 			o1->setPosition(engine::Vector3f(m_playerPos.x(), m_playerPos.y(), m_playerPos.z()));
 		}
 		else{
@@ -209,6 +212,17 @@ void gp::engine::Engine::resolveInterpenetrations()
 		it != m_collisions.end(); ++it) {
 		CollisionResolver resolver(*it);
 		resolver.resolveInterpenetration();
+	}
+}
+
+void gp::engine::Engine::resolveTriggers()
+{
+	for (std::vector<Collision>::const_iterator it = m_collisions.begin();
+		it != m_collisions.end(); ++it) {
+		CollisionResolver resolver(*it);
+		gp::engine::Vector3f info;
+		resolver.resolveTriggers(info);
+		//TODO (Send info to UI)
 	}
 }
 

@@ -20,8 +20,8 @@ private:
 
 public:
 	Sphere(float mass = 1, const Vector3f &position = Vector3f::Zero(), float_t radius = 1.f,
-		const Vector3f &velocity = Vector3f::Zero(), const Quaternion &rotation = Quaternion(), bool trigger = false)
-		: Object(mass, position, velocity, rotation, rotationalInertia(mass, radius), radius, trigger),
+		const Vector3f &velocity = Vector3f::Zero(), const Quaternion &rotation = Quaternion(), ObjectType type = DEFAULT)
+		: Object(mass, position, velocity, rotation, rotationalInertia(mass, radius), radius, type),
 		m_radius(radius)
 	{ }
 

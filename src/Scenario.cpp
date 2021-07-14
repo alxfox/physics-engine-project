@@ -4,12 +4,13 @@
 #include "engine/objects/Box.h"
 #include "engine/objects/Sphere.h"
 #include "engine/constraints/Rope.h"
+#include "engine/objects/Object.h"
 
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtx/string_cast.hpp"
 
 gp::Entity gp::Scenario::addBox(float_t mass, const engine::Vector3f &position, const engine::Vector3f &size,
-		const engine::Vector3f &velocity, const engine::Quaternion &rotation, bool trig)
+		const engine::Vector3f &velocity, const engine::Quaternion &rotation, engine::Object::ObjectType trig)
 {
 	// Create the visualization object
 	Entity entity = addVisObject(gp::graphics::Cube, position, 0.5*size, rotation);
@@ -21,7 +22,7 @@ gp::Entity gp::Scenario::addBox(float_t mass, const engine::Vector3f &position, 
 }
 
 gp::Entity gp::Scenario::addSphere(float_t mass, const gp::engine::Vector3f &position, float_t radius,
-		const gp::engine::Vector3f &velocity, const engine::Quaternion &rotation, bool trig)
+		const gp::engine::Vector3f &velocity, const engine::Quaternion &rotation, engine::Object::ObjectType trig)
 {
 	// Create the visualization object
 	Entity entity = addVisObject(gp::graphics::Sphere, position, engine::Vector3f(radius, radius, radius), rotation);

@@ -20,8 +20,8 @@ private:
 
 public:
 	Box(float mass = 1, const Vector3f &position = Vector3f::Zero(), const Vector3f &size = Vector3f::Ones(),
-		const Vector3f &velocity = Vector3f::Zero(), const Quaternion &rotation = Quaternion(), bool trigger = false)
-		: Object(mass, position, velocity, rotation, rotationalInertia(mass, size), 0.5*size.norm(), trigger),
+		const Vector3f &velocity = Vector3f::Zero(), const Quaternion &rotation = Quaternion(), ObjectType type = DEFAULT)
+		: Object(mass, position, velocity, rotation, rotationalInertia(mass, size), 0.5*size.norm(), type),
 		m_halfSize(0.5*size)
 	{ }
 

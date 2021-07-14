@@ -296,7 +296,7 @@ gp::Custom3::Custom3()
 //	  e = addBox(1, engine::Vector3f(-3.5f, 0.0f, -3.0f), engine::Vector3f(2.0f, 0.5f, 0.3f));
 //    setMaterial(e, green);
     Entity e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.5f, 0.25f, 0.0f), engine::Vector3f(.4f, 0.4f, 0.4f), engine::Vector3f::Zero(),
-		engine::Quaternion(), true);
+		engine::Quaternion(), engine::Object::TRIGGER_PLAYER);
 //    setMaterial(e, blue);
 //    e = addSphere(1.0f, engine::Vector3f(0.75f, 2.0f, -0.9f), 0.7f);
 //    setMaterial(e, green);
