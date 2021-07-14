@@ -46,6 +46,7 @@ private:
 
 	void setupNewScenario();
 	void setupCallbacks();
+	void dealWithMsgFromEngine();
 
 public:
 	Game(GLFWwindow* window);

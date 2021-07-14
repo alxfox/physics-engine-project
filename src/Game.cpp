@@ -137,8 +137,25 @@ void gp::Game::run()
     ++frameCounter;
 
     glfwSwapBuffers(m_window);
+
+    // if (!m_engine2vis.empty()) {
+    //   dealWithMsgFromEngine();
+    // }
   }
 }
+
+// void gp::Game::dealWithMsgFromEngine() {
+//   messages::Message message = m_engine2vis.pop();
+//   if (gp::messages::isType<engine::messages::ScoreAndLifeUpdate>(message)) {
+//     auto castedMsg = static_cast<engine::messages::ScoreAndLifeUpdate&>(message);
+//     uint16_t life = castedMsg.get_life();
+//     uint16_t score = castedMsg.get_score();
+//     //update the window 
+//     m_scenarioControl.m_score = score;
+//     m_scenarioControl.m_life = life;
+//   }
+//   // error
+// }
 
 void gp::Game::setupNewScenario()
 {
@@ -148,8 +165,19 @@ void gp::Game::setupNewScenario()
 	/// \todo general message handler+
   while (true){
   gp::messages::Message message = m_engine2vis.waitAndPop();
-  if(gp::messages::isType<gp::engine::messages::ScenarioLoadedMessage>(message))
+  if(gp::messages::isType<gp::engine::messages::ScenarioLoadedMessage>(message)){
     break;
+  }
+    else if (gp::messages::isType<engine::messages::ScoreAndLifeUpdate>(message))
+    {
+      auto castedMsg = static_cast<engine::messages::ScoreAndLifeUpdate&>(message);
+    uint16_t life = castedMsg.get_life();
+    uint16_t score = castedMsg.get_score();
+    //update the window 
+    m_scenarioControl.m_score = score;
+    m_scenarioControl.m_life = life;
+    }
+    
   }
 	
 

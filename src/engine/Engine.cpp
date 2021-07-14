@@ -165,6 +165,11 @@ void gp::engine::Engine::detectCollisions()
 			Collision collision(o1, o2);
 			if (collision.detect())
 				m_collisions.emplace_back(collision);
+
+	//write the new score by message
+			uint16_t score = 10, life = 3;
+			engine::messages::ScoreAndLifeUpdate message(score, life);
+			m_outQueue.push(message);
 		}
 	}
 	if(m_shooting){
