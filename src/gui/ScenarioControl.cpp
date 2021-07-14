@@ -14,6 +14,7 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
 
+//=============================================AIMING CROSS=========================================================
 
 	FormHelper *aimingReticleHor = new FormHelper(this);
 	m_aimingReticleHor = aimingReticleHor->addWindow(Eigen::Vector2i(width/2.0f-20, height/2.0f), "");
@@ -47,15 +48,36 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	//aimRet->setFixedHeight(40);
 	//aimingReticleHelper->addWidget("", aimRet);
 
+//=====================================Score top right==================================================
+// FormHelper *gui = new FormHelper(this);
+// 	m_nanoguiWindow = gui->addWindow(Eigen::Vector2i(1, height-60), "");
 
+// FormHelper *aimingReticleHor = new FormHelper(this);
+	// m_aimingReticleHor = aimingReticleHor->addWindow(Eigen::Vector2i(width/2.0f-20, height/2.0f), "");
+
+// FormHelper *Scoringboard = new FormHelper(this);
+
+
+// 	m_scoringboard = Scoringboard->addWindow(Eigen::Vector2i(1, height-60), "");
+// Widget* lifeandscore = new Widget(m_scoringboard);
+// 	lifeandscore->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum);
+// Widget* scoring = new Widget(lifeandscore);
+// 	scoring->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
+// Widget* life = new Widget(lifeandscore);
+// 	life->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum);
+
+// nanogui::Label* points = new Label(scoring, "Score: ");
+// nanogui::Label* leben = new Label(life, "Lives: ");
+// // games->setFixedWidth(width-10);
+// // 	games->setFixedHeight(50);
+// gui->addWidget("",lifeandscore);
+
+//======================================INTERFACE BOTTOM================================================
 	FormHelper *gui = new FormHelper(this);
 	m_nanoguiWindow = gui->addWindow(Eigen::Vector2i(1, height-60), "");
 
 	//m_nanoguiWindow->theme()->mWindowFillUnfocused = Color(engine::Vector4f(0.0f, 0.0f, 200.0f, 255.0f));
 	//m_nanoguiWindow->theme()->mWindowFillFocused = Color(engine::Vector4f(21.0f, 101.0f, 192.0f, 255.0f));
-	
-
-
 
 	Widget* games = new Widget(m_nanoguiWindow);
 	games->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle));
@@ -69,6 +91,7 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	Widget* instructions = new Widget(games);
 	instructions->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
 	nanogui::Label* instr = new Label(instructions, "  Press W, A, S, D to move and Left Mouseclick to shoot.");
+	//nanogui::Label* instr = new Label(instructions, "  Score: " + std::to_string(score) + "Life: " + std::to_string(life));
 	nanogui::Label* instr1 = new Label(instructions, "  Try to shoot the flying objects as far away from you as possible so that they disappear.");
 	nanogui::Label* instr2 = new Label(instructions, "  Press H to hide the Menue. Press Esc to pause the game");
 	games->setFixedWidth(width-10);

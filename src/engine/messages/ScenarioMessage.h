@@ -70,6 +70,23 @@ public:
 	ScenarioLoadedMessage() : Message(type_id<ScenarioLoadedMessage>()) {}
 };
 
+class ScoreAndLifeUpdate : public gp::messages::Message
+{
+private:
+	uint16_t m_score;
+	uint16_t m_life;
+
+public:
+	ScoreAndLifeUpdate(uint16_t score, uint16_t life): Message(type_id<ScoreAndLifeUpdate>()), m_score(score), m_life(life) {}
+
+	uint16_t get_score() const {
+		return m_score;
+	}
+	uint16_t get_life() const {
+		return m_life;
+	}
+};
+
 }
 
 }

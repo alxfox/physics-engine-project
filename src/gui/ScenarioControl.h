@@ -51,6 +51,7 @@ public:
 	nanogui::Window* m_aimingReticleHor = nullptr;
 	nanogui::Window* m_aimingReticleVer = nullptr;
 	nanogui::Window* m_nanoguiWindow = nullptr;
+	nanogui::Window* m_scoringboard = nullptr;
 // 	gp::messages::Queue<gp::messages::Message> engineMessages;
 
 	ScenarioControl(GLFWwindow* window, gp::messages::Queue<gp::messages::Message>& vis2engine);

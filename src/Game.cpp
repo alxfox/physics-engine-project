@@ -137,7 +137,22 @@ void gp::Game::run()
     ++frameCounter;
 
     glfwSwapBuffers(m_window);
+
+    if (!m_engine2vis.empty()) {
+      dealWithMsgFromEngine();
+    }
   }
+}
+
+void gp::Game::dealWithMsgFromEngine() {
+  messages::Message message = m_engine2vis.pop();
+  if (gp::messages::isType<engine::messages::ScoreAndLifeUpdate>(message)) {
+    auto castedMsg = static_cast<engine::messages::ScoreAndLifeUpdate&>(message);
+    uint16_t life = castedMsg.get_life();
+    uint16_t score = castedMsg.get_score();
+   // m_scenarioControl.updateScoreAndLife(score, life);
+  }
+  // error
 }
 
 void gp::Game::setupNewScenario()

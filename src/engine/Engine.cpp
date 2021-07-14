@@ -111,6 +111,13 @@ void gp::engine::Engine::handleMessage(const gp::messages::Message& message)
 		m_playerPos = playerMessage.playerPosition();
 		return;
 	}
+	/// use case example
+	uint16_t score = 10;
+	uint16_t life = 10;
+
+	// messages::ScoreAndLifeUpdate message(score, life);
+	m_outQueue.push(message);
+	///
 
 	std::cerr << "Engine Warning: Received unknown message." << std::endl;
 }
