@@ -111,13 +111,6 @@ void gp::engine::Engine::handleMessage(const gp::messages::Message& message)
 		m_playerPos = playerMessage.playerPosition();
 		return;
 	}
-	/// use case example
-	uint16_t score = 10;
-	uint16_t life = 10;
-
-	// messages::ScoreAndLifeUpdate message(score, life);
-	m_outQueue.push(message);
-	///
 
 	std::cerr << "Engine Warning: Received unknown message." << std::endl;
 }
@@ -169,6 +162,11 @@ void gp::engine::Engine::detectCollisions()
 			Collision collision(o1, o2);
 			if (collision.detect())
 				m_collisions.emplace_back(collision);
+
+	//write the new score by message
+			uint16_t score = 10, life = 3;
+			engine::messages::ScoreAndLifeUpdate message(score, life);
+			m_outQueue.push(message);
 		}
 	}
 	if(m_shooting){

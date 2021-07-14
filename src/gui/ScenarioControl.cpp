@@ -99,6 +99,9 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	//games->theme()->mWindowFillUnfocused = Color(engine::Vector4f(255.0f, 255.0f, 0.0f, 255.0f));
 	gui->addWidget("",games);
 
+	m_score = 0;
+	m_life = 3;
+	
 
 	FormHelper *gui2 = new FormHelper(this);
 	m_scoringboard = gui2->addWindow(Eigen::Vector2i(1, height-100), "");
