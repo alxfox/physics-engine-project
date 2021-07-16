@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include <cmath>
 #include <iostream>
 #include "Scenarios.h"
 #include "common/messages/StopMessage.h"
@@ -12,7 +13,7 @@
 #include "gui/graphics/TextureManager.h"
 #include "engine/messages/ControlMessage.h"
 #include <GLFW/glfw3.h>
-
+#include <ctime>
 void* gp::runEngine(void* data)
 {
 	EngineData* engineData = static_cast<EngineData*>(data);
@@ -56,6 +57,10 @@ void gp::Game::run()
   GLuint64 frameCounter = 0;
   float time = 0;
   // Game loop
+  int wave = 0;
+  std::time_t result = std::time(nullptr);
+  long int t0 = static_cast<long int> (std::time(NULL));
+  //std::cout << t0 << " seconds since the Epoch\n"<<std::endl;
   while (!glfwWindowShouldClose(m_window)) {
     if (m_scenarioControl.hasNewScenario()) {
       setupNewScenario();
@@ -111,6 +116,14 @@ void gp::Game::run()
     gp::engine::Vector3f camPos(pos.x,pos.y,pos.z);
 		m_vis2engine.push(gp::engine::messages::PlayerPositionMessage(camPos - towards*0.4f));
 
+
+
+    long int t1 = static_cast<long int> (std::time(NULL));
+    if (t1 - t0 > 2) {
+      t0 = static_cast<long int> (std::time(NULL));
+      scenario->addSphere(1.0f, engine::Vector3f(0.75f, 2.0f + wave, -0.9f), 0.7f);
+      wave+=1;
+    }
     //if (frameCounter % 6000 == 0) { 
 
     //  scenario->addSphere(1.0f, engine::Vector3f(0.75f, 2.0f, -0.9f), 0.7f);
@@ -118,6 +131,25 @@ void gp::Game::run()
     //    << scenario->camera().worldPosition().x << " " << scenario->camera().worldPosition().y << " " << scenario->camera().worldPosition().z 
     //    << "}" << std::endl; 
     //}
+     //std::cout << "sice " << m_engine2vis.size() << std::endl;
+    if(!m_engine2vis.empty()) {
+      gp::messages::Message message = m_engine2vis.pop();
+
+      if (gp::messages::isType<gp::engine::messages::ScoreAndLifeUpdate>(message))
+      {
+        const gp::engine::messages::ScoreAndLifeUpdate& me = static_cast<const gp::engine::messages::ScoreAndLifeUpdate&>(message);
+        //std::cout << "vaaaaaaaaca" << std::endl;
+        //auto castedMsg = static_cast<gp::engine::messages::ScoreAndLifeUpdate&>(message);
+        //const gp::engine::messages::ScoreAndLifeUpdate* me = dynamic_cast<gp::engine::messages::ScoreAndLifeUpdate*>(message);
+		    //std::cout << "hehehehe" << me.get_life() << std::endl;
+        float_t life = me.get_life();
+        float_t score = me.get_score();
+        //update the window 
+        m_scenarioControl.m_leben->setCaption("LIVES:"+ std::to_string(life));
+        m_scenarioControl.m_punkte->setCaption("SCORE:"+ std::to_string(score));
+      }
+    }
+
     scenario->synchronize();
 
     renderComponentMan->computeMatrices(camera->view, spotLight->depthVP);
@@ -144,19 +176,6 @@ void gp::Game::run()
   }
 }
 
-// void gp::Game::dealWithMsgFromEngine() {
-//   messages::Message message = m_engine2vis.pop();
-//   if (gp::messages::isType<engine::messages::ScoreAndLifeUpdate>(message)) {
-//     auto castedMsg = static_cast<engine::messages::ScoreAndLifeUpdate&>(message);
-//     uint16_t life = castedMsg.get_life();
-//     uint16_t score = castedMsg.get_score();
-//     //update the window 
-//     m_scenarioControl.m_score = score;
-//     m_scenarioControl.m_life = life;
-//   }
-//   // error
-// }
-
 void gp::Game::setupNewScenario()
 {
 	m_vis2engine.push(gp::engine::messages::ScenarioMessage(
@@ -165,19 +184,22 @@ void gp::Game::setupNewScenario()
 	/// \todo general message handler+
   while (true){
   gp::messages::Message message = m_engine2vis.waitAndPop();
-  if(gp::messages::isType<gp::engine::messages::ScenarioLoadedMessage>(message)){
-    break;
-  }
-    else if (gp::messages::isType<engine::messages::ScoreAndLifeUpdate>(message))
-    {
-      auto castedMsg = static_cast<engine::messages::ScoreAndLifeUpdate&>(message);
-    uint16_t life = castedMsg.get_life();
-    uint16_t score = castedMsg.get_score();
-    //update the window 
-    m_scenarioControl.m_score = score;
-    m_scenarioControl.m_life = life;
+    if(gp::messages::isType<gp::engine::messages::ScenarioLoadedMessage>(message)){
+      const gp::engine::messages::ScenarioLoadedMessage& me = static_cast<const gp::engine::messages::ScenarioLoadedMessage&>(message);
+      std::cout << "yeeeha " << me.m_test << std::endl; 
+      break;
     }
-    
+    //else if (gp::messages::isType<gp::engine::messages::ScoreAndLifeUpdate>(message))
+    //{
+    //  std::cout << "vaaaaaaaaca" << std::endl;
+    //  auto castedMsg = static_cast<gp::engine::messages::ScoreAndLifeUpdate&>(message);
+    //uint16_t life = 2318; //castedMsg.get_life();
+    //uint16_t score = castedMsg.get_score();
+    ////update the window 
+    //m_scenarioControl.m_leben->setCaption("LIVES:  	 "+ std::to_string(life));
+    ////m_scenarioControl.m_punkte = new Label(points, "SCORE: 	"+ std::to_string(score));
+
+    //}
   }
 	
 

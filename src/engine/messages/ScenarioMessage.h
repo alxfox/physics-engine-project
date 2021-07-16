@@ -67,22 +67,23 @@ public:
 class ScenarioLoadedMessage : public gp::messages::Message
 {
 public:
-	ScenarioLoadedMessage() : Message(type_id<ScenarioLoadedMessage>()) {}
+	Vector3f m_test;
+	ScenarioLoadedMessage() : Message(type_id<ScenarioLoadedMessage>()), m_test(Vector3f(1.0f,1.0f,1.0f)) {}
 };
 
 class ScoreAndLifeUpdate : public gp::messages::Message
 {
 private:
-	uint16_t m_score;
-	uint16_t m_life;
+	float_t m_score;
+	float_t m_life;
 
 public:
-	ScoreAndLifeUpdate(uint16_t score, uint16_t life): Message(type_id<ScoreAndLifeUpdate>()), m_score(score), m_life(life) {}
+	ScoreAndLifeUpdate(float_t score, float_t life): Message(type_id<ScoreAndLifeUpdate>()), m_score(score), m_life(life) {}
 
-	uint16_t get_score() const {
+	float_t get_score() const {
 		return m_score;
 	}
-	uint16_t get_life() const {
+	float_t get_life() const {
 		return m_life;
 	}
 };

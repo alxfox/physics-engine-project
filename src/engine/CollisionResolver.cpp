@@ -15,6 +15,9 @@ void gp::engine::CollisionResolver::resolveTriggers(engine::Vector3f &info){
 	Object* obj1 = m_collision.object1();
 	Object* obj2 = m_collision.object2();
 
+	info(0) = 4;
+	info(1) = 33;
+
 	if(obj1->objType() == Object::TRIGGER_PLAYER){
 		std::cout << "I'm triggered" << std::endl;
 		obj2->setPosition(Vector3f(binPos, -10, 0));

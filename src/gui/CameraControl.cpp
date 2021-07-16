@@ -17,6 +17,7 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
   scenarioControl.m_aimingReticleVer->setPosition(Eigen::Vector2i(width/2.0f-9, height/2.0f-9));
   scenarioControl.m_nanoguiWindow->setPosition(Eigen::Vector2i(10, height-60));
   scenarioControl.m_nanoguiWindow->setSize(Eigen::Vector2i(width-20, 60));
+  scenarioControl.m_scoringboard->setPosition(Eigen::Vector2i(width-150, 1));
   if (scenarioControl.isPaused()) {
     inside = false;
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
@@ -61,7 +62,7 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
 
   float speed = 0.05f;
   //camera.translate(glm::vec3( (A-D) * speed, 0*(Q-E) * speed, (W-S) * speed ));
-  camera.translateCC(glm::vec3( (A-D) * speed, 0*(Q-E) * speed, (W-S) * speed ));
+  camera.translate(glm::vec3( (A-D) * speed, 0*(Q-E) * speed, 0*(W-S) * speed ));
   //translateCC -> it is modified so that you can't get off the floor
 
   glm::vec3 yAxis = glm::vec3(0.0, 1.0, 0.0);

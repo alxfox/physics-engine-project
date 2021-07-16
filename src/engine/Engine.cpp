@@ -6,6 +6,7 @@
 #include "CollisionResolver.h"
 #include "ObjectManager.h"
 #include "ConstraintManager.h"
+#include "config.h"
 #include "messages/ControlMessage.h"
 #include "messages/ScenarioMessage.h"
 #include "common/messages/StopMessage.h"
@@ -226,8 +227,10 @@ void gp::engine::Engine::resolveTriggers()
 		//TODO (Send info to UI)
 
 		//write the new score by message
-		uint16_t score = 10, life = 3;
-		engine::messages::ScoreAndLifeUpdate message(score, life);
+
+		float_t score = info(0), life = info(1);
+		messages::ScoreAndLifeUpdate message(score, life);
+		std::cout << "hehehe" << message.get_life() << std::endl;
 		m_outQueue.push(message);
 	}
 }
