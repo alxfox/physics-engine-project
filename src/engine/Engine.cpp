@@ -222,16 +222,17 @@ void gp::engine::Engine::resolveTriggers()
 	for (std::vector<Collision>::const_iterator it = m_collisions.begin();
 		it != m_collisions.end(); ++it) {
 		CollisionResolver resolver(*it);
-		gp::engine::Vector3f info;
-		resolver.resolveTriggers(info);
-		//TODO (Send info to UI)
+		//resolver.resolveTriggers();
 
-		//write the new score by message
+		switch (resolver.resolveTriggers()) {
+		case gp::engine::CollisionResolver::ENEMY_DIES:
+			m_outQueue.push(messages::EnemyDeathMessage());
+			break;
+		case gp::engine::CollisionResolver::ENEMY_HITS:
+			m_outQueue.push(messages::EnemyDamageMessage());
+			break;
+		}
 
-		float_t score = info(0), life = info(1);
-		messages::ScoreAndLifeUpdate message(score, life);
-		std::cout << "hehehe" << message.get_life() << std::endl;
-		m_outQueue.push(message);
 	}
 }
 

@@ -20,6 +20,12 @@ private:
 	const Collision &m_collision;
 
 public:
+
+	enum TriggerType 
+	{
+		ENEMY_DIES,
+		ENEMY_HITS
+	};	
 	/**
 	 * @param collision A collision object that has detected a collision
 	 */
@@ -30,7 +36,7 @@ public:
 
 	 * @brief Resolve the possible triggers 
 	 */
-	void resolveTriggers(engine::Vector3f &info);
+	TriggerType resolveTriggers();
 
 	/**
 	 * @brief Resolve the interpenetration

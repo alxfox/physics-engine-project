@@ -10,28 +10,26 @@
 
 float binPos =  -50;
 
-void gp::engine::CollisionResolver::resolveTriggers(engine::Vector3f &info){
+gp::engine::CollisionResolver::TriggerType gp::engine::CollisionResolver::resolveTriggers(){
 
 	Object* obj1 = m_collision.object1();
 	Object* obj2 = m_collision.object2();
-
-	info(0) = 4;
-	info(1) = 33;
+	
 
 	if(obj1->objType() == Object::TRIGGER_PLAYER){
 		std::cout << "I'm triggered" << std::endl;
 		obj2->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
-		return;
+		return ENEMY_HITS;
 	}
 
 	if(obj2->objType() == Object::TRIGGER_PLAYER){
 		std::cout << "I'm triggered" << std::endl;
 		obj1->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
-		return;
+		return ENEMY_HITS;
 	}
-
+	return ENEMY_DIES; 
 }
 
 void gp::engine::CollisionResolver::resolveInterpenetration()

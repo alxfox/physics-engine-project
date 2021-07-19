@@ -63,23 +63,22 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	//m_nanoguiWindow->theme()->mWindowFillUnfocused = Color(engine::Vector4f(0.0f, 0.0f, 200.0f, 255.0f));
 	//m_nanoguiWindow->theme()->mWindowFillFocused = Color(engine::Vector4f(21.0f, 101.0f, 192.0f, 255.0f));
 	 
-	m_score = 0;
-	m_life = 3;
-	
+	m_life = 3;	
+	m_score = 0;	
 
 	FormHelper *gui2 = new FormHelper(this);
 	m_scoringboard = gui2->addWindow(Eigen::Vector2i(width-150, 1), "");
 
 	Widget* games2 = new Widget(m_scoringboard);
 	games2->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
-	Widget* points = new Widget(games2);
-	points->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
-	m_punkte = new Label(points, "SCORE: 	"+ std::to_string(m_score));
+	//Widget* points = new Widget(games2);
+	//points->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
+	m_scoreLabel= new Label(games2, "SCORE: 0                                        " );//+ std::to_string(m_score));
 
-	Widget* live = new Widget(games2);
-	live->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
-	m_leben = new Label(live, "LIVES:  	 "+ std::to_string(m_life));
-	games2->setFixedWidth(150);
+	//Widget* live = new Widget(games2);
+	//live->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
+	m_lifeLabel= new Label(games2, "LIVES: 3                                        " );//+ std::to_string(m_life));
+	games2->setFixedWidth(300);
 	games2->setFixedHeight(30);
 	gui2->addWidget("",games2);
 

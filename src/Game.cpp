@@ -135,18 +135,15 @@ void gp::Game::run()
     if(!m_engine2vis.empty()) {
       gp::messages::Message message = m_engine2vis.pop();
 
-      if (gp::messages::isType<gp::engine::messages::ScoreAndLifeUpdate>(message))
+      if (gp::messages::isType<gp::engine::messages::EnemyDamageMessage>(message))
       {
-        const gp::engine::messages::ScoreAndLifeUpdate& me = static_cast<const gp::engine::messages::ScoreAndLifeUpdate&>(message);
-        //std::cout << "vaaaaaaaaca" << std::endl;
-        //auto castedMsg = static_cast<gp::engine::messages::ScoreAndLifeUpdate&>(message);
-        //const gp::engine::messages::ScoreAndLifeUpdate* me = dynamic_cast<gp::engine::messages::ScoreAndLifeUpdate*>(message);
-		    //std::cout << "hehehehe" << me.get_life() << std::endl;
-        float_t life = me.get_life();
-        float_t score = me.get_score();
-        //update the window 
-        m_scenarioControl.m_leben->setCaption("LIVES:"+ std::to_string(life));
-        m_scenarioControl.m_punkte->setCaption("SCORE:"+ std::to_string(score));
+        m_scenarioControl.m_life -= 1;
+        m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(m_scenarioControl.m_life));
+      }
+      if (gp::messages::isType<gp::engine::messages::EnemyDeathMessage>(message))
+      {
+        m_scenarioControl.m_score += 1;
+        m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(m_scenarioControl.m_score));
       }
     }
 
@@ -185,21 +182,8 @@ void gp::Game::setupNewScenario()
   while (true){
   gp::messages::Message message = m_engine2vis.waitAndPop();
     if(gp::messages::isType<gp::engine::messages::ScenarioLoadedMessage>(message)){
-      const gp::engine::messages::ScenarioLoadedMessage& me = static_cast<const gp::engine::messages::ScenarioLoadedMessage&>(message);
-      std::cout << "yeeeha " << me.m_test << std::endl; 
       break;
     }
-    //else if (gp::messages::isType<gp::engine::messages::ScoreAndLifeUpdate>(message))
-    //{
-    //  std::cout << "vaaaaaaaaca" << std::endl;
-    //  auto castedMsg = static_cast<gp::engine::messages::ScoreAndLifeUpdate&>(message);
-    //uint16_t life = 2318; //castedMsg.get_life();
-    //uint16_t score = castedMsg.get_score();
-    ////update the window 
-    //m_scenarioControl.m_leben->setCaption("LIVES:  	 "+ std::to_string(life));
-    ////m_scenarioControl.m_punkte = new Label(points, "SCORE: 	"+ std::to_string(score));
-
-    //}
   }
 	
 

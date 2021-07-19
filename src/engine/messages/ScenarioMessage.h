@@ -88,6 +88,24 @@ public:
 	}
 };
 
+class EnemyDamageMessage: public gp::messages::Message
+{
+private:
+
+public:
+	EnemyDamageMessage(): Message(type_id<EnemyDamageMessage>()) {}
+
+};
+
+class EnemyDeathMessage: public gp::messages::Message
+{
+private:
+
+public:
+	EnemyDeathMessage(): Message(type_id<EnemyDeathMessage>()) {}
+
+};
+
 }
 
 }

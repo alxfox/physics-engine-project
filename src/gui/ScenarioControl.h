@@ -52,8 +52,8 @@ public:
 	nanogui::Window* m_aimingReticleVer = nullptr;
 	nanogui::Window* m_nanoguiWindow = nullptr;
 	nanogui::Window* m_scoringboard = nullptr;
-	nanogui::Label* m_punkte = nullptr; 
-	nanogui::Label* m_leben = nullptr; 
+	nanogui::Label* m_scoreLabel = nullptr; 
+	nanogui::Label* m_lifeLabel = nullptr; 
 	int16_t m_score;
 	int16_t m_life;
 	
