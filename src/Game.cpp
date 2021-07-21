@@ -217,8 +217,8 @@ void gp::Game::run()
         }
         if (t1 - t0 > 0.5f) {
           t0 = static_cast<long int> (std::time(NULL));
-          float rPos_x = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * width - width/2.0f;
-          float rPos_y = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * height - height/2.0f;
+          float rPos_x = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (width -4.0f) - (width/2.0f-2.0f);
+          float rPos_y = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (height-4.0f) - (height/2.0f-2.0f);
 
           //from -depth/2 to depth/2 - 5
           float rPos_z = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (depth-(depth-depth/9.0f)) - depth/2.0f;
@@ -236,10 +236,32 @@ void gp::Game::run()
                 rPos_z-=depth/2.0f;
               }
           }
-          float rRadius = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) + 0.5f;
-          scenario->addSphere(1.0f, engine::Vector3f(rPos_x, rPos_y, rPos_z), rRadius, 
+        float rRadius = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) + 0.5f;
+        Entity nBall = scenario->addSphere(1.0f, engine::Vector3f(rPos_x, rPos_y, rPos_z), rRadius, 
                               rVel_length*engine::Vector3f(rVel_x, rVel_y, rVel_z+2.5f));
-          wave+=1;
+
+
+	      gp::graphics::Material& redPink = scenario->getMaterial("redPink");
+       	redPink.diffuseColor = engine::Vector3f(0.9f, 0.1f, 0.4f);
+
+	      gp::graphics::Material& orangeYellow = scenario->getMaterial("orangeYellow");
+       	orangeYellow.diffuseColor = engine::Vector3f(0.95f, 0.50f, 0.0f);
+	      gp::graphics::Material& pistacio = scenario->getMaterial("pistacio");
+       	pistacio.diffuseColor = engine::Vector3f(0.5f, 0.6f, 0.1f);
+
+        int color = rand() % 3 + 1;  
+        if (color == 1){
+          scenario->setMaterial(nBall, redPink);
+        }
+        if (color == 2){
+          scenario->setMaterial(nBall, orangeYellow);
+        }
+        if (color == 3){
+          //scenario->setMaterial(nBall, white);
+        }
+
+
+        wave+=1;
         }
       }
       else{
