@@ -191,7 +191,7 @@ void gp::engine::Engine::detectCollisions()
 		else{
 			engine::Vector3f objToCam = m_playerPos - o1->position();
 			if (objToCam.norm() > o1->distToCam()){
-				o1->setVelocity(objToCam*1.0f);
+				//o1->setVelocity(objToCam*1.0f);
 				//o1->setDistToCam(objToCam.norm());
 			}
 			//o1->setVelocity(o1->velocity() + (-o1->position() + m_playerPos)*0.01f);

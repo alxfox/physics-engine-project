@@ -3,7 +3,10 @@
 #include <cmath>
 #include <iostream>
 #include "Scenarios.h"
+#include "CustomScenarios.h"
+#include "common/Entity.h"
 #include "common/messages/StopMessage.h"
+#include "engine/math/Quaternion.h"
 #include "engine/messages/ScenarioMessage.h"
 #include "engine/objects/Box.h"
 #include "engine/Engine.h"
@@ -55,12 +58,32 @@ void gp::Game::run()
   gp::graphics::ConstraintManager* constraintMan = nullptr;
 
   GLuint64 frameCounter = 0;
+  Entity m_front;
+  Entity m_back;
+  Entity m_right;
+  Entity m_left;
+  Entity m_roof;
+  Entity m_floor;
   float time = 0;
   // Game loop
   int wave = 0;
-  std::time_t result = std::time(nullptr);
-  long int t0 = static_cast<long int> (std::time(NULL));
+  long int t0;
+  long int t0_2;
   //std::cout << t0 << " seconds since the Epoch\n"<<std::endl;
+
+	float width = 10.0f;
+	float height = 30.0f;
+	float depth = 100.0f;
+	float arenaSize = 30.0f;
+	float arenaHeight = 8.0f;
+	float arenaOffset = -2.0f;
+	float arenaThickness = 0.1f;
+
+	gp::graphics::Material fullGreen; 
+	gp::graphics::Material green; 
+	gp::graphics::Material fullRed; 
+	gp::graphics::Material red; 
+
   while (!glfwWindowShouldClose(m_window)) {
     if (m_scenarioControl.hasNewScenario()) {
       setupNewScenario();
@@ -69,6 +92,67 @@ void gp::Game::run()
       camera = &scenario->camera();
       renderComponentMan = &scenario->renderObjectManager();
       constraintMan = &scenario->renderConstraintManager();
+
+
+      if (dynamic_cast<gp::Custom3*>(scenario) != nullptr){
+        m_scenarioControl.m_score = 0;
+        m_scenarioControl.m_life = 3;
+        m_scenarioControl.m_lifeLabel->setCaption("LIVES: 3");
+        m_scenarioControl.m_scoreLabel->setCaption("SCORE: 0");
+
+        t0 = static_cast<long int> (std::time(NULL));
+        t0_2 = static_cast<long int> (std::time(NULL));
+	      fullGreen = scenario->getMaterial("fullGreen");
+        fullGreen.diffuseColor = engine::Vector3f(0.0f, 1.0f, 0.0f);
+      //=====================================================Our Game======================================================
+      //(need to have references of some objects in Game.cpp, so as to make them interactive)
+        //return;
+	      gp::graphics::Material& white = scenario->getMaterial("white");
+
+       	gp::graphics::Material& blue = scenario->getMaterial("blue");
+       	blue.diffuseColor = engine::Vector3f(0.0f, 0.5f, 1.0f);
+
+	      green = scenario->getMaterial("green");
+       	green.diffuseColor = engine::Vector3f(0.0f, 1.0f, 0.2f);
+
+	      red = scenario->getMaterial("red");
+       	red.diffuseColor = engine::Vector3f(1.0f, 0.2f, 0.1f);
+
+	      fullRed = scenario->getMaterial("fullRed");
+        fullRed.diffuseColor = engine::Vector3f(1.0f, 0.0f, 0.0f);
+
+
+	      m_front = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.0, 0.0, -depth/2.0), engine::Vector3f(width, height, arenaThickness),
+        engine::Vector3f::Zero(), engine::Quaternion(), engine::Object::TRIGGER_ZONE_0);
+	      scenario->setMaterial(m_front, green);
+	      //scenario->setName(m_front, "front");
+
+	      m_back = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.0,  0.0, depth/2.0), engine::Vector3f(width, height, arenaThickness),
+        engine::Vector3f::Zero(), engine::Quaternion(), engine::Object::TRIGGER_ZONE_1);
+	      scenario->setMaterial(m_back, red);
+	      //setName(e, "back");
+
+	      m_left = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(-width/2.0, 0.0, 0.0), engine::Vector3f(arenaThickness, height, depth));
+	      scenario->setMaterial(m_left, blue);
+	      //setName(e, "left");
+
+	      m_right = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(width/2.0, 0.0, 0.0), engine::Vector3f(arenaThickness, height, depth));
+	      scenario->setMaterial(m_right, blue);
+	      //setName(e, "right");
+
+	      m_roof = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.0, height/2.0, 0.0), engine::Vector3f(width, arenaThickness, depth));
+	      scenario->setMaterial(m_roof, white);
+	      //setName(e, "right");
+
+	      m_floor = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0, -height/2.0, 0), engine::Vector3f(width, arenaThickness, depth));
+	      scenario->setMaterial(m_floor, white);
+
+        //Entity lamp;
+	      //lamp = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0, height/2.0-2, 0), engine::Vector3f(4.0f, 4.0f, 4.0f));
+	      //scenario->setMaterial(lamp, white);
+	      //setName(e, "top");
+
+      }
 
     }
     // Check if any events have been activated (key pressed, mouse moved etc.) and call corresponding response functions
@@ -118,12 +202,54 @@ void gp::Game::run()
 
 
 
-    long int t1 = static_cast<long int> (std::time(NULL));
-    if (t1 - t0 > 2) {
-      t0 = static_cast<long int> (std::time(NULL));
-      scenario->addSphere(1.0f, engine::Vector3f(0.75f, 2.0f + wave, -0.9f), 0.7f);
-      wave+=1;
+    if (dynamic_cast<gp::Custom3*>(scenario) != nullptr){
+    //=====================================================Our Game======================================================
+      //(need to have references of some objects in Game.cpp, so as to make them interactive)
+      //return;
+
+      if(!m_scenarioControl.isPaused()){
+        long int t1 = static_cast<long int> (std::time(NULL));
+        if (t1 - t0_2 > 0.5f) {
+          t0_2 = static_cast<long int> (std::time(NULL));
+          scenario->setMaterial(m_front, green);
+          scenario->setMaterial(m_back, red);
+          wave+=1;
+        }
+        if (t1 - t0 > 0.5f) {
+          t0 = static_cast<long int> (std::time(NULL));
+          float rPos_x = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * width - width/2.0f;
+          float rPos_y = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * height - height/2.0f;
+
+          //from -depth/2 to depth/2 - 5
+          float rPos_z = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (depth-(depth-depth/9.0f)) - depth/2.0f;
+
+          float rVel_x = ((static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*2.0f -1.0f)*
+                          (static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*10.0f;
+          float rVel_y = ((static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*2.0f -1.0f)*
+                          (static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*10.0f;
+          float rVel_z = ((static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*2.0f -1.0f)*
+                          (static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*10.0f;
+
+          float rVel_length = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*10.0f;
+          if ((rVel_length) > 5.0f){//very fast
+              if(rPos_z > 0){//too close
+                rPos_z-=depth/2.0f;
+              }
+          }
+          float rRadius = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) + 0.5f;
+          scenario->addSphere(1.0f, engine::Vector3f(rPos_x, rPos_y, rPos_z), rRadius, 
+                              rVel_length*engine::Vector3f(rVel_x, rVel_y, rVel_z+2.5f));
+          wave+=1;
+        }
+      }
+      else{
+          //5 and 0.5 seconds after the pause, we will have the events, if there's no another pause in between.
+          t0 = static_cast<long int> (std::time(NULL));
+          t0_2 = static_cast<long int> (std::time(NULL));
+      }
+
     }
+
     //if (frameCounter % 6000 == 0) { 
 
     //  scenario->addSphere(1.0f, engine::Vector3f(0.75f, 2.0f, -0.9f), 0.7f);
@@ -139,11 +265,13 @@ void gp::Game::run()
       {
         m_scenarioControl.m_life -= 1;
         m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(m_scenarioControl.m_life));
+        scenario->setMaterial(m_back, fullRed);
       }
       if (gp::messages::isType<gp::engine::messages::EnemyDeathMessage>(message))
       {
         m_scenarioControl.m_score += 1;
         m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(m_scenarioControl.m_score));
+        scenario->setMaterial(m_front, fullGreen);
       }
     }
 

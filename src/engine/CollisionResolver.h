@@ -22,7 +22,7 @@ private:
 public:
 
 	enum TriggerType 
-	{
+	{	DEFAULT,
 		ENEMY_DIES,
 		ENEMY_HITS
 	};	

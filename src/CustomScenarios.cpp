@@ -202,35 +202,35 @@ gp::Custom3::Custom3()
 
   //textures
 
-  gp::graphics::Material& green = getMaterial("green");
-  green.diffuseColor = engine::Vector3f(0.0f, 1.0f, 0.5f);
-  gp::graphics::Material& blue = getMaterial("blue");
-  blue.diffuseColor = engine::Vector3f(0.0f, 0.5f, 1.0f);
+ // gp::graphics::Material& green = getMaterial("green");
+ // green.diffuseColor = engine::Vector3f(0.0f, 1.0f, 0.5f);
+ // gp::graphics::Material& blue = getMaterial("blue");
+ // blue.diffuseColor = engine::Vector3f(0.0f, 0.5f, 1.0f);
   
-  Entity e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.5f, 0.25f, 0.0f), engine::Vector3f(.4f, 0.4f, 0.4f), engine::Vector3f::Zero(),
-	engine::Quaternion(), engine::Object::TRIGGER_PLAYER);
+ // Entity e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.5f, 0.25f, 0.0f), engine::Vector3f(.4f, 0.4f, 0.4f), engine::Vector3f::Zero(),
+	//engine::Quaternion(), engine::Object::TRIGGER_PLAYER);
 
-  std::string colorName;
-  int j = 0;
-  float_t n = 20.0;
-  for(float_t degree = 0; degree < 2*M_PI; degree += 2*M_PI/n){
+ // std::string colorName;
+ // int j = 0;
+ // float_t n = 20.0;
+ // for(float_t degree = 0; degree < 2*M_PI; degree += 2*M_PI/n){
 
-      e = addSphere(1,//gp::engine::Object::UNMOVABLE_MASS,
-              engine::Vector3f(std::cos(degree)*8.1f, 8, 1-std::sin(degree)*8.1f), 
-              0.3f,//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
-              //engine::Vector3f(2.0f, 0.1f, 0.2f),
-              engine::Vector3f(0, 0, 0),
-      		    engine::Quaternion((2*M_PI / n) * j, engine::Vector3f(0, 1, 0))
-              );
+ //     e = addSphere(1,//gp::engine::Object::UNMOVABLE_MASS,
+ //             engine::Vector3f(std::cos(degree)*8.1f, 8, 1-std::sin(degree)*8.1f), 
+ //             0.3f,//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+ //             //engine::Vector3f(2.0f, 0.1f, 0.2f),
+ //             engine::Vector3f(0, 0, 0),
+ //     		    engine::Quaternion((2*M_PI / n) * j, engine::Vector3f(0, 1, 0))
+ //             );
 
-      colorName = "c" + std::to_string(j);
-      getMaterial(colorName).diffuseColor = engine::Vector3f(0.2f, 0.5f, j/n);
-	 /// getMaterial(colorName).shininess = 10.0f;
-	 /// getMaterial(colorName).specularColor = engine::Vector3f(0.2f, 0.5f, j/40.0f);
-      //gp::engine::Vector3f a;
-      //a << 0.1f, 0.1f, 0.1f;
-	    setMaterial(e, getMaterial(colorName));
-      j+=1;
-  }
+ //     colorName = "c" + std::to_string(j);
+ //     getMaterial(colorName).diffuseColor = engine::Vector3f(0.2f, 0.5f, j/n);
+	// /// getMaterial(colorName).shininess = 10.0f;
+	// /// getMaterial(colorName).specularColor = engine::Vector3f(0.2f, 0.5f, j/40.0f);
+ //     //gp::engine::Vector3f a;
+ //     //a << 0.1f, 0.1f, 0.1f;
+	//    setMaterial(e, getMaterial(colorName));
+ //     j+=1;
+ // }
 
 }

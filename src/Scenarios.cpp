@@ -250,30 +250,30 @@ gp::StandardArena::StandardArena()
 	float arenaOffset = -2.0f;
 	//float arenaThickness = 0.1f;
 	float arenaThickness = 0.1f;
-	Entity e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(-arenaSize, arenaOffset + arenaHeight/2.0, 0), engine::Vector3f(arenaThickness, arenaHeight, arenaSize/1.0f));
-	setMaterial(e, blue);
-	setName(e, "left");
+	//Entity e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(-arenaSize, arenaOffset + arenaHeight/2.0, 0), engine::Vector3f(arenaThickness, arenaHeight, arenaSize/1.0f));
+	//setMaterial(e, blue);
+	//setName(e, "left");
 
-	e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(arenaSize, arenaOffset + arenaHeight/2.0, 0), engine::Vector3f(arenaThickness, arenaHeight, arenaSize/1.0f));
-	setMaterial(e, blue);
-	setName(e, "right");
+	//e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(arenaSize, arenaOffset + arenaHeight/2.0, 0), engine::Vector3f(arenaThickness, arenaHeight, arenaSize/1.0f));
+	//setMaterial(e, blue);
+	//setName(e, "right");
 
-	e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.0, arenaOffset + arenaHeight/2.0, -arenaSize/2.0), engine::Vector3f(arenaSize*2, arenaHeight, arenaThickness));
-	setMaterial(e, green);
-	setName(e, "back");
+	//e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.0, arenaOffset + arenaHeight/2.0, -arenaSize/2.0), engine::Vector3f(arenaSize*2, arenaHeight, arenaThickness));
+	//setMaterial(e, green);
+	//setName(e, "back");
 
-	e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.0, arenaOffset + arenaHeight/2.0, arenaSize/2.0), engine::Vector3f(arenaSize*2, arenaHeight, arenaThickness));
-	setMaterial(e, red);
-	setName(e, "front");
+	//e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.0, arenaOffset + arenaHeight/2.0, arenaSize/2.0), engine::Vector3f(arenaSize*2, arenaHeight, arenaThickness));
+	//setMaterial(e, red);
+	//setName(e, "front");
 
-	e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0, -2, 0), engine::Vector3f(2.0f*arenaSize, arenaThickness, 2.0f*arenaSize));
-	setMaterial(e, white);
-	setName(e, "bottom");
+	//Entity e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0, -2, 0), engine::Vector3f(2.0f*arenaSize, arenaThickness, 10.0f*arenaSize));
+	//setMaterial(e, white);
+	//setName(e, "bottom");
 
 	//e = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0, arenaHeight+4, 0), engine::Vector3f(2.0f*arenaSize, arenaThickness, 2.0f*arenaSize));
 	//setMaterial(e, white);
 	//setName(e, "top");
 
-	m_spotLight.setupLight(glm::vec3(0.0f, 60.0f, 7.0f), glm::vec3(0.0f, -1.0f, -0.0f), 300.0f, 0.1f);
-	m_camera.setWorldPosition(glm::vec3(0.0f, -1.0f, 10.0f));
+	m_spotLight.setupLight(glm::vec3(0.0f, 14.9f, 0.0f), glm::vec3(0.0f, -1.00f, 0.0f), 450.0f, 0.5f);
+	m_camera.setWorldPosition(glm::vec3(0.0f, -1.0f, 45.0f));
 }

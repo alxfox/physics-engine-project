@@ -62,8 +62,36 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
 
   float speed = 0.05f;
   //camera.translate(glm::vec3( (A-D) * speed, 0*(Q-E) * speed, (W-S) * speed ));
-  camera.translate(glm::vec3( (A-D) * speed, 0*(Q-E) * speed, 0*(W-S) * speed ));
+  float xFactor = 4.5f;
+  float yFactor = 14.5f;
+
+    
+  camera.translate(glm::vec3( (A-D) * speed, -(W-S) * speed, 0.0*(Q-E) * speed ));
   //translateCC -> it is modified so that you can't get off the floor
+
+  if(camera.worldPosition().x >= xFactor){
+   glm::vec3 rectifier = camera.worldPosition();
+   rectifier.x = xFactor;
+   camera.setWorldPosition(rectifier);
+  }
+
+  if(camera.worldPosition().x <= -xFactor){
+   glm::vec3 rectifier = camera.worldPosition();
+   rectifier.x = -xFactor;
+   camera.setWorldPosition(rectifier);
+  }
+
+  if(camera.worldPosition().y >= yFactor){
+   glm::vec3 rectifier = camera.worldPosition();
+   rectifier.y = yFactor;
+   camera.setWorldPosition(rectifier);
+  }
+
+  if(camera.worldPosition().y <= -yFactor){
+   glm::vec3 rectifier = camera.worldPosition();
+   rectifier.y = -yFactor;
+   camera.setWorldPosition(rectifier);
+  }
 
   glm::vec3 yAxis = glm::vec3(0.0, 1.0, 0.0);
   glm::vec3 xAxis = glm::vec3(1.0, 0.0, 0.0);

@@ -16,20 +16,34 @@ gp::engine::CollisionResolver::TriggerType gp::engine::CollisionResolver::resolv
 	Object* obj2 = m_collision.object2();
 	
 
-	if(obj1->objType() == Object::TRIGGER_PLAYER){
+	if(obj1->objType() == Object::TRIGGER_ZONE_1){
 		std::cout << "I'm triggered" << std::endl;
 		obj2->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
 		return ENEMY_HITS;
 	}
 
-	if(obj2->objType() == Object::TRIGGER_PLAYER){
+	if(obj2->objType() == Object::TRIGGER_ZONE_1){
 		std::cout << "I'm triggered" << std::endl;
 		obj1->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
 		return ENEMY_HITS;
 	}
-	return ENEMY_DIES; 
+
+	if(obj1->objType() == Object::TRIGGER_ZONE_0){
+		std::cout << "I'm triggered" << std::endl;
+		obj2->setPosition(Vector3f(binPos, -10, 0));
+		binPos -= 10;
+		return ENEMY_DIES;
+	}
+
+	if(obj2->objType() == Object::TRIGGER_ZONE_0){
+		std::cout << "I'm triggered" << std::endl;
+		obj1->setPosition(Vector3f(binPos, -10, 0));
+		binPos -= 10;
+		return ENEMY_DIES;
+	}
+	return DEFAULT;
 }
 
 void gp::engine::CollisionResolver::resolveInterpenetration()
