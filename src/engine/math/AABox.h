@@ -37,7 +37,7 @@ public:
 		//Point outside iff one of the coordinates is in absolute value bigger than corresponding half size
 		if(!(abs(point(0)) > m_box.halfSize()(0) || abs(point(1)) > m_box.halfSize()(1) || abs(point(2)) > m_box.halfSize()(2)))
 		std::cout<<"test"<<std::endl;
-		assert(abs(point(0)) > m_box.halfSize()(0) || abs(point(1)) > m_box.halfSize()(1) || abs(point(2)) > m_box.halfSize()(2));
+		//assert(abs(point(0)) > m_box.halfSize()(0) || abs(point(1)) > m_box.halfSize()(1) || abs(point(2)) > m_box.halfSize()(2));
 
 		//To project the point, we modify its components accordingly
 		Vector3f projection(point);

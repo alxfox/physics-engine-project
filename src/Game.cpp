@@ -68,7 +68,8 @@ void gp::Game::run()
   // Game loop
   int wave = 0;
   long int t0;
-  long int t0_2;
+  long int t0_ball;
+  long int t0_squares;
   //std::cout << t0 << " seconds since the Epoch\n"<<std::endl;
 
 	float width = 10.0f;
@@ -83,6 +84,7 @@ void gp::Game::run()
 	gp::graphics::Material green; 
 	gp::graphics::Material fullRed; 
 	gp::graphics::Material red; 
+  gp::graphics::Material pistacio;
 
   while (!glfwWindowShouldClose(m_window)) {
     if (m_scenarioControl.hasNewScenario()) {
@@ -101,7 +103,8 @@ void gp::Game::run()
         m_scenarioControl.m_scoreLabel->setCaption("SCORE: 0");
 
         t0 = static_cast<long int> (std::time(NULL));
-        t0_2 = static_cast<long int> (std::time(NULL));
+        t0_ball = static_cast<long int> (std::time(NULL));
+        t0_squares = static_cast<long int> (std::time(NULL));
 	      fullGreen = scenario->getMaterial("fullGreen");
         fullGreen.diffuseColor = engine::Vector3f(0.0f, 1.0f, 0.0f);
       //=====================================================Our Game======================================================
@@ -121,11 +124,14 @@ void gp::Game::run()
 	      fullRed = scenario->getMaterial("fullRed");
         fullRed.diffuseColor = engine::Vector3f(1.0f, 0.0f, 0.0f);
 
+	      pistacio = scenario->getMaterial("pistacio");
+       	pistacio.diffuseColor = engine::Vector3f(0.5f, 0.6f, 0.1f);
+
 
 	      m_front = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.0, 0.0, -depth/2.0), engine::Vector3f(width, height, arenaThickness),
         engine::Vector3f::Zero(), engine::Quaternion(), engine::Object::TRIGGER_ZONE_0);
 	      scenario->setMaterial(m_front, green);
-	      //scenario->setName(m_front, "front");
+	      scenario->setName(m_front, "front");
 
 	      m_back = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.0,  0.0, depth/2.0), engine::Vector3f(width, height, arenaThickness),
         engine::Vector3f::Zero(), engine::Quaternion(), engine::Object::TRIGGER_ZONE_1);
@@ -151,6 +157,137 @@ void gp::Game::run()
 	      //lamp = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0, height/2.0-2, 0), engine::Vector3f(4.0f, 4.0f, 4.0f));
 	      //scenario->setMaterial(lamp, white);
 	      //setName(e, "top");
+
+//===================================================SPIRAL DECORATION=========================================================
+        float_t j = 0.0f;
+        float_t n = 270.0;
+        for(float_t degree = 0; degree < 2*M_PI; degree += 2*M_PI/n){
+          Entity e = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS,
+            engine::Vector3f(-width/2.0f + 0.1f , -height/2.0f + j/9.0f, depth/2.0f - 0.1f), 
+            gp::engine::Vector3f(1.0f, 0.1f, 0.1f),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+            //engine::Vector3f(2.0f, 0.1f, 0.2f),
+            engine::Vector3f(0, 0, 0),
+            engine::Quaternion((2*M_PI / 20.0f) * j, engine::Vector3f(0, 1, 0))
+            );
+
+	          scenario->setMaterial(e, white);
+            j+=1;
+        }
+
+        j = 0.0f;
+        n = 270.0;
+        for(float_t degree = 0; degree < 2*M_PI; degree += 2*M_PI/n){
+          Entity e = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS,
+            engine::Vector3f(width/2.0f - 0.1f , -height/2.0f + j/9.0f, depth/2.0f - 0.1f), 
+            gp::engine::Vector3f(1.0f, 0.1f, 0.1f),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+            //engine::Vector3f(2.0f, 0.1f, 0.2f),
+            engine::Vector3f(0, 0, 0),
+            engine::Quaternion((2*M_PI / 20.0f) * j, engine::Vector3f(0, 1, 0))
+            );
+
+	          scenario->setMaterial(e, white);
+            j+=1;
+        }
+
+        j = 0.0f;
+        n = 75.0;
+        for(float_t degree = 0; degree < 2*M_PI; degree += 2*M_PI/n){
+          Entity e = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS,
+            engine::Vector3f(-width/2.0f + 0.5f , -height/2.0f + j/2.0f, -depth/2.0f + 0.5f), 
+            gp::engine::Vector3f(2.0f, 0.3f, 0.1f),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+            //engine::Vector3f(2.0f, 0.1f, 0.2f),
+            engine::Vector3f(0, 0, 0),
+            engine::Quaternion((2*M_PI / 10.0f) * j, engine::Vector3f(0, 1, 0)),
+            engine::Object::TRIGGER_ZONE_0
+            );
+
+	          scenario->setMaterial(e, white);
+            j+=1;
+        }
+
+        j = 0.0f;
+        n = 75.0f;
+        for(float_t degree = 0; degree < 2*M_PI; degree += 2*M_PI/n){
+
+          Entity e = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS,
+            engine::Vector3f(width/2.0f - 0.5f , -height/2.0f + j/2.0f, -depth/2.0f + 0.5f), 
+            gp::engine::Vector3f(2.0f, 0.3f, 0.1f),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+            //engine::Vector3f(2.0f, 0.1f, 0.2f),
+            engine::Vector3f(0, 0, 0),
+            engine::Quaternion((2*M_PI / 10.0f) * j, engine::Vector3f(0, 1, 0)),
+            engine::Object::TRIGGER_ZONE_0
+            );
+
+	          scenario->setMaterial(e, white);
+            j+=1;
+        }
+
+        j = 0.0f;
+        n = 74.0f;
+        std::string colorName;
+        for(float_t degree = 0; degree < 2*M_PI; degree += 2*M_PI/n){
+          Entity e = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS,
+            engine::Vector3f(-width/2.0f + 0.4f , -height/2.0f + 0.5f, -depth/2.0f + j/0.75f), 
+            gp::engine::Vector3f(3.1f, 0.3f, 0.1f),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+            //engine::Vector3f(2.0f, 0.1f, 0.2f),
+            engine::Vector3f(0, 0, 0),
+            engine::Quaternion((2*M_PI / 6.0f)*j, engine::Vector3f(0, 0, 1))*engine::Quaternion((2*M_PI / 5.0f), engine::Vector3f(0, 1, 0))
+            );
+            colorName = "c" + std::to_string(j);
+            scenario->getMaterial(colorName).diffuseColor = engine::Vector3f(0.2f, 0.5f, j/n);
+	          scenario->getMaterial(colorName).shininess = 10.0f;
+	          scenario->getMaterial(colorName).specularColor = engine::Vector3f(0.2f, 0.5f, j/40.0f);
+	          scenario->setMaterial(e, scenario->getMaterial(colorName));
+            j+=1;
+        }
+
+        j = 0.0f;
+        n = 74.0f;
+        for(float_t degree = 0; degree < 2*M_PI; degree += 2*M_PI/n){
+          Entity e = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS,
+            engine::Vector3f(width/2.0f - 0.3f , -height/2.0f + 0.5f, -depth/2.0f + j/0.75f), 
+            gp::engine::Vector3f(3.1f, 0.3f, 0.1f),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+            //engine::Vector3f(2.0f, 0.1f, 0.2f),
+            engine::Vector3f(0, 0, 0),
+            engine::Quaternion(-(2*M_PI / 6.0f)*j, engine::Vector3f(0, 0, 1))*engine::Quaternion(-(2*M_PI / 5.0f), engine::Vector3f(0, 1, 0))
+            );
+            colorName = "c" + std::to_string(j);
+            scenario->getMaterial(colorName).diffuseColor = engine::Vector3f(0.2f, 0.5f, j/n);
+	          scenario->getMaterial(colorName).shininess = 10.0f;
+	          scenario->getMaterial(colorName).specularColor = engine::Vector3f(0.2f, 0.5f, j/40.0f);
+	          scenario->setMaterial(e, scenario->getMaterial(colorName));
+            j+=1;
+        }
+
+        scenario->addBox(gp::engine::Object::UNMOVABLE_MASS,
+            engine::Vector3f(-width/2.0f + 0.175 , height/2.0f - 0.175f, 0.0), 
+            gp::engine::Vector3f(0.4f, 0.2f, depth),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+            //engine::Vector3f(2.0f, 0.1f, 0.2f),
+            engine::Vector3f(0, 0, 0)
+        );        
+
+        scenario->addBox(gp::engine::Object::UNMOVABLE_MASS,
+            engine::Vector3f(width/2.0f - 0.175 , height/2.0f - 0.175f, 0.0), 
+            gp::engine::Vector3f(0.4f, 0.2f, depth),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+            //engine::Vector3f(2.0f, 0.1f, 0.2f),
+            engine::Vector3f(0, 0, 0)
+        );        
+
+        scenario->addBox(gp::engine::Object::UNMOVABLE_MASS,
+            engine::Vector3f(-width/2.0f + 0.175 , height/2.0f - 0.375f, 0.0), 
+            gp::engine::Vector3f(0.1f, 0.5f, depth),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+            //engine::Vector3f(2.0f, 0.1f, 0.2f),
+            engine::Vector3f(0, 0, 0)
+        );
+
+        scenario->addBox(gp::engine::Object::UNMOVABLE_MASS,
+            engine::Vector3f(width/2.0f - 0.175 , height/2.0f - 0.375f, 0.0), 
+            gp::engine::Vector3f(0.1f, 0.5f, depth),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+            //engine::Vector3f(2.0f, 0.1f, 0.2f),
+            engine::Vector3f(0, 0, 0)
+        );        
+
+
 
       }
 
@@ -209,14 +346,14 @@ void gp::Game::run()
 
       if(!m_scenarioControl.isPaused()){
         long int t1 = static_cast<long int> (std::time(NULL));
-        if (t1 - t0_2 > 0.5f) {
-          t0_2 = static_cast<long int> (std::time(NULL));
+        if (t1 - t0 > 0.5f) {
+          t0 = static_cast<long int> (std::time(NULL));
           scenario->setMaterial(m_front, green);
           scenario->setMaterial(m_back, red);
           wave+=1;
         }
-        if (t1 - t0 > 0.5f) {
-          t0 = static_cast<long int> (std::time(NULL));
+        if (t1 - t0_ball > 1.0f) {
+          t0_ball = static_cast<long int> (std::time(NULL));
           float rPos_x = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (width -4.0f) - (width/2.0f-2.0f);
           float rPos_y = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (height-4.0f) - (height/2.0f-2.0f);
 
@@ -237,8 +374,8 @@ void gp::Game::run()
               }
           }
         float rRadius = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) + 0.5f;
-        Entity nBall = scenario->addSphere(1.0f, engine::Vector3f(rPos_x, rPos_y, rPos_z), rRadius, 
-                              rVel_length*engine::Vector3f(rVel_x, rVel_y, rVel_z+2.5f));
+        Entity nBall = scenario->addSphere(1.0f, engine::Vector3f(rPos_x, rPos_y, rPos_z + 5.5f), rRadius, 
+                              rVel_length*engine::Vector3f(rVel_x+rVel_z, rVel_y, rVel_z+5.5f));
 
 
 	      gp::graphics::Material& redPink = scenario->getMaterial("redPink");
@@ -246,8 +383,7 @@ void gp::Game::run()
 
 	      gp::graphics::Material& orangeYellow = scenario->getMaterial("orangeYellow");
        	orangeYellow.diffuseColor = engine::Vector3f(0.95f, 0.50f, 0.0f);
-	      gp::graphics::Material& pistacio = scenario->getMaterial("pistacio");
-       	pistacio.diffuseColor = engine::Vector3f(0.5f, 0.6f, 0.1f);
+
 
         int color = rand() % 3 + 1;  
         if (color == 1){
@@ -260,14 +396,51 @@ void gp::Game::run()
           //scenario->setMaterial(nBall, white);
         }
 
+        }
 
-        wave+=1;
+        if (t1 - t0_squares > 5.0f) {
+          t0_squares= static_cast<long int> (std::time(NULL));
+          float rPos_x = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (width -6.0f) - (width/2.0f-3.0f);
+          float rPos_y = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (height-6.0f) - (height/2.0f-3.0f);
+          float rWidth = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*4.0f + 4.0f; 
+          float rHeight = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * 1.0f + 1.0f;
+
+          //from -depth/2 to depth/2 - 5
+          float rVel_z = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*10.0f + 10.0f;
+
+          float rRadius = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) + 0.5f;
+
+          Entity nCube = scenario->addBox(1000.0f,//gp::engine::Object::UNMOVABLE_MASS,
+            engine::Vector3f(0, rPos_y, -depth/2.0f + 3.0f), 
+            gp::engine::Vector3f(rWidth, rHeight, 0.1f),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
+            //engine::Vector3f(2.0f, 0.1f, 0.2f),
+            engine::Vector3f(0, 0, rVel_z)
+            );        
+
+	        engine::Object* o = scenario->engineObjectManager().find(nCube);
+	        o->setAngularVelocity(engine::Vector3f(0, 0, 7*M_PI));
+          o->setVelocity(engine::Vector3f(0,0,100.0f));
+          scenario->setMaterial(nCube, pistacio);
+        //int color = rand() % 3 + 1;  
+        //if (color == 1){
+        //  scenario->setMaterial(nBall, redPink);
+        //}
+        //if (color == 2){
+        //  scenario->setMaterial(nBall, orangeYellow);
+        //}
+        //if (color == 3){
+        //  //scenario->setMaterial(nBall, white);
+        //}
+
+
+          wave+=1;
         }
       }
       else{
           //5 and 0.5 seconds after the pause, we will have the events, if there's no another pause in between.
           t0 = static_cast<long int> (std::time(NULL));
-          t0_2 = static_cast<long int> (std::time(NULL));
+          t0_ball = static_cast<long int> (std::time(NULL));
+          t0_squares = static_cast<long int> (std::time(NULL));
       }
 
     }

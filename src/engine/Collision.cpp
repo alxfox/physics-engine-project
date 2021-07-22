@@ -137,7 +137,7 @@ bool gp::engine::Collision::detectSphereBox()
 				}
 			}
 		}
-		assert(pointsBelow==8 or pointsAbove==8);
+		//assert(pointsBelow==8 or pointsAbove==8);
 		return true;
 	}
 	return false;

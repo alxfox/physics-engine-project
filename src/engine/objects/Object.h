@@ -78,10 +78,13 @@ public:
 		DEFAULT_POWER_UP,
 		TRIGGER_PLAYER,
 		TRIGGER_ZONE_0,
-		TRIGGER_ZONE_1
+		TRIGGER_ZONE_1,
+		CUBE
 	};	
 	/** The object is not a rigid body but a trigger **/
 	ObjectType m_type;
+
+	bool isCube;
 
 	Object(float_t mass, const Vector3f &position, const Vector3f &velocity, const Quaternion &rotation, const Matrix3f &rotationalInertia, float_t boundingRadius, ObjectType type = DEFAULT)
 		: m_invMass(1./mass), m_position(position), m_rotation(rotation), m_velocity(velocity),

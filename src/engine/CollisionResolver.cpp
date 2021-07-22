@@ -43,6 +43,7 @@ gp::engine::CollisionResolver::TriggerType gp::engine::CollisionResolver::resolv
 		binPos -= 10;
 		return ENEMY_DIES;
 	}
+
 	return DEFAULT;
 }
 
