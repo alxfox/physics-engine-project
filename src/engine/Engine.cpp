@@ -105,6 +105,7 @@ void gp::engine::Engine::handleMessage(const gp::messages::Message& message)
 		const messages::ShootMessage& shootMessage = static_cast<const messages::ShootMessage&>(message);
 		m_shootingDir=shootMessage.direction();
 		m_shootingPos=shootMessage.source();
+		m_shootingInt=shootMessage.intensity();
 		m_shooting=true;
 		return;
 	}
@@ -174,7 +175,7 @@ void gp::engine::Engine::detectCollisions()
 			it1 != objects.cend(); ++it1) {
 			Object* o1 = *it1;
 			if(o1->isMovable()){
-				Collision coll(o1,m_shootingPos,m_shootingDir);
+				Collision coll(o1,m_shootingPos,m_shootingDir,m_shootingInt);
 				if(coll.detect()){
 					m_collisions.emplace_back(coll);
 					}

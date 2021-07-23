@@ -48,13 +48,14 @@ class ShootMessage : public gp::messages::Message
 private:
 	Vector3f m_source;
 	Vector3f m_direction;
-  
+	float_t m_intensity;
 
 public:
-	ShootMessage(Vector3f source, Vector3f direction)
+	ShootMessage(Vector3f source, Vector3f direction,float_t intensity)
 		: gp::messages::Message(type_id<ShootMessage>()),
 		m_source(source),
-		m_direction(direction)
+		m_direction(direction),
+		m_intensity(intensity)
 	{ }
 
 	Vector3f source() const {
@@ -62,6 +63,9 @@ public:
 	}
 	Vector3f direction() const {
 		return m_direction;
+	}
+	float_t intensity() const {
+		return m_intensity;
 	}
 };
 

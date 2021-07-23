@@ -17,6 +17,7 @@
 #include "engine/messages/ControlMessage.h"
 #include <GLFW/glfw3.h>
 #include <ctime>
+#include <chrono>
 void* gp::runEngine(void* data)
 {
 	EngineData* engineData = static_cast<EngineData*>(data);
@@ -86,6 +87,14 @@ void gp::Game::run()
 	gp::graphics::Material red; 
   gp::graphics::Material pistacio;
 
+
+  bool currentlyChargedShooting =false;
+  bool currentlyShooting = false;
+  std::chrono::steady_clock::time_point startShot;
+  std::chrono::steady_clock::time_point lastShot;
+  bool canShoot = true;
+  int32_t shotIntensityLevel = 0;
+  int32_t cooldown = 1000;
   while (!glfwWindowShouldClose(m_window)) {
     if (m_scenarioControl.hasNewScenario()) {
       setupNewScenario();
@@ -296,40 +305,103 @@ void gp::Game::run()
     glfwPollEvents();
 
     m_cameraControl.moveCamera(m_window, m_scenarioControl, *camera);
-
-
-    //if (glfwGetKey(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS&&!m_scenarioControl.interactsWithMouse()) {
-	  if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-
-      //std::cout << "I shot";
-    //if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS&&!m_scenarioControl.interactsWithMouse()) {
-      glm::vec3 pos = camera->worldPosition();
-      gp::engine::Vector3f posV(pos.x,pos.y,pos.z);
-      /**This also works**/
-      //glm::quat q = glm::inverse(glm::normalize(camera->rotation()));
-      //glm::vec3 lookAt = q*glm::vec3(0,0,1);
-      glm::mat4 m = camera->view;
-      glm::vec3 lookAt(m[0][2],m[1][2],m[2][2]);
-      gp::engine::Vector3f towards(-lookAt.x,-lookAt.y,-lookAt.z);
-      towards.normalize();
-      //scenario->addSphere(gp::engine::Object::UNMOVABLE_MASS,posV + towards, 0.01f);
-      //std::cout << towards << std::endl;
-			m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards));
-
-      m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 8;
-      gp::engine::Vector4f shootColor(255.0f, 0.0f, .0f, 955.0f);
-      m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
-      m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
-      m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillFocused = nanogui::Color(shootColor);
-      m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillFocused = nanogui::Color(shootColor);
-		}
-    else{
+    if(!canShoot) {//shot cooldown
+      std::chrono::steady_clock::time_point curTime = std::chrono::steady_clock::now();
+      int64_t millis = std::chrono::duration_cast<std::chrono::milliseconds>(curTime-lastShot).count();
+      canShoot = millis>cooldown;
+    }
+    //can we shoot currently?
+	  if (!(currentlyChargedShooting||currentlyShooting) && canShoot){ 
+      if(glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) { //start a charged shot
+        currentlyChargedShooting = true;
+        startShot = std::chrono::steady_clock::now();
+        m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 8;
+        gp::engine::Vector4f shootColor(255.0f, 0.0f, .0f, 955.0f);
+        m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
+        m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
+        m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillFocused = nanogui::Color(shootColor);
+        m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillFocused = nanogui::Color(shootColor);
+      } else if(glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){ //do a normal shot
+        float_t intensityMod = 1.f;
+        glm::vec3 pos = camera->worldPosition();
+        gp::engine::Vector3f posV(pos.x,pos.y,pos.z);
+        /**This also works**/
+        //glm::quat q = glm::inverse(glm::normalize(camera->rotation()));
+        //glm::vec3 lookAt = q*glm::vec3(0,0,1);
+        glm::mat4 m = camera->view;
+        glm::vec3 lookAt(m[0][2],m[1][2],m[2][2]);
+        gp::engine::Vector3f towards(-lookAt.x,-lookAt.y,-lookAt.z);
+        towards.normalize();
+        //scenario->addSphere(gp::engine::Object::UNMOVABLE_MASS,posV + towards, 0.01f);
+        //std::cout << towards << std::endl;
+        m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards,intensityMod));
+        m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 8;
+        gp::engine::Vector4f shootColor(255.0f, 0.0f, .0f, 955.0f);
+        m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
+        m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
+        m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillFocused = nanogui::Color(shootColor);
+        m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillFocused = nanogui::Color(shootColor);
+        lastShot = std::chrono::steady_clock::now();
+        canShoot = false;
+        cooldown = 250;
+        //TODO: add idle color here
+        shotIntensityLevel = 0;
+        currentlyShooting = true;
+      }
+    }else if (currentlyShooting){
+      std::chrono::steady_clock::time_point curTime = std::chrono::steady_clock::now();
+      int64_t millis = std::chrono::duration_cast<std::chrono::milliseconds>(curTime-lastShot).count();
+      if(millis>50){
       m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 4;
       m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
       m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
       m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillFocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
       m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillFocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
-
+      currentlyShooting = false;}
+    }
+    else if (currentlyChargedShooting){
+      if (!glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS){
+        currentlyChargedShooting = false;
+        float_t intensityMod = 1.f;
+        switch (shotIntensityLevel){
+          case 0: intensityMod = 1.f;
+          break;
+          case 1: intensityMod = 2.f;
+          break;
+          case 2: intensityMod = 3.f;
+        }
+        glm::vec3 pos = camera->worldPosition();
+        gp::engine::Vector3f posV(pos.x,pos.y,pos.z);
+        /**This also works**/
+        //glm::quat q = glm::inverse(glm::normalize(camera->rotation()));
+        //glm::vec3 lookAt = q*glm::vec3(0,0,1);
+        glm::mat4 m = camera->view;
+        glm::vec3 lookAt(m[0][2],m[1][2],m[2][2]);
+        gp::engine::Vector3f towards(-lookAt.x,-lookAt.y,-lookAt.z);
+        towards.normalize();
+        //scenario->addSphere(gp::engine::Object::UNMOVABLE_MASS,posV + towards, 0.01f);
+        //std::cout << towards << std::endl;
+        m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards,intensityMod));
+        m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 4;
+        m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
+        m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
+        m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillFocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
+        m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillFocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
+        lastShot = std::chrono::steady_clock::now();
+        canShoot = false;
+        //TODO: add idle color here
+        shotIntensityLevel = 0;
+        cooldown = 1000;
+      }else{
+        std::chrono::steady_clock::time_point curTime = std::chrono::steady_clock::now();
+        int64_t millis = std::chrono::duration_cast<std::chrono::milliseconds>(curTime-startShot).count();
+        if(millis>1000){
+          shotIntensityLevel = 1;//TODO: add charge level 1 color here
+        }
+        if(millis>2500){
+          shotIntensityLevel = 2;//TODO: add charge level 2 color here
+        }
+      }
     }
 
     glm::mat4 m = camera->view;

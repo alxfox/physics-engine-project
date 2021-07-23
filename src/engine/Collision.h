@@ -69,6 +69,7 @@ private:
 
 	Vector3f m_shotSource;
 	Vector3f m_shotDirection;
+	float_t m_shotIntensity;
 
 public:
 	Collision(Object* object1, Object* object2)
@@ -89,14 +90,15 @@ public:
 		m_object2(&constraint.object2()),
 		m_interpenetrationDepth(std::numeric_limits<float_t>::signaling_NaN())
 	{ }
-	Collision(Object* object1, Vector3f position, Vector3f direction)
+	Collision(Object* object1, Vector3f position, Vector3f direction,float_t intensity)
 		: m_type(SHOT),
 		m_constraint(0L),
 		m_object1(object1),
 		m_object2(object1),// !! filling both with obj1 !!
 		m_interpenetrationDepth(std::numeric_limits<float_t>::signaling_NaN()),
 		m_shotSource(position),
-		m_shotDirection(direction)
+		m_shotDirection(direction),
+		m_shotIntensity(intensity)
 	{ }
 	/**
 	 * @brief Detects a collision and fills the data structure
