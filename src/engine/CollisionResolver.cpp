@@ -146,15 +146,19 @@ void gp::engine::CollisionResolver::applyCollisionImpulseForRay()
 	float_t f = dividend/divisor;
 	float_t f1 = f;
 	float_t f2 = -f;
-
+				f1 = 100.f;
 //=========================================Velocity updates==============================================
 
 	Vector3f w1New = inertia1World*(r1.cross(f1*normal));
 
 	Vector3f v1New = obj1->invMass()*f1*normal;
-
+	std::cout << obj1->velocity().x() << " "<< obj1->velocity().y() << " "<< obj1->velocity().z();
 	obj1->changeVelocity(v1New);
 	obj1->changeAngularVelocity(w1New);
+	std::cout << " | " <<  obj1->velocity().x() << " "<< obj1->velocity().y() << " "<< obj1->velocity().z() << std::endl;
+	if(v1New.z()>1.f)
+		std::cout << "wat";
+
 }
 void gp::engine::CollisionResolver::applyCollisionImpulseWithoutRotationFriction()
 {

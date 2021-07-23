@@ -300,6 +300,8 @@ void gp::Game::run()
 
     //if (glfwGetKey(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS&&!m_scenarioControl.interactsWithMouse()) {
 	  if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+
+      //std::cout << "I shot";
     //if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS&&!m_scenarioControl.interactsWithMouse()) {
       glm::vec3 pos = camera->worldPosition();
       gp::engine::Vector3f posV(pos.x,pos.y,pos.z);
@@ -311,6 +313,7 @@ void gp::Game::run()
       gp::engine::Vector3f towards(-lookAt.x,-lookAt.y,-lookAt.z);
       towards.normalize();
       //scenario->addSphere(gp::engine::Object::UNMOVABLE_MASS,posV + towards, 0.01f);
+      //std::cout << towards << std::endl;
 			m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards));
 
       m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 8;

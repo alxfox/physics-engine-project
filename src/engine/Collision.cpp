@@ -55,7 +55,7 @@ bool gp::engine::Collision::detectShot(){
 		m_collisionPoint1 = pointOnLine - b * m_shotDirection;
 		m_collisionNormal = m_shotDirection.normalized();
 		m_interpenetrationDepth = 10.f;
-		std::cout << m_collisionPoint1.x() << " "<< m_collisionPoint1.y() << " "<< m_collisionPoint1.z() << std::endl;
+		//std::cout << m_collisionPoint1.x() << " "<< m_collisionPoint1.y() << " "<< m_collisionPoint1.z() << std::endl;
 		return true;
 	}
 	else{
@@ -68,7 +68,7 @@ bool gp::engine::Collision::detectShot(){
 			m_collisionPoint1=myBox->modelMatrix()*result;
 			m_collisionNormal = m_shotDirection.normalized();
 			m_interpenetrationDepth = 10.f;
-			std::cout << m_collisionPoint1.x() << " "<< m_collisionPoint1.y() << " "<< m_collisionPoint1.z() << std::endl;
+			//std::cout << m_collisionPoint1.x() << " "<< m_collisionPoint1.y() << " "<< m_collisionPoint1.z() << std::endl;
 			return true;
 		}
 		return false;
