@@ -52,6 +52,7 @@ gp::Game::~Game()
 
 void gp::Game::run()
 {
+  m_scenarioControl.toggleEngine();
   gp::Scenario* scenario = nullptr;
   gp::graphics::SpotLight* spotLight = nullptr;
   gp::graphics::Camera* camera = nullptr;
@@ -103,6 +104,7 @@ void gp::Game::run()
       camera = &scenario->camera();
       renderComponentMan = &scenario->renderObjectManager();
       constraintMan = &scenario->renderConstraintManager();
+
 
 
       if (dynamic_cast<gp::Custom3*>(scenario) != nullptr){
@@ -485,7 +487,7 @@ void gp::Game::run()
 
           float rRadius = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) + 0.5f;
 
-          Entity nCube = scenario->addBox(1000.0f,//gp::engine::Object::UNMOVABLE_MASS,
+          Entity nCube = scenario->addBox(1.0f,//gp::engine::Object::UNMOVABLE_MASS,
             engine::Vector3f(0, rPos_y, -depth/2.0f + 3.0f), 
             gp::engine::Vector3f(rWidth, rHeight, 0.1f),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
             //engine::Vector3f(2.0f, 0.1f, 0.2f),

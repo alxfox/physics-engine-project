@@ -15,8 +15,16 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
   
   scenarioControl.m_aimingReticleHor->setPosition(Eigen::Vector2i(width/2.0f-20, height/2.0f));
   scenarioControl.m_aimingReticleVer->setPosition(Eigen::Vector2i(width/2.0f-9, height/2.0f-9));
-  scenarioControl.m_nanoguiWindow->setPosition(Eigen::Vector2i(10, height-60));
-  scenarioControl.m_nanoguiWindow->setSize(Eigen::Vector2i(width-20, 60));
+  scenarioControl.m_nanoguiWindow->setPosition(Eigen::Vector2i(width/2.0f- (width/ 5.0f)/2.0f, height/2.0f -(height / 5.0f)/2.0f ));
+  scenarioControl.m_nanoguiWindow->setSize(Eigen::Vector2i(width / 5.0f, height / 5.0f));
+  int menuWidth = scenarioControl.m_nanoguiWindow->width();
+  int menuHeight = scenarioControl.m_nanoguiWindow->height();
+  scenarioControl.m_g1->setPosition(Eigen::Vector2i(0, menuHeight/2 - 3*menuHeight/13-menuHeight/18));
+  scenarioControl.m_g2->setPosition(Eigen::Vector2i(0, menuHeight/2 - 2*menuHeight/13));
+  scenarioControl.m_g3->setPosition(Eigen::Vector2i(0, menuHeight/2 - menuHeight/13+menuHeight/18));
+  scenarioControl.m_g1->setSize(Eigen::Vector2i(menuWidth/1 -40, menuHeight/8));
+  scenarioControl.m_g2->setSize(Eigen::Vector2i(menuWidth/1 -40, menuHeight/8));
+  scenarioControl.m_g3->setSize(Eigen::Vector2i(menuWidth/1 -40, menuHeight/8));
   scenarioControl.m_scoringboard->setPosition(Eigen::Vector2i(width-150, 1));
   if (scenarioControl.isPaused()) {
     inside = false;

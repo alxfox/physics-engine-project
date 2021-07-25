@@ -36,10 +36,7 @@ private:
 	/** The outgoing queue to the physics engine */
 	gp::messages::Queue<gp::messages::Message>& m_vis2engine;
 
-	/**
-	 * Callback for the pause button
-	 */
-	void toggleEngine();
+
 
 	/**
 	 * Callback for the step button
@@ -47,7 +44,17 @@ private:
 	void stepEngine();
 
 public:
+
+	/**
+	 * Callback for the pause button
+	 */
+	void toggleEngine();
+
 	bool enableConstraintsRendering = true;
+
+	nanogui::Button* m_g1 = nullptr;
+	nanogui::Button* m_g2 = nullptr;
+	nanogui::Button* m_g3 = nullptr;
 	nanogui::Window* m_aimingReticleHor = nullptr;
 	nanogui::Window* m_aimingReticleVer = nullptr;
 	nanogui::Window* m_nanoguiWindow = nullptr;

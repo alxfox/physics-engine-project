@@ -39,24 +39,31 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	FormHelper *gui = new FormHelper(this);
 	m_nanoguiWindow = gui->addWindow(Eigen::Vector2i(1, height-60), "");
 
-	//m_nanoguiWindow->theme()->mWindowFillUnfocused = Color(engine::Vector4f(0.0f, 0.0f, 200.0f, 255.0f));
-	//m_nanoguiWindow->theme()->mWindowFillFocused = Color(engine::Vector4f(21.0f, 101.0f, 192.0f, 255.0f));
+	NVGcontext* cont2 = this->nvgContext();
+	Theme* base2 = new Theme(cont2);
+	m_nanoguiWindow->setTheme(base2);
+
+	m_nanoguiWindow->theme()->mWindowFillUnfocused = Color(engine::Vector4f(.1f, 0.33f, 0.66f, .7f));
+	m_nanoguiWindow->theme()->mWindowFillFocused = Color(engine::Vector4f(.2f, 0.43f, 0.76f, .7f));
 
 	Widget* games = new Widget(m_nanoguiWindow);
-	games->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle));
-	nanogui::Button* g1 = new Button(games, "G1");
-	nanogui::Button* g2 = new Button(games, "G2");
-	nanogui::Button* g3 = new Button(games, "G3");
-	g1->setCallback([this]() { loadScenario<gp::Custom1>(); });
-	g2->setCallback([this]() { loadScenario<gp::Custom2>(); });
-	g3->setCallback([this]() { loadScenario<gp::Custom3>(); });
-	Widget* instructions = new Widget(games);
-	instructions->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
-	nanogui::Label* instr = new Label(instructions, "  Press W, A, S, D to move and Left Mouseclick to shoot.");
-	nanogui::Label* instr1 = new Label(instructions, "  Try to shoot the flying objects as far away from you as possible so that they disappear.");
-	nanogui::Label* instr2 = new Label(instructions, "  Press H to hide the Menue. Press Esc to pause the game");
-	games->setFixedWidth(width-10);
-	games->setFixedHeight(50);
+	
+	//games->setLayout(new GridLayout(Orientation::Horizontal, 3, Alignment::Middle, 0, 50));
+	m_g1 = new Button(games, "G1");
+	m_g2 = new Button(games, "G2");
+	m_g3 = new Button(games, "G3");
+	//m_playPause->setPosition(Vector2i(40, 40));
+	//m_playPause->setIcon(ENTYPO_ICON_PLAY);
+	m_g1->setCallback([this]() { loadScenario<gp::Custom1>(); });
+	m_g2->setCallback([this]() { loadScenario<gp::Custom2>(); });
+	m_g3->setCallback([this]() { loadScenario<gp::Custom3>(); });//m_nanoguiWindow->setVisible(m_paused); });
+	//Widget* instructions = new Widget(games);
+	//instructions->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
+	//nanogui::Label* instr = new Label(instructions, "  Press W, A, S, D to move and Left Mouseclick to shoot.");
+	//nanogui::Label* instr1 = new Label(instructions, "  Try to shoot the flying objects as far away from you as possible so that they disappear.");
+	//nanogui::Label* instr2 = new Label(instructions, "  Press H to hide the Menue. Press Esc to pause the game");
+	games->setFixedWidth(width);
+	games->setFixedHeight(height);
 	gui->addWidget("",games);
 
 //=====================================Score top right==================================================
