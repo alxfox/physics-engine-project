@@ -171,13 +171,19 @@ void gp::engine::Engine::detectCollisions()
 		}
 	}
 	if(m_shooting){
-		for (std::vector<Object*>::const_iterator it1 = objects.cbegin();
-			it1 != objects.cend(); ++it1) {
+		std::vector<Object*> sortedObj = objects;
+		Vector3f pos = m_playerPos;
+		std::sort(sortedObj.begin(),sortedObj.end(),[pos](Object* a,Object* b) {
+			return (a->position()-pos).norm() < (b->position()-pos).norm();
+		});
+		for (std::vector<Object*>::const_iterator it1 = sortedObj.cbegin();
+			it1 != sortedObj.cend(); ++it1) {
 			Object* o1 = *it1;
 			if(o1->isMovable()){
 				Collision coll(o1,m_shootingPos,m_shootingDir,m_shootingInt);
 				if(coll.detect()){
 					m_collisions.emplace_back(coll);
+					break;
 					}
 			}
 		}

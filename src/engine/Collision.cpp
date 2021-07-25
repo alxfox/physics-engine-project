@@ -55,9 +55,9 @@ bool gp::engine::Collision::detectShot(){
 		m_collisionPoint1 = pointOnLine - b * m_shotDirection;
 		m_collisionNormal = m_shotDirection.normalized();
 		m_interpenetrationDepth = 10.f*m_shotIntensity;
-		if(m_shotIntensity>1.f){
+		/*if(m_shotIntensity>1.f){
 			std::cout <<"";
-		}
+		}*/
 		//std::cout << m_collisionPoint1.x() << " "<< m_collisionPoint1.y() << " "<< m_collisionPoint1.z() << std::endl;
 		return true;
 	}
