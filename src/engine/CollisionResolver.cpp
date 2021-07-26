@@ -127,7 +127,18 @@ void gp::engine::CollisionResolver::applyCollisionImpulseForRay()
 		return;
 	}
 
-	obj1->receiveShot();
+	if (m_collision.interpenetrationDepth() >= 10) {
+		obj1->receiveShot();
+	}
+
+	if (m_collision.interpenetrationDepth() >= 20) {
+		obj1->receiveShot();
+	}
+
+	if (m_collision.interpenetrationDepth() >= 30) {
+		obj1->receiveShot();
+	}
+
 	if(obj1->numShots() >= 3){
 		obj1->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;

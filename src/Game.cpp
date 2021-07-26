@@ -79,6 +79,8 @@ void gp::Game::run()
   float_t levelVel = 1;
   int lives = 5;
   int score = 0;
+  Entity spawnedObjects[30];
+  int spawnIndex = 0;
   //std::cout << t0 << " seconds since the Epoch\n"<<std::endl;
 
 	float width = 10.0f;
@@ -111,6 +113,7 @@ void gp::Game::run()
       camera = &scenario->camera();
       renderComponentMan = &scenario->renderObjectManager();
       constraintMan = &scenario->renderConstraintManager();
+      //m_cameraControl.reset();
 
       if(m_scenarioControl.m_reloadedScenario){
         numObjectsToDespawn = 10;
@@ -122,6 +125,8 @@ void gp::Game::run()
         m_scenarioControl.m_reloadedScenario = false;
         m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
         m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
+        spawnIndex = 0;
+	      //camera->setRotation(glm::quat());
       }
 
 
@@ -434,11 +439,16 @@ void gp::Game::run()
     //=====================================================Our Game======================================================
       //(need to have references of some objects in Game.cpp, so as to make them interactive)
       //return;
-      if(numObjectsToDespawn <= 0) {
+      if(numObjectsToDespawn <= 9) {
         if(level >= 3){            
           //TODO Win condition in Scenario 3
         }
         else{
+	       //int width, height;
+	       //glfwGetWindowSize(m_window, &width, &height);
+         //glfwSetCursorPos(m_window, width / 2.0f, height / 2.0f);
+         //m_cameraControl.m_lastXPos = width /2.0f;
+         //m_cameraControl.m_lastYPos = height /2.0f;
           m_scenarioControl.loadScenario<gp::Custom3>();
           m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
           m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
@@ -456,16 +466,37 @@ void gp::Game::run()
             break;
           }
           level += 1;
+          spawnIndex = 0;
+
+	        //glm::quat rot3();
+          //m_cameraControl.reset();
           continue;
         }
       }
       if(!m_scenarioControl.isPaused()){
         long int t1 = static_cast<long int> (std::time(NULL));
-        if (t1 - t0 > 0.5f) {
+        if (t1 - t0 > 0.15f) {
           t0 = static_cast<long int> (std::time(NULL));
           scenario->setMaterial(m_front, green);
           scenario->setMaterial(m_back, red);
           wave+=1;
+          for(int ii = 0; ii < spawnIndex; ii++){
+	          engine::Object* o = scenario->engineObjectManager().find(spawnedObjects[ii]);
+            int shots = o->numShots();
+            switch (shots) {
+              case 0:
+                scenario->setMaterial(spawnedObjects[ii], fullRed);
+              break;
+
+              case 1:
+                scenario->setMaterial(spawnedObjects[ii], fullGreen);
+              break;
+
+              case 2:
+                scenario->setMaterial(spawnedObjects[ii], pistacio);
+              break;
+            }
+          }
         }
         if (t1 - t0_ball > 5.0f && numObjectsToSpawn > 0) {
           t0_ball = static_cast<long int> (std::time(NULL));
@@ -489,8 +520,9 @@ void gp::Game::run()
               }
           }
         float rRadius = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) + 0.5f;
-        Entity nBall = scenario->addSphere(1.0f, engine::Vector3f(rPos_x, rPos_y, rPos_z + 5.5f), rRadius, 
+        spawnedObjects[spawnIndex] = scenario->addSphere(1.0f, engine::Vector3f(rPos_x, rPos_y, rPos_z + 5.5f), rRadius, 
                               levelVel*rVel_length*engine::Vector3f(rVel_x+rVel_z, rVel_y, rVel_z+5.5f));
+
 
         numObjectsToSpawn -= 1;
 	      gp::graphics::Material& redPink = scenario->getMaterial("redPink");
@@ -502,15 +534,16 @@ void gp::Game::run()
 
         int color = rand() % 3 + 1;  
         if (color == 1){
-          scenario->setMaterial(nBall, redPink);
+          scenario->setMaterial(spawnedObjects[spawnIndex], redPink);
         }
         if (color == 2){
-          scenario->setMaterial(nBall, orangeYellow);
+          scenario->setMaterial(spawnedObjects[spawnIndex], orangeYellow);
         }
         if (color == 3){
           //scenario->setMaterial(nBall, white);
         }
 
+        spawnIndex+=1;
         }
 
         if (t1 - t0_squares > 15.0f && numObjectsToSpawn > 0) {
@@ -525,19 +558,21 @@ void gp::Game::run()
 
           float rRadius = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) + 0.5f;
 
-          Entity nCube = scenario->addBox(1.0f,//gp::engine::Object::UNMOVABLE_MASS,
+          spawnedObjects[spawnIndex] = scenario->addBox(1.0f,//gp::engine::Object::UNMOVABLE_MASS,
             engine::Vector3f(0, rPos_y, -depth/2.0f + 3.0f), 
             gp::engine::Vector3f(rWidth, rHeight, 0.1f),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
             //engine::Vector3f(2.0f, 0.1f, 0.2f),
             engine::Vector3f(0, 0, levelVel*rVel_z)
             );        
 
+
           numObjectsToSpawn -= 1;
 
-	        engine::Object* o = scenario->engineObjectManager().find(nCube);
+	        engine::Object* o = scenario->engineObjectManager().find(spawnedObjects[spawnIndex]);
 	        o->setAngularVelocity(engine::Vector3f(0, 0, 7*M_PI));
           o->setVelocity(engine::Vector3f(0,0,100.0f));
-          scenario->setMaterial(nCube, pistacio);
+          scenario->setMaterial(spawnedObjects[spawnIndex], pistacio);
+          spawnIndex+=1;
 
         //int color = rand() % 3 + 1;  
         //if (color == 1){
