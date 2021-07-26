@@ -9,6 +9,15 @@
 #include "utils.h"
 
 float binPos =  -50;
+bool objectDestroyed = false;
+
+bool gp::engine::CollisionResolver::hasDeletedObject() {
+	return objectDestroyed; 
+}
+
+void gp::engine::CollisionResolver::updateDeletedObject(bool deleted) {
+	objectDestroyed = deleted; 
+}
 
 gp::engine::CollisionResolver::TriggerType gp::engine::CollisionResolver::resolveTriggers(){
 
@@ -20,6 +29,7 @@ gp::engine::CollisionResolver::TriggerType gp::engine::CollisionResolver::resolv
 		std::cout << "I'm triggered" << std::endl;
 		obj2->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
+		obj2->setMass(Object::UNMOVABLE_MASS);
 		return ENEMY_HITS;
 	}
 
@@ -27,6 +37,7 @@ gp::engine::CollisionResolver::TriggerType gp::engine::CollisionResolver::resolv
 		std::cout << "I'm triggered" << std::endl;
 		obj1->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
+		obj1->setMass(Object::UNMOVABLE_MASS);
 		return ENEMY_HITS;
 	}
 
@@ -34,6 +45,7 @@ gp::engine::CollisionResolver::TriggerType gp::engine::CollisionResolver::resolv
 		std::cout << "I'm triggered" << std::endl;
 		obj2->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
+		obj2->setMass(Object::UNMOVABLE_MASS);
 		return ENEMY_DIES;
 	}
 
@@ -41,6 +53,7 @@ gp::engine::CollisionResolver::TriggerType gp::engine::CollisionResolver::resolv
 		std::cout << "I'm triggered" << std::endl;
 		obj1->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
+		obj1->setMass(Object::UNMOVABLE_MASS);
 		return ENEMY_DIES;
 	}
 
@@ -113,6 +126,15 @@ void gp::engine::CollisionResolver::applyCollisionImpulseForRay()
 	if(obj1->objType() != Object::DEFAULT){
 		return;
 	}
+
+	obj1->receiveShot();
+	if(obj1->numShots() >= 3){
+		obj1->setPosition(Vector3f(binPos, -10, 0));
+		binPos -= 10;
+		obj1->setMass(Object::UNMOVABLE_MASS);
+		objectDestroyed = true;
+	}
+
 //=========================================Collecting Data==============================================
 	Vector3f v1 = obj1->velocity();
 	Vector3f v2 = m_collision.collisionNormal()*m_collision.interpenetrationDepth();

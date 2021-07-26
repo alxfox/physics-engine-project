@@ -54,9 +54,9 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	m_g3 = new Button(games, "G3");
 	//m_playPause->setPosition(Vector2i(40, 40));
 	//m_playPause->setIcon(ENTYPO_ICON_PLAY);
-	m_g1->setCallback([this]() { loadScenario<gp::Custom1>(); });
-	m_g2->setCallback([this]() { loadScenario<gp::Custom2>(); });
-	m_g3->setCallback([this]() { loadScenario<gp::Custom3>(); });//m_nanoguiWindow->setVisible(m_paused); });
+	m_g1->setCallback([this]() { loadScenario<gp::Custom1>(); m_reloadedScenario = true; });
+	m_g2->setCallback([this]() { loadScenario<gp::Custom2>(); m_reloadedScenario = true; });
+	m_g3->setCallback([this]() { loadScenario<gp::Custom3>(); m_reloadedScenario = true; });//m_nanoguiWindow->setVisible(m_paused); });
 	//Widget* instructions = new Widget(games);
 	//instructions->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
 	//nanogui::Label* instr = new Label(instructions, "  Press W, A, S, D to move and Left Mouseclick to shoot.");
@@ -80,11 +80,11 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	games2->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
 	//Widget* points = new Widget(games2);
 	//points->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
-	m_scoreLabel= new Label(games2, "SCORE: 0                                        " );//+ std::to_string(m_score));
+	m_scoreLabel= new Label(games2, "SCORE:  0                                        " );//+ std::to_string(m_score));
 
 	//Widget* live = new Widget(games2);
 	//live->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
-	m_lifeLabel= new Label(games2, "LIVES: 3                                        " );//+ std::to_string(m_life));
+	m_lifeLabel= new Label(games2, "LIVES: 5                                        " );//+ std::to_string(m_life));
 	games2->setFixedWidth(300);
 	games2->setFixedHeight(30);
 	gui2->addWidget("",games2);

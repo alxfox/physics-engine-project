@@ -34,6 +34,14 @@ public:
 	{ }
 	/**
 
+	 * @brief True if ray has deleted an object in this Collision Resolution 
+	 */
+
+	bool hasDeletedObject();
+
+	void updateDeletedObject(bool deleted);
+	/**
+
 	 * @brief Resolve the possible triggers 
 	 */
 	TriggerType resolveTriggers();

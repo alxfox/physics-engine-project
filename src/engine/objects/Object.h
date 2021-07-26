@@ -24,7 +24,7 @@ private:
 
 
 	/** 1/mass of the object */
-	const float_t m_invMass;
+	float_t m_invMass;
 
 	/** The current position (center) of the object */
 	Vector3f m_position;
@@ -66,6 +66,7 @@ private:
 
 	float_t m_distToCam; 
 
+	int m_shotsReceived;
 
 protected:
 
@@ -95,7 +96,8 @@ public:
 		m_rotationalInverseInertia(rotationalInertia.inverse()),
 		m_boundingRadius(boundingRadius),
 		m_type(type),
-		m_distToCam(10)
+		m_distToCam(10),
+		m_shotsReceived(0)
 	{
 		updateModelMatrix();
 	}
@@ -137,13 +139,26 @@ public:
 	{
 		return m_invMass;
 	}
-
+	
 	/**
 	 * @return The mass of the object
 	 */
 	float_t mass() const
 	{
 		return 1./m_invMass;
+	}
+
+	void setMass(float_t newMass){
+		m_invMass = 1./newMass;
+		updateModelMatrix();
+	}
+
+	void receiveShot(){
+		m_shotsReceived += 1;
+	}
+
+	int numShots(){
+		return m_shotsReceived;
 	}
 
 	/**

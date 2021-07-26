@@ -20,7 +20,7 @@ const float_t UPDATE_INTERVAL = 1.0/60.0;
 const float_t SLOW_MOTION_FACTOR = 0.2;
 
 /** The constant acceleration (note: we cannot use Vector3f here) */
-const Eigen::Matrix<float_t, 3, 1> ACCELERATION(0, -9.81*0, 0);
+const Eigen::Matrix<float_t, 3, 1> ACCELERATION(0, -9.81*0, 10);
 
 /** Number of collision resolve per time step */
 const unsigned int COLLISION_RESOLVES_PER_STEP = 5;

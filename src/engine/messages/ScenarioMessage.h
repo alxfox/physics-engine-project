@@ -97,12 +97,21 @@ public:
 
 };
 
-class EnemyDeathMessage: public gp::messages::Message
+class EnemyDeathByGoalMessage: public gp::messages::Message
 {
 private:
 
 public:
-	EnemyDeathMessage(): Message(type_id<EnemyDeathMessage>()) {}
+	EnemyDeathByGoalMessage(): Message(type_id<EnemyDeathByGoalMessage>()) {}
+
+};
+
+class EnemyDeathByRayMessage: public gp::messages::Message
+{
+private:
+
+public:
+	EnemyDeathByRayMessage(): Message(type_id<EnemyDeathByRayMessage>()) {}
 
 };
 

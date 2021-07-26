@@ -233,7 +233,7 @@ void gp::engine::Engine::resolveTriggers()
 
 		switch (resolver.resolveTriggers()) {
 		case gp::engine::CollisionResolver::ENEMY_DIES:
-			m_outQueue.push(messages::EnemyDeathMessage());
+			m_outQueue.push(messages::EnemyDeathByGoalMessage());
 			break;
 		case gp::engine::CollisionResolver::ENEMY_HITS:
 			m_outQueue.push(messages::EnemyDamageMessage());
@@ -249,5 +249,9 @@ void gp::engine::Engine::applyCollisionImpulse()
 		it != m_collisions.end(); ++it) {
 		CollisionResolver resolver(*it);
 		resolver.applyCollisionImpulse();
+		if(resolver.hasDeletedObject()){
+			m_outQueue.push(messages::EnemyDeathByRayMessage());
+			resolver.updateDeletedObject(false);
+		}
 	}
 }

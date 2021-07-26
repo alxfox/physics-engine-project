@@ -72,6 +72,13 @@ void gp::Game::run()
   long int t0;
   long int t0_ball;
   long int t0_squares;
+
+  int numObjectsToDespawn = 10;
+  int numObjectsToSpawn = 10;
+  int level = 0;
+  float_t levelVel = 1;
+  int lives = 5;
+  int score = 0;
   //std::cout << t0 << " seconds since the Epoch\n"<<std::endl;
 
 	float width = 10.0f;
@@ -105,13 +112,20 @@ void gp::Game::run()
       renderComponentMan = &scenario->renderObjectManager();
       constraintMan = &scenario->renderConstraintManager();
 
+      if(m_scenarioControl.m_reloadedScenario){
+        numObjectsToDespawn = 10;
+        numObjectsToSpawn = 10;
+        level = 0;
+        levelVel = 1;
+        lives = 5;
+        score = 0;
+        m_scenarioControl.m_reloadedScenario = false;
+        m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
+        m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
+      }
 
 
       if (dynamic_cast<gp::Custom3*>(scenario) != nullptr){
-        m_scenarioControl.m_score = 0;
-        m_scenarioControl.m_life = 3;
-        m_scenarioControl.m_lifeLabel->setCaption("LIVES: 3");
-        m_scenarioControl.m_scoreLabel->setCaption("SCORE: 0");
 
         t0 = static_cast<long int> (std::time(NULL));
         t0_ball = static_cast<long int> (std::time(NULL));
@@ -420,7 +434,31 @@ void gp::Game::run()
     //=====================================================Our Game======================================================
       //(need to have references of some objects in Game.cpp, so as to make them interactive)
       //return;
-
+      if(numObjectsToDespawn <= 0) {
+        if(level >= 3){            
+          //TODO Win condition in Scenario 3
+        }
+        else{
+          m_scenarioControl.loadScenario<gp::Custom3>();
+          m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
+          m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
+          std::cout << "yee" << std::endl;
+          switch (level) {
+            case 0: // 0->1 transition
+              numObjectsToDespawn = 15;
+              numObjectsToSpawn = 15;
+              levelVel = 2;
+            break;
+            case 1: //1->2 transition
+              numObjectsToDespawn = 20;
+              numObjectsToSpawn = 20;
+              levelVel = 4;
+            break;
+          }
+          level += 1;
+          continue;
+        }
+      }
       if(!m_scenarioControl.isPaused()){
         long int t1 = static_cast<long int> (std::time(NULL));
         if (t1 - t0 > 0.5f) {
@@ -429,7 +467,7 @@ void gp::Game::run()
           scenario->setMaterial(m_back, red);
           wave+=1;
         }
-        if (t1 - t0_ball > 1.0f) {
+        if (t1 - t0_ball > 5.0f && numObjectsToSpawn > 0) {
           t0_ball = static_cast<long int> (std::time(NULL));
           float rPos_x = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (width -4.0f) - (width/2.0f-2.0f);
           float rPos_y = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (height-4.0f) - (height/2.0f-2.0f);
@@ -452,9 +490,9 @@ void gp::Game::run()
           }
         float rRadius = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) + 0.5f;
         Entity nBall = scenario->addSphere(1.0f, engine::Vector3f(rPos_x, rPos_y, rPos_z + 5.5f), rRadius, 
-                              rVel_length*engine::Vector3f(rVel_x+rVel_z, rVel_y, rVel_z+5.5f));
+                              levelVel*rVel_length*engine::Vector3f(rVel_x+rVel_z, rVel_y, rVel_z+5.5f));
 
-
+        numObjectsToSpawn -= 1;
 	      gp::graphics::Material& redPink = scenario->getMaterial("redPink");
        	redPink.diffuseColor = engine::Vector3f(0.9f, 0.1f, 0.4f);
 
@@ -475,7 +513,7 @@ void gp::Game::run()
 
         }
 
-        if (t1 - t0_squares > 5.0f) {
+        if (t1 - t0_squares > 15.0f && numObjectsToSpawn > 0) {
           t0_squares= static_cast<long int> (std::time(NULL));
           float rPos_x = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (width -6.0f) - (width/2.0f-3.0f);
           float rPos_y = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (height-6.0f) - (height/2.0f-3.0f);
@@ -491,13 +529,16 @@ void gp::Game::run()
             engine::Vector3f(0, rPos_y, -depth/2.0f + 3.0f), 
             gp::engine::Vector3f(rWidth, rHeight, 0.1f),//gp::engine::Vector3f(0.1f, 0.1f, 0.1f),
             //engine::Vector3f(2.0f, 0.1f, 0.2f),
-            engine::Vector3f(0, 0, rVel_z)
+            engine::Vector3f(0, 0, levelVel*rVel_z)
             );        
+
+          numObjectsToSpawn -= 1;
 
 	        engine::Object* o = scenario->engineObjectManager().find(nCube);
 	        o->setAngularVelocity(engine::Vector3f(0, 0, 7*M_PI));
           o->setVelocity(engine::Vector3f(0,0,100.0f));
           scenario->setMaterial(nCube, pistacio);
+
         //int color = rand() % 3 + 1;  
         //if (color == 1){
         //  scenario->setMaterial(nBall, redPink);
@@ -536,14 +577,28 @@ void gp::Game::run()
       if (gp::messages::isType<gp::engine::messages::EnemyDamageMessage>(message))
       {
         m_scenarioControl.m_life -= 1;
-        m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(m_scenarioControl.m_life));
+        lives -= 1;
+        m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
         scenario->setMaterial(m_back, fullRed);
+        numObjectsToDespawn -=1;
       }
-      if (gp::messages::isType<gp::engine::messages::EnemyDeathMessage>(message))
+      if (gp::messages::isType<gp::engine::messages::EnemyDeathByGoalMessage>(message))
       {
         m_scenarioControl.m_score += 1;
-        m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(m_scenarioControl.m_score));
+        score += 100;
+        m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
         scenario->setMaterial(m_front, fullGreen);
+        numObjectsToDespawn -=1;
+      }
+
+      if (gp::messages::isType<gp::engine::messages::EnemyDeathByRayMessage>(message))
+      {
+        //m_scenarioControl.m_score += 1;
+        //m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(m_scenarioControl.m_score));
+        //scenario->setMaterial(m_front, fullGreen);
+        score += 10;
+        m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
+        numObjectsToDespawn -=1;
       }
     }
 

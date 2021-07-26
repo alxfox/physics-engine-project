@@ -63,6 +63,7 @@ public:
 	nanogui::Label* m_lifeLabel = nullptr; 
 	int16_t m_score;
 	int16_t m_life;
+	bool m_reloadedScenario = false;
 	
 // 	gp::messages::Queue<gp::messages::Message> engineMessages;
 
