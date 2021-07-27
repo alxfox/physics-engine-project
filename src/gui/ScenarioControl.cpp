@@ -77,14 +77,15 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	m_scoringboard = gui2->addWindow(Eigen::Vector2i(width-150, 1), "");
 
 	Widget* games2 = new Widget(m_scoringboard);
-	games2->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
+	games2->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
+	Widget* scores = new Widget(games2);
 	//Widget* points = new Widget(games2);
 	//points->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
-	m_scoreLabel= new Label(games2, "SCORE:  0                                        " );//+ std::to_string(m_score));
+	m_scoreLabel= new Label(scores, "SCORE:  0                                        " );//+ std::to_string(m_score));
 
 	//Widget* live = new Widget(games2);
 	//live->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
-	m_lifeLabel= new Label(games2, "LIVES: 5                                        " );//+ std::to_string(m_life));
+	m_lifeLabel= new Label(scores, "LIVES: 5                                        " );//+ std::to_string(m_life));
 	games2->setFixedWidth(300);
 	games2->setFixedHeight(30);
 	gui2->addWidget("",games2);

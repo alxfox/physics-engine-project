@@ -81,6 +81,7 @@ void gp::Game::run()
   int score = 0;
   Entity spawnedObjects[30];
   int spawnIndex = 0;
+  bool newLevel = false;
   //std::cout << t0 << " seconds since the Epoch\n"<<std::endl;
 
 	float width = 10.0f;
@@ -116,18 +117,18 @@ void gp::Game::run()
       //m_cameraControl.reset();
 
       if(m_scenarioControl.m_reloadedScenario){
-        numObjectsToDespawn = 10;
-        numObjectsToSpawn = 10;
-        level = 0;
-        levelVel = 1;
-        lives = 5;
-        score = 0;
-        m_scenarioControl.m_reloadedScenario = false;
-        m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
-        m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
-        spawnIndex = 0;
-	      //camera->setRotation(glm::quat());
+            numObjectsToDespawn = 10;
+            numObjectsToSpawn = 10;
+            level = 0;
+            levelVel = 1;
+            lives = 5;
+            score = 0;
+            m_scenarioControl.m_reloadedScenario = false;
+            m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
+            m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
+            spawnIndex = 0;
       }
+
 
 
       if (dynamic_cast<gp::Custom3*>(scenario) != nullptr){
@@ -325,7 +326,15 @@ void gp::Game::run()
     // Check if any events have been activated (key pressed, mouse moved etc.) and call corresponding response functions
     glfwPollEvents();
 
+    //m_cameraControl.moveCamera(m_window, m_scenarioControl, *camera);
+
+    if(newLevel) {
+      newLevel = false;
+      glfwGetCursorPos(m_window, &m_cameraControl.m_lastXPos, &m_cameraControl.m_lastYPos);
+    }
+
     m_cameraControl.moveCamera(m_window, m_scenarioControl, *camera);
+
     if(!canShoot) {//shot cooldown
       std::chrono::steady_clock::time_point curTime = std::chrono::steady_clock::now();
       int64_t millis = std::chrono::duration_cast<std::chrono::milliseconds>(curTime-lastShot).count();
@@ -439,20 +448,15 @@ void gp::Game::run()
     //=====================================================Our Game======================================================
       //(need to have references of some objects in Game.cpp, so as to make them interactive)
       //return;
-      if(numObjectsToDespawn <= 9) {
-        if(level >= 3){            
+      if(numObjectsToDespawn <= 0) {
+        if(level >= 2){            
           //TODO Win condition in Scenario 3
         }
         else{
-	       //int width, height;
-	       //glfwGetWindowSize(m_window, &width, &height);
-         //glfwSetCursorPos(m_window, width / 2.0f, height / 2.0f);
-         //m_cameraControl.m_lastXPos = width /2.0f;
-         //m_cameraControl.m_lastYPos = height /2.0f;
           m_scenarioControl.loadScenario<gp::Custom3>();
           m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
           m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
-          std::cout << "yee" << std::endl;
+          newLevel = true;
           switch (level) {
             case 0: // 0->1 transition
               numObjectsToDespawn = 15;
@@ -467,9 +471,6 @@ void gp::Game::run()
           }
           level += 1;
           spawnIndex = 0;
-
-	        //glm::quat rot3();
-          //m_cameraControl.reset();
           continue;
         }
       }
