@@ -43,25 +43,31 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	Theme* base2 = new Theme(cont2);
 	m_nanoguiWindow->setTheme(base2);
 
-	m_nanoguiWindow->theme()->mWindowFillUnfocused = Color(engine::Vector4f(.1f, 0.33f, 0.66f, .7f));
-	m_nanoguiWindow->theme()->mWindowFillFocused = Color(engine::Vector4f(.2f, 0.43f, 0.76f, .7f));
+	m_nanoguiWindow->theme()->mWindowFillUnfocused = Color(engine::Vector4f(.2f, 0.33f, 0.66f, .7f));
+	m_nanoguiWindow->theme()->mWindowFillFocused = Color(engine::Vector4f(.2f, 0.33f, 0.66f, .7f));
+
 
 	Widget* games = new Widget(m_nanoguiWindow);
 	
 	//games->setLayout(new GridLayout(Orientation::Horizontal, 3, Alignment::Middle, 0, 50));
-	m_g1 = new Button(games, "G1");
-	m_g2 = new Button(games, "G2");
-	m_g3 = new Button(games, "G3");
+	//m_g1 = new Button(games, "G1");
+	m_g2 = new Button(games, "PLAYGROUND");
+	m_g3 = new Button(games, "GAME");
 	//m_playPause->setPosition(Vector2i(40, 40));
 	//m_playPause->setIcon(ENTYPO_ICON_PLAY);
-	m_g1->setCallback([this]() { loadScenario<gp::Custom1>(); m_reloadedScenario = true; });
+	//m_g1->setCallback([this]() { loadScenario<gp::Custom1>(); m_reloadedScenario = true; });
 	m_g2->setCallback([this]() { loadScenario<gp::Custom2>(); m_reloadedScenario = true; });
 	m_g3->setCallback([this]() { loadScenario<gp::Custom3>(); m_reloadedScenario = true; });//m_nanoguiWindow->setVisible(m_paused); });
+
+	m_g2->setBackgroundColor(Color(engine::Vector4f(.2f, 0.43f, 0.76f, .7f)));
+	m_g3->setBackgroundColor(Color(engine::Vector4f(.2f, 0.43f, 0.76f, .7f)));
 	//Widget* instructions = new Widget(games);
 	//instructions->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
 	//nanogui::Label* instr = new Label(instructions, "  Press W, A, S, D to move and Left Mouseclick to shoot.");
 	//nanogui::Label* instr1 = new Label(instructions, "  Try to shoot the flying objects as far away from you as possible so that they disappear.");
 	//nanogui::Label* instr2 = new Label(instructions, "  Press H to hide the Menue. Press Esc to pause the game");
+	m_nanoguiWindow->theme()->mButtonGradientTopFocused = Color(engine::Vector4f(0.f, 0.0f, 0.09f, .9f));
+	m_nanoguiWindow->theme()->mButtonGradientBotFocused = Color(engine::Vector4f(0.f, 0.0f, 0.09f, .9f));
 	games->setFixedWidth(width);
 	games->setFixedHeight(height);
 	gui->addWidget("",games);
@@ -79,14 +85,24 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	Widget* games2 = new Widget(m_scoringboard);
 	games2->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
 	Widget* scores = new Widget(games2);
+	scores->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
+	Widget* level = new Widget(games2);
+	level->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
 	//Widget* points = new Widget(games2);
 	//points->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
-	m_scoreLabel= new Label(scores, "SCORE:  0                                        " );//+ std::to_string(m_score));
+	m_scoreLabel= new Label(scores, "SCORE: 0					" );//+ std::to_string(m_score));
 
 	//Widget* live = new Widget(games2);
 	//live->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
-	m_lifeLabel= new Label(scores, "LIVES: 5                                        " );//+ std::to_string(m_life));
-	games2->setFixedWidth(300);
+	m_lifeLabel= new Label(scores, "LIVES: 5					" );//+ std::to_string(m_life));
+	m_moobsLabel = new Label(level, "ENEMIES: 10                                        " );//+ std::to_string(m_life));
+	m_levelLabel = new Label(level, "LEVEL: 1                                        " );//+ std::to_string(m_score));
+
+	scores->setFixedWidth(90);
+	scores->setFixedHeight(30);
+	level->setFixedWidth(100);
+	level->setFixedHeight(30);
+	games2->setFixedWidth(200);
 	games2->setFixedHeight(30);
 	gui2->addWidget("",games2);
 

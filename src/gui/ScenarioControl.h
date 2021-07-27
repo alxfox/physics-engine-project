@@ -61,6 +61,8 @@ public:
 	nanogui::Window* m_scoringboard = nullptr;
 	nanogui::Label* m_scoreLabel = nullptr; 
 	nanogui::Label* m_lifeLabel = nullptr; 
+	nanogui::Label* m_moobsLabel = nullptr; 
+	nanogui::Label* m_levelLabel = nullptr; 
 	int16_t m_score;
 	int16_t m_life;
 	bool m_reloadedScenario = false;

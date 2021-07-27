@@ -19,13 +19,13 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
   scenarioControl.m_nanoguiWindow->setSize(Eigen::Vector2i(width / 5.0f, height / 5.0f));
   int menuWidth = scenarioControl.m_nanoguiWindow->width();
   int menuHeight = scenarioControl.m_nanoguiWindow->height();
-  scenarioControl.m_g1->setPosition(Eigen::Vector2i(0, menuHeight/2 - 3*menuHeight/13-menuHeight/18));
-  scenarioControl.m_g2->setPosition(Eigen::Vector2i(0, menuHeight/2 - 2*menuHeight/13));
-  scenarioControl.m_g3->setPosition(Eigen::Vector2i(0, menuHeight/2 - menuHeight/13+menuHeight/18));
-  scenarioControl.m_g1->setSize(Eigen::Vector2i(menuWidth/1 -40, menuHeight/8));
-  scenarioControl.m_g2->setSize(Eigen::Vector2i(menuWidth/1 -40, menuHeight/8));
-  scenarioControl.m_g3->setSize(Eigen::Vector2i(menuWidth/1 -40, menuHeight/8));
-  scenarioControl.m_scoringboard->setPosition(Eigen::Vector2i(width-150, 1));
+  //scenarioControl.m_g1->setPosition(Eigen::Vector2i(0, menuHeight/2 - 3*menuHeight/13-menuHeight/18));
+  scenarioControl.m_g2->setPosition(Eigen::Vector2i(0, menuHeight/2 - 2*menuHeight/6));
+  scenarioControl.m_g3->setPosition(Eigen::Vector2i(0, menuHeight/2 - menuHeight/6+menuHeight/9));
+  //scenarioControl.m_g1->setSize(Eigen::Vector2i(menuWidth/1 -40, menuHeight/8));
+  scenarioControl.m_g2->setSize(Eigen::Vector2i(menuWidth/1 -40, menuHeight/4));
+  scenarioControl.m_g3->setSize(Eigen::Vector2i(menuWidth/1 -40, menuHeight/4));
+  scenarioControl.m_scoringboard->setPosition(Eigen::Vector2i(width-200, 1));
   if (scenarioControl.isPaused()) {
     inside = false;
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 

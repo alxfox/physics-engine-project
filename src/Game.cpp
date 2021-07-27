@@ -96,7 +96,16 @@ void gp::Game::run()
 	gp::graphics::Material green; 
 	gp::graphics::Material fullRed; 
 	gp::graphics::Material red; 
+  gp::graphics::Material purple;
+  gp::graphics::Material lightBlue;
+  gp::graphics::Material darkBlue;
+  gp::graphics::Material lightRed;
+  gp::graphics::Material blue;
+  gp::graphics::Material white;
   gp::graphics::Material pistacio;
+	gp::graphics::Material fullOrange; 
+	gp::graphics::Material orange; 
+	gp::graphics::Material lightOrange; 
 
 
   bool currentlyChargedShooting =false;
@@ -125,7 +134,9 @@ void gp::Game::run()
             score = 0;
             m_scenarioControl.m_reloadedScenario = false;
             m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
-            m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
+            m_scenarioControl.m_scoreLabel->setCaption("SCORE: "+ std::to_string(score));
+            m_scenarioControl.m_moobsLabel->setCaption("ENEMIES: "+ std::to_string(numObjectsToDespawn));
+            m_scenarioControl.m_levelLabel->setCaption("LEVEL: "+ std::to_string(level+1));
             spawnIndex = 0;
       }
 
@@ -136,27 +147,50 @@ void gp::Game::run()
         t0 = static_cast<long int> (std::time(NULL));
         t0_ball = static_cast<long int> (std::time(NULL));
         t0_squares = static_cast<long int> (std::time(NULL));
-	      fullGreen = scenario->getMaterial("fullGreen");
-        fullGreen.diffuseColor = engine::Vector3f(0.0f, 1.0f, 0.0f);
+
       //=====================================================Our Game======================================================
       //(need to have references of some objects in Game.cpp, so as to make them interactive)
         //return;
-	      gp::graphics::Material& white = scenario->getMaterial("white");
+	      white = scenario->getMaterial("white");
 
-       	gp::graphics::Material& blue = scenario->getMaterial("blue");
+       	lightBlue = scenario->getMaterial("lightBlue");
+       	lightBlue.diffuseColor = engine::Vector3f(0.01f, 0.53f, 0.82f);
+
+       	blue = scenario->getMaterial("blue");
        	blue.diffuseColor = engine::Vector3f(0.0f, 0.5f, 1.0f);
+
+       	darkBlue = scenario->getMaterial("darkBlue");
+       	darkBlue.diffuseColor = engine::Vector3f(0.2f, 0.25f, 0.6f);
+
+       	purple = scenario->getMaterial("purple");
+       	purple.diffuseColor = engine::Vector3f(0.3f, 0.2f, 0.66f);
+
+	      pistacio = scenario->getMaterial("pistacio");
+       	pistacio.diffuseColor = engine::Vector3f(0.5f, 0.6f, 0.1f);
 
 	      green = scenario->getMaterial("green");
        	green.diffuseColor = engine::Vector3f(0.0f, 1.0f, 0.2f);
 
+	      fullGreen = scenario->getMaterial("fullGreen");
+        fullGreen.diffuseColor = engine::Vector3f(0.0f, 1.0f, 0.0f);
+
+	      lightRed= scenario->getMaterial("lightRed");
+       	lightRed.diffuseColor = engine::Vector3f(1.0f, 0.5f, 0.5f);
+
 	      red = scenario->getMaterial("red");
-       	red.diffuseColor = engine::Vector3f(1.0f, 0.2f, 0.1f);
+       	red.diffuseColor = engine::Vector3f(1.0f, 0.09f, 0.3f);
 
 	      fullRed = scenario->getMaterial("fullRed");
-        fullRed.diffuseColor = engine::Vector3f(1.0f, 0.0f, 0.0f);
+        fullRed.diffuseColor = engine::Vector3f(0.8f, 0.2f, 0.2f);
 
-	      pistacio = scenario->getMaterial("pistacio");
-       	pistacio.diffuseColor = engine::Vector3f(0.5f, 0.6f, 0.1f);
+	      lightOrange = scenario->getMaterial("lightOrange");
+       	lightOrange.diffuseColor = engine::Vector3f(1.0f, 0.8f, 0.5f);
+
+	      orange = scenario->getMaterial("orange");
+       	orange.diffuseColor = engine::Vector3f(1.0f, 0.6f, 0.1f);
+
+	      fullOrange = scenario->getMaterial("fullOrange");
+        fullOrange.diffuseColor = engine::Vector3f(0.96f, 0.5f, 0.0f);
 
 
 	      m_front = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.0, 0.0, -depth/2.0), engine::Vector3f(width, height, arenaThickness),
@@ -170,12 +204,31 @@ void gp::Game::run()
 	      //setName(e, "back");
 
 	      m_left = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(-width/2.0, 0.0, 0.0), engine::Vector3f(arenaThickness, height, depth));
-	      scenario->setMaterial(m_left, blue);
+
+
+
+
+
 	      //setName(e, "left");
 
 	      m_right = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(width/2.0, 0.0, 0.0), engine::Vector3f(arenaThickness, height, depth));
-	      scenario->setMaterial(m_right, blue);
 	      //setName(e, "right");
+        switch (level) {
+          case 0:
+	          scenario->setMaterial(m_left, blue);
+	          scenario->setMaterial(m_right, blue);
+          break;
+
+          case 1:
+            scenario->setMaterial(m_left, darkBlue);
+            scenario->setMaterial(m_right, darkBlue);
+          break;
+
+          case 2:
+            scenario->setMaterial(m_left, purple);
+            scenario->setMaterial(m_right, purple);
+          break;
+        }
 
 	      m_roof = scenario->addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(0.0, height/2.0, 0.0), engine::Vector3f(width, arenaThickness, depth));
 	      scenario->setMaterial(m_roof, white);
@@ -448,20 +501,22 @@ void gp::Game::run()
     //=====================================================Our Game======================================================
       //(need to have references of some objects in Game.cpp, so as to make them interactive)
       //return;
-      if(numObjectsToDespawn <= 0) {
+      if(numObjectsToDespawn <= 9) {
         if(level >= 2){            
           //TODO Win condition in Scenario 3
         }
         else{
           m_scenarioControl.loadScenario<gp::Custom3>();
           m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
-          m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
+          m_scenarioControl.m_scoreLabel->setCaption("SCORE: "+ std::to_string(score));
+
           newLevel = true;
           switch (level) {
             case 0: // 0->1 transition
               numObjectsToDespawn = 15;
               numObjectsToSpawn = 15;
               levelVel = 2;
+
             break;
             case 1: //1->2 transition
               numObjectsToDespawn = 20;
@@ -470,34 +525,53 @@ void gp::Game::run()
             break;
           }
           level += 1;
+          m_scenarioControl.m_moobsLabel->setCaption("ENEMIES: "+ std::to_string(numObjectsToDespawn));
+          m_scenarioControl.m_levelLabel->setCaption("LEVEL: "+ std::to_string(level+1));
           spawnIndex = 0;
           continue;
         }
       }
       if(!m_scenarioControl.isPaused()){
+        for(int ii = 0; ii < spawnIndex; ii++){
+	        engine::Object* o = scenario->engineObjectManager().find(spawnedObjects[ii]);
+          int shots = o->numShots();
+          switch (shots) {
+            case 0:
+
+              if (dynamic_cast<engine::Box*>(o) != nullptr){
+                scenario->setMaterial(spawnedObjects[ii], fullOrange);
+              }
+              else{
+                scenario->setMaterial(spawnedObjects[ii], fullRed);
+              }
+            break;
+
+            case 1:
+              if (dynamic_cast<engine::Box*>(o) != nullptr){
+                scenario->setMaterial(spawnedObjects[ii], orange);
+              }
+              else{
+                scenario->setMaterial(spawnedObjects[ii], red);
+              }
+            break;
+
+            case 2:
+              if (dynamic_cast<engine::Box*>(o) != nullptr){
+                scenario->setMaterial(spawnedObjects[ii], lightOrange);
+              }
+              else{
+                scenario->setMaterial(spawnedObjects[ii], lightRed);
+              }
+            break;
+          }
+        }
+
         long int t1 = static_cast<long int> (std::time(NULL));
-        if (t1 - t0 > 0.15f) {
+        if (t1 - t0 > 0.3f) {
           t0 = static_cast<long int> (std::time(NULL));
           scenario->setMaterial(m_front, green);
           scenario->setMaterial(m_back, red);
           wave+=1;
-          for(int ii = 0; ii < spawnIndex; ii++){
-	          engine::Object* o = scenario->engineObjectManager().find(spawnedObjects[ii]);
-            int shots = o->numShots();
-            switch (shots) {
-              case 0:
-                scenario->setMaterial(spawnedObjects[ii], fullRed);
-              break;
-
-              case 1:
-                scenario->setMaterial(spawnedObjects[ii], fullGreen);
-              break;
-
-              case 2:
-                scenario->setMaterial(spawnedObjects[ii], pistacio);
-              break;
-            }
-          }
         }
         if (t1 - t0_ball > 5.0f && numObjectsToSpawn > 0) {
           t0_ball = static_cast<long int> (std::time(NULL));
@@ -533,16 +607,17 @@ void gp::Game::run()
        	orangeYellow.diffuseColor = engine::Vector3f(0.95f, 0.50f, 0.0f);
 
 
-        int color = rand() % 3 + 1;  
-        if (color == 1){
-          scenario->setMaterial(spawnedObjects[spawnIndex], redPink);
-        }
-        if (color == 2){
-          scenario->setMaterial(spawnedObjects[spawnIndex], orangeYellow);
-        }
-        if (color == 3){
-          //scenario->setMaterial(nBall, white);
-        }
+        scenario->setMaterial(spawnedObjects[spawnIndex], fullRed);
+        //int color = rand() % 3 + 1;  
+        //if (color == 1){
+        //  scenario->setMaterial(spawnedObjects[spawnIndex], redPink);
+        //}
+        //if (color == 2){
+        //  scenario->setMaterial(spawnedObjects[spawnIndex], orangeYellow);
+        //}
+        //if (color == 3){
+        //  //scenario->setMaterial(nBall, white);
+        //}
 
         spawnIndex+=1;
         }
@@ -572,7 +647,7 @@ void gp::Game::run()
 	        engine::Object* o = scenario->engineObjectManager().find(spawnedObjects[spawnIndex]);
 	        o->setAngularVelocity(engine::Vector3f(0, 0, 7*M_PI));
           o->setVelocity(engine::Vector3f(0,0,100.0f));
-          scenario->setMaterial(spawnedObjects[spawnIndex], pistacio);
+          scenario->setMaterial(spawnedObjects[spawnIndex], fullOrange);
           spawnIndex+=1;
 
         //int color = rand() % 3 + 1;  
@@ -625,16 +700,15 @@ void gp::Game::run()
         m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
         scenario->setMaterial(m_front, fullGreen);
         numObjectsToDespawn -=1;
+        m_scenarioControl.m_moobsLabel->setCaption("ENEMIES:  "+ std::to_string(numObjectsToDespawn));
       }
 
       if (gp::messages::isType<gp::engine::messages::EnemyDeathByRayMessage>(message))
       {
-        //m_scenarioControl.m_score += 1;
-        //m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(m_scenarioControl.m_score));
-        //scenario->setMaterial(m_front, fullGreen);
         score += 10;
         m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));
         numObjectsToDespawn -=1;
+        m_scenarioControl.m_moobsLabel->setCaption("ENEMIES:  "+ std::to_string(numObjectsToDespawn));
       }
     }
 
