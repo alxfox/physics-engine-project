@@ -127,17 +127,17 @@ void gp::engine::CollisionResolver::applyCollisionImpulseForRay()
 		return;
 	}
 
-	if (m_collision.interpenetrationDepth() >= 10) {
+	//if (m_collision.interpenetrationDepth() >= 1.f) {
+		obj1->receiveShot();
+	//}
+/*
+	if (m_collision.interpenetrationDepth() >= 2.5f) {
 		obj1->receiveShot();
 	}
 
-	if (m_collision.interpenetrationDepth() >= 20) {
+	if (m_collision.interpenetrationDepth() >= 5.f) {
 		obj1->receiveShot();
-	}
-
-	if (m_collision.interpenetrationDepth() >= 30) {
-		obj1->receiveShot();
-	}
+	}*/
 
 	if(obj1->numShots() >= 3){
 		obj1->setPosition(Vector3f(binPos, -10, 0));
@@ -179,16 +179,16 @@ void gp::engine::CollisionResolver::applyCollisionImpulseForRay()
 	float_t f = dividend/divisor;
 	float_t f1 = f;
 	float_t f2 = -f;
-				f1 = 100.f;
+				f1 = m_collision.interpenetrationDepth()*50.f;
 //=========================================Velocity updates==============================================
 
-	Vector3f w1New = inertia1World*(r1.cross(f1*normal));
+	Vector3f w1New = inertia1World*(r1.cross(f1/10.f*normal));
 
 	Vector3f v1New = obj1->invMass()*f1*normal;
 	std::cout << obj1->velocity().x() << " "<< obj1->velocity().y() << " "<< obj1->velocity().z();
 	obj1->changeVelocity(v1New);
 	obj1->changeAngularVelocity(w1New);
-	std::cout << " | " <<  obj1->velocity().x() << " "<< obj1->velocity().y() << " "<< obj1->velocity().z() << std::endl;
+	std::cout << " | " <<  obj1->velocity().x() << " " << obj1->velocity().y() << " "<< obj1->velocity().z() << std::endl;
 	if(v1New.z()>1.f)
 		std::cout << "wat";
 
