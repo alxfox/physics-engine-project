@@ -503,7 +503,10 @@ void gp::Game::run()
       //return;
       if(numObjectsToDespawn <= 0) {
         if(level >= 2){            
-          //TODO Win condition in Scenario 3
+          m_scenarioControl.m_winlose->setCaption("YOU WIN \n");
+          m_scenarioControl.m_endscore->setCaption("SCORE:  "+ std::to_string(score));
+          m_scenarioControl.m_endmenu->setVisible(true);
+          m_scenarioControl.toggleEngine();
         }
         else{
           m_scenarioControl.loadScenario<gp::Custom3>();
@@ -692,6 +695,16 @@ void gp::Game::run()
         m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
         scenario->setMaterial(m_back, fullRed);
         numObjectsToDespawn -=1;
+
+        //Game Over
+        // if(lives <= 0){
+        
+        //   m_scenarioControl.m_winlose->setCaption("GAME OVER ");
+        //   m_scenarioControl.m_endscore->setCaption("SCORE:  "+ std::to_string(score));
+        //   m_scenarioControl.m_endmenu->setVisible(true);
+        //   m_scenarioControl.toggleEngine();
+        // }
+
       }
       if (gp::messages::isType<gp::engine::messages::EnemyDeathByGoalMessage>(message))
       {

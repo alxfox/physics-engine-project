@@ -153,7 +153,8 @@ void gp::engine::Engine::detectCollisions()
 			// we do not need to check o1<->o2 AND o2<->o1
 			if (o1 == o2)
 				break;
-
+			if(o1==nullptr || o2 == nullptr)
+				continue;
 			// Ignore collision of to unmoveable objects
 			if (!o1->isMovable() && !o2->isMovable())
 				continue;
