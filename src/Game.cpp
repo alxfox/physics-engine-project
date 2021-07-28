@@ -86,7 +86,7 @@ void gp::Game::run()
 
 	float width = 10.0f;
 	float height = 30.0f;
-	float depth = 100.0f;
+	float depth = 80.0f;
 	float arenaSize = 30.0f;
 	float arenaHeight = 8.0f;
 	float arenaOffset = -2.0f;
@@ -501,7 +501,7 @@ void gp::Game::run()
     //=====================================================Our Game======================================================
       //(need to have references of some objects in Game.cpp, so as to make them interactive)
       //return;
-      if(numObjectsToDespawn <= 9) {
+      if(numObjectsToDespawn <= 0) {
         if(level >= 2){            
           //TODO Win condition in Scenario 3
         }
@@ -573,7 +573,7 @@ void gp::Game::run()
           scenario->setMaterial(m_back, red);
           wave+=1;
         }
-        if (t1 - t0_ball > 5.0f && numObjectsToSpawn > 0) {
+        if (t1 - t0_ball > 3.0f && numObjectsToSpawn > 0) {
           t0_ball = static_cast<long int> (std::time(NULL));
           float rPos_x = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (width -4.0f) - (width/2.0f-2.0f);
           float rPos_y = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (height-4.0f) - (height/2.0f-2.0f);
@@ -622,7 +622,7 @@ void gp::Game::run()
         spawnIndex+=1;
         }
 
-        if (t1 - t0_squares > 15.0f && numObjectsToSpawn > 0) {
+        if (t1 - t0_squares > 9.0f && numObjectsToSpawn > 0) {
           t0_squares= static_cast<long int> (std::time(NULL));
           float rPos_x = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (width -6.0f) - (width/2.0f-3.0f);
           float rPos_y = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (height-6.0f) - (height/2.0f-3.0f);

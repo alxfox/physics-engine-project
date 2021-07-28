@@ -90,11 +90,11 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	level->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum));
 	//Widget* points = new Widget(games2);
 	//points->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
-	m_scoreLabel= new Label(scores, "SCORE: 0					" );//+ std::to_string(m_score));
+	m_scoreLabel= new Label(scores, "SCORE: 0							" );//+ std::to_string(m_score));
 
 	//Widget* live = new Widget(games2);
 	//live->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Minimum));
-	m_lifeLabel= new Label(scores, "LIVES: 5					" );//+ std::to_string(m_life));
+	m_lifeLabel= new Label(scores, "LIVES: 5						" );//+ std::to_string(m_life));
 	m_moobsLabel = new Label(level, "ENEMIES: 10                                        " );//+ std::to_string(m_life));
 	m_levelLabel = new Label(level, "LEVEL: 1                                        " );//+ std::to_string(m_score));
 

@@ -275,5 +275,5 @@ gp::StandardArena::StandardArena()
 	//setName(e, "top");
 
 	m_spotLight.setupLight(glm::vec3(0.0f, 14.9f, 0.0f), glm::vec3(0.0f, -1.00f, 0.0f), 450.0f, 0.5f);
-	m_camera.setWorldPosition(glm::vec3(0.0f, -1.0f, 45.0f));
+	m_camera.setWorldPosition(glm::vec3(0.0f, -1.0f, 35.0f));
 }
