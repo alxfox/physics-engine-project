@@ -55,14 +55,24 @@ public:
 	nanogui::Button* m_g1 = nullptr;
 	nanogui::Button* m_g2 = nullptr;
 	nanogui::Button* m_g3 = nullptr;
+	nanogui::Button* m_restart3 = nullptr;
 	nanogui::Window* m_aimingReticleHor = nullptr;
 	nanogui::Window* m_aimingReticleVer = nullptr;
 	nanogui::Window* m_nanoguiWindow = nullptr;
 	nanogui::Window* m_scoringboard = nullptr;
+	nanogui::Window* m_endmenu = nullptr;
 	nanogui::Label* m_scoreLabel = nullptr; 
 	nanogui::Label* m_lifeLabel = nullptr; 
 	nanogui::Label* m_moobsLabel = nullptr; 
 	nanogui::Label* m_levelLabel = nullptr; 
+	nanogui::Label* m_winlose = nullptr;
+	nanogui::Label* m_space = nullptr;
+	nanogui::Label* m_endscore = nullptr;
+
+
+
+
+
 	int16_t m_score;
 	int16_t m_life;
 	bool m_reloadedScenario = false;
