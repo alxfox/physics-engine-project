@@ -2,6 +2,7 @@
 #define GP_GUI_SCENARIOCONTROL_H
 
 #include "Scenario.h"
+#include <cmath>
 #include <queue>
 #include <nanogui/nanogui.h>
 #include "common/messages/Message.h"
@@ -76,7 +77,12 @@ public:
 	int16_t m_score;
 	int16_t m_life;
 	bool m_reloadedScenario = false;
-	
+
+	float_t m_xFactor = 10;
+	float_t m_yFactor = 10;
+	float_t m_zFactor = 10;
+
+	bool isPlayground = true;	
 // 	gp::messages::Queue<gp::messages::Message> engineMessages;
 
 	ScenarioControl(GLFWwindow* window, gp::messages::Queue<gp::messages::Message>& vis2engine);

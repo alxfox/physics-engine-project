@@ -82,6 +82,7 @@ void gp::Game::run()
   Entity spawnedObjects[30];
   int spawnIndex = 0;
   bool newLevel = false;
+  bool gameEnded = false;
   //std::cout << t0 << " seconds since the Epoch\n"<<std::endl;
 
 	float width = 10.0f;
@@ -138,12 +139,19 @@ void gp::Game::run()
             m_scenarioControl.m_moobsLabel->setCaption("ENEMIES: "+ std::to_string(numObjectsToDespawn));
             m_scenarioControl.m_levelLabel->setCaption("LEVEL: "+ std::to_string(level+1));
             spawnIndex = 0;
+            gameEnded = false;
       }
 
 
+      if (dynamic_cast<gp::Custom2*>(scenario) != nullptr){          
+        m_scenarioControl.isPlayground = true;
+      }
 
-      if (dynamic_cast<gp::Custom3*>(scenario) != nullptr){
-
+      if (dynamic_cast<gp::Custom3*>(scenario) != nullptr){          
+        m_scenarioControl.m_xFactor = width/2.0 -1;
+        m_scenarioControl.m_yFactor = height/2.0 -1;
+        m_scenarioControl.m_zFactor = depth/2.0 -1;
+        m_scenarioControl.isPlayground = false;
         t0 = static_cast<long int> (std::time(NULL));
         t0_ball = static_cast<long int> (std::time(NULL));
         t0_squares = static_cast<long int> (std::time(NULL));
@@ -506,9 +514,12 @@ void gp::Game::run()
           m_scenarioControl.m_winlose->setCaption("YOU WIN \n");
           m_scenarioControl.m_endscore->setCaption("SCORE:  "+ std::to_string(score));
           m_scenarioControl.m_endmenu->setVisible(true);
+          m_scenarioControl.m_reloadedScenario = true;
+          m_scenarioControl.loadScenario<gp::Custom3>();
           m_scenarioControl.toggleEngine();
+          continue;
         }
-        else{
+        else {
           m_scenarioControl.loadScenario<gp::Custom3>();
           m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
           m_scenarioControl.m_scoreLabel->setCaption("SCORE: "+ std::to_string(score));
@@ -695,15 +706,18 @@ void gp::Game::run()
         m_scenarioControl.m_lifeLabel->setCaption("LIVES: "+ std::to_string(lives));
         scenario->setMaterial(m_back, fullRed);
         numObjectsToDespawn -=1;
+        m_scenarioControl.m_moobsLabel->setCaption("ENEMIES:  "+ std::to_string(numObjectsToDespawn));
 
         //Game Over
-        // if(lives <= 0){
+        if(lives <= 0){
         
-        //   m_scenarioControl.m_winlose->setCaption("GAME OVER ");
-        //   m_scenarioControl.m_endscore->setCaption("SCORE:  "+ std::to_string(score));
-        //   m_scenarioControl.m_endmenu->setVisible(true);
-        //   m_scenarioControl.toggleEngine();
-        // }
+          m_scenarioControl.m_winlose->setCaption("GAME OVER ");
+          m_scenarioControl.m_endscore->setCaption("SCORE:  "+ std::to_string(score));
+          m_scenarioControl.m_endmenu->setVisible(true);
+          m_scenarioControl.m_reloadedScenario = true;
+          m_scenarioControl.loadScenario<gp::Custom3>();
+          m_scenarioControl.toggleEngine();
+        }
 
       }
       if (gp::messages::isType<gp::engine::messages::EnemyDeathByGoalMessage>(message))

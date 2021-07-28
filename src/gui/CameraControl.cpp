@@ -78,11 +78,19 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
 
   float speed = 0.05f;
   //camera.translate(glm::vec3( (A-D) * speed, 0*(Q-E) * speed, (W-S) * speed ));
-  float xFactor = 4.5f;
-  float yFactor = 14.5f;
+  float xFactor = scenarioControl.m_xFactor;
+  float yFactor = scenarioControl.m_yFactor;
+  float zFactor = scenarioControl.m_zFactor;
 
     
-  camera.translate(glm::vec3( (A-D) * speed, -(W-S) * speed, 0.0*(Q-E) * speed ));
+
+  if (scenarioControl.isPlayground) {
+    camera.translate(glm::vec3( (A-D) * speed, (Q-E) * speed, (W-S) * speed));
+  }
+  else{
+    camera.translate(glm::vec3( (A-D) * speed, -(W-S) * speed, 0*(Q-E) * speed ));
+
+  }
   //translateCC -> it is modified so that you can't get off the floor
 
   if(camera.worldPosition().x >= xFactor){
@@ -106,6 +114,18 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
   if(camera.worldPosition().y <= -yFactor){
    glm::vec3 rectifier = camera.worldPosition();
    rectifier.y = -yFactor;
+   camera.setWorldPosition(rectifier);
+  }
+
+  if(camera.worldPosition().z >= zFactor){
+   glm::vec3 rectifier = camera.worldPosition();
+   rectifier.z = zFactor;
+   camera.setWorldPosition(rectifier);
+  }
+
+  if(camera.worldPosition().z <= -zFactor){
+   glm::vec3 rectifier = camera.worldPosition();
+   rectifier.z = -zFactor;
    camera.setWorldPosition(rectifier);
   }
 
