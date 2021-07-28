@@ -72,6 +72,32 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	games->setFixedHeight(height);
 	gui->addWidget("",games);
 
+//=====================================Game Over Menu=================================================
+
+FormHelper *gui3 = new FormHelper(this);
+	m_endmenu = gui3->addWindow(Eigen::Vector2i(50, 50), "");
+
+	m_endmenu->setVisible(false);
+	Widget* games3 = new Widget(m_endmenu);
+	Widget* gameover = new Widget(games3);
+
+	games3->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Fill));
+	gameover->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Middle));
+
+	m_winlose = new Label(gameover, "winlose");
+	m_space = new Label(gameover, "\n");
+	m_endscore = new Label(gameover, "SCORE:  0 \n");
+
+	m_restart3 = new Button(games3, "BACK TO MENU");
+	m_restart3->setCallback([this]() { m_nanoguiWindow->setVisible(m_paused); m_endmenu->setVisible(false); });
+	
+	gameover->setFixedWidth(width/2);
+	games3->setFixedWidth(width);
+	games3->setFixedHeight(height);
+	gui3->addWidget("",games3);
+
+
+
 //=====================================Score top right==================================================
 	//m_nanoguiWindow->theme()->mWindowFillUnfocused = Color(engine::Vector4f(0.0f, 0.0f, 200.0f, 255.0f));
 	//m_nanoguiWindow->theme()->mWindowFillFocused = Color(engine::Vector4f(21.0f, 101.0f, 192.0f, 255.0f));
