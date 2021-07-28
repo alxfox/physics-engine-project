@@ -85,7 +85,7 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
     
 
   if (scenarioControl.isPlayground) {
-    camera.translate(glm::vec3( (A-D) * speed, (Q-E) * speed, (W-S) * speed));
+    camera.translateCC(glm::vec3( (A-D) * speed, (Q-E) * speed, (W-S) * speed));
   }
   else{
     camera.translate(glm::vec3( (A-D) * speed, -(W-S) * speed, 0*(Q-E) * speed ));

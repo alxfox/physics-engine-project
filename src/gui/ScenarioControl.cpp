@@ -93,7 +93,7 @@ FormHelper *gui3 = new FormHelper(this);
 	m_restart3 = new Button(games3, "BACK TO MENU");
 	m_restart3->setCallback([this]() { m_nanoguiWindow->setVisible(m_paused); m_endmenu->setVisible(false); });
 	
-	gameover->setFixedWidth(width/2);
+	gameover->setFixedWidth(width*1000);
 	games3->setFixedWidth(width);
 	games3->setFixedHeight(height);
 	gui3->addWidget("",games3);

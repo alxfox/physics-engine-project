@@ -85,8 +85,8 @@ void gp::Game::run()
   bool gameEnded = false;
   //std::cout << t0 << " seconds since the Epoch\n"<<std::endl;
 
-	float width = 10.0f;
-	float height = 30.0f;
+	float width = 30.0f;
+	float height = 10.0f;
 	float depth = 80.0f;
 	float arenaSize = 30.0f;
 	float arenaHeight = 8.0f;
@@ -127,8 +127,8 @@ void gp::Game::run()
       //m_cameraControl.reset();
 
       if(m_scenarioControl.m_reloadedScenario){
-            numObjectsToDespawn = 10;
-            numObjectsToSpawn = 10;
+            numObjectsToDespawn = 1;
+            numObjectsToSpawn = 1;
             level = 0;
             levelVel = 1;
             lives = 5;
@@ -488,9 +488,21 @@ void gp::Game::run()
         int64_t millis = std::chrono::duration_cast<std::chrono::milliseconds>(curTime-startShot).count();
         if(millis>1000){
           shotIntensityLevel = 1;//TODO: add charge level 1 color here
+          m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 8;
+          gp::engine::Vector4f shootColor(.0f, 0.0f, 255.0f, 955.0f);
+          m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
+          m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
+          m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillFocused = nanogui::Color(shootColor);
+          m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillFocused = nanogui::Color(shootColor);
         }
         if(millis>2500){
           shotIntensityLevel = 2;//TODO: add charge level 2 color here
+          m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 8;
+          gp::engine::Vector4f shootColor(.0f, 255.0f, .0f, 955.0f);
+          m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
+          m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
+          m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillFocused = nanogui::Color(shootColor);
+          m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillFocused = nanogui::Color(shootColor);
         }
       }
     }
@@ -527,14 +539,14 @@ void gp::Game::run()
           newLevel = true;
           switch (level) {
             case 0: // 0->1 transition
-              numObjectsToDespawn = 15;
-              numObjectsToSpawn = 15;
+              numObjectsToDespawn = 5;
+              numObjectsToSpawn = 5;
               levelVel = 2;
 
             break;
             case 1: //1->2 transition
-              numObjectsToDespawn = 20;
-              numObjectsToSpawn = 20;
+              numObjectsToDespawn = 5;
+              numObjectsToSpawn = 5;
               levelVel = 4;
             break;
           }
@@ -577,6 +589,7 @@ void gp::Game::run()
                 scenario->setMaterial(spawnedObjects[ii], lightRed);
               }
             break;
+            //TODO
           }
         }
 
