@@ -80,13 +80,15 @@ FormHelper *gui3 = new FormHelper(this);
 	m_endmenu->setVisible(false);
 	Widget* games3 = new Widget(m_endmenu);
 	Widget* gameover = new Widget(games3);
-
+	Widget* endscore = new Widget(games3);
 	games3->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Fill));
 	gameover->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Middle));
+	endscore->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Middle));
+
 
 	m_winlose = new Label(gameover, "winlose");
-	m_space = new Label(gameover, "\n");
-	m_endscore = new Label(gameover, "SCORE:  0 \n");
+	
+	m_endscore = new Label(endscore, "SCORE:  0");
 
 	m_restart3 = new Button(games3, "BACK TO MENU");
 	m_restart3->setCallback([this]() { m_nanoguiWindow->setVisible(m_paused); m_endmenu->setVisible(false); });

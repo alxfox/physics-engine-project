@@ -13,6 +13,14 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
   
+
+   scenarioControl.m_endmenu->setPosition(Eigen::Vector2i(width/4.0f, height/4.0f));
+  scenarioControl.m_endmenu->setSize(Eigen::Vector2i(width / 2.0f, height / 2.0f));
+  int endmenuWidth = scenarioControl.m_endmenu->width();
+  int endmenuHeight = scenarioControl.m_endmenu->height();
+  scenarioControl.m_restart3->setPosition(Eigen::Vector2i(0, endmenuHeight/2  + endmenuHeight/4));
+  scenarioControl.m_restart3->setSize(Eigen::Vector2i(endmenuWidth/1 -40, endmenuHeight/8));
+
   scenarioControl.m_aimingReticleHor->setPosition(Eigen::Vector2i(width/2.0f-20, height/2.0f));
   scenarioControl.m_aimingReticleVer->setPosition(Eigen::Vector2i(width/2.0f-9, height/2.0f-9));
   scenarioControl.m_nanoguiWindow->setPosition(Eigen::Vector2i(width/2.0f- (width/ 5.0f)/2.0f, height/2.0f -(height / 5.0f)/2.0f ));
