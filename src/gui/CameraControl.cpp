@@ -89,7 +89,6 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
   }
   else{
     camera.translate(glm::vec3( (A-D) * speed, -(W-S) * speed, 0*(Q-E) * speed ));
-
   }
   //translateCC -> it is modified so that you can't get off the floor
 

@@ -117,6 +117,13 @@ void gp::engine::Engine::handleMessage(const gp::messages::Message& message)
 		return;
 	}
 
+	if(gp::messages::isType<messages::GravityMessage>(message)){
+		//add an object or sth (dummy class?) that can be called during collision detection
+		const messages::GravityMessage& gravityMsg = static_cast<const messages::GravityMessage&>(message);
+		m_sceneAcceleration = gravityMsg.getSceneAccel();
+		return;
+	}
+
 	std::cerr << "Engine Warning: Received unknown message." << std::endl;
 }
 
@@ -128,8 +135,8 @@ void gp::engine::Engine::updatePositionVelocity()
 		it != objects.cend(); ++it) {
 		Object* o = *it;
 		if(!o->isMovable()) continue;
-		o->updatePositionAndRotation(ACCELERATION,step);
-		o->updateVelocity(ACCELERATION, step);
+		o->updatePositionAndRotation(m_sceneAcceleration,step);
+		o->updateVelocity(m_sceneAcceleration, step);
 	}
 }
 

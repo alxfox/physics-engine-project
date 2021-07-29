@@ -87,6 +87,23 @@ public:
 	}
 };
 
+class GravityMessage: public gp::messages::Message
+{
+private:
+	Vector3f m_sceneAccel;
+  
+
+public:
+	GravityMessage(Vector3f newAccel)
+		: gp::messages::Message(type_id<GravityMessage>()),
+		m_sceneAccel(newAccel)
+	{ }
+
+	Vector3f getSceneAccel() const {
+		return m_sceneAccel;
+	}
+};
+
 }
 
 }

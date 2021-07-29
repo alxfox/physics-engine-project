@@ -52,6 +52,7 @@ private:
 	Vector3f m_shootingDir;
 	float_t m_shootingInt;
 	Vector3f m_playerPos;
+	Vector3f m_sceneAcceleration;
 	/** The collision of the current time step */
 	std::vector<Collision> m_collisions;
 

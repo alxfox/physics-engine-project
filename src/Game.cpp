@@ -103,6 +103,7 @@ void gp::Game::run()
   gp::graphics::Material lightRed;
   gp::graphics::Material blue;
   gp::graphics::Material white;
+  gp::graphics::Material black;
   gp::graphics::Material pistacio;
 	gp::graphics::Material fullOrange; 
 	gp::graphics::Material orange; 
@@ -145,9 +146,14 @@ void gp::Game::run()
 
       if (dynamic_cast<gp::Custom2*>(scenario) != nullptr){          
         m_scenarioControl.isPlayground = true;
+        m_scenarioControl.m_xFactor = width/2.0 -1;
+        m_scenarioControl.m_yFactor = 20 -1;
+        m_scenarioControl.m_zFactor = depth/2.0 -1;
+        m_vis2engine.push(gp::engine::messages::GravityMessage(engine::Vector3f(0.0f,-9.81f,0.0f)));
       }
 
       if (dynamic_cast<gp::Custom3*>(scenario) != nullptr){          
+        m_vis2engine.push(gp::engine::messages::GravityMessage(engine::Vector3f(0.0f,0.0f,10.0f)));
         m_scenarioControl.m_xFactor = width/2.0 -1;
         m_scenarioControl.m_yFactor = height/2.0 -1;
         m_scenarioControl.m_zFactor = depth/2.0 -1;
@@ -160,6 +166,7 @@ void gp::Game::run()
       //(need to have references of some objects in Game.cpp, so as to make them interactive)
         //return;
 	      white = scenario->getMaterial("white");
+	      black = scenario->getMaterial("black");
 
        	lightBlue = scenario->getMaterial("lightBlue");
        	lightBlue.diffuseColor = engine::Vector3f(0.01f, 0.53f, 0.82f);
@@ -570,7 +577,7 @@ void gp::Game::run()
               else{
                 scenario->setMaterial(spawnedObjects[ii], fullRed);
               }
-            break;
+              break;
 
             case 1:
               if (dynamic_cast<engine::Box*>(o) != nullptr){
@@ -579,7 +586,7 @@ void gp::Game::run()
               else{
                 scenario->setMaterial(spawnedObjects[ii], red);
               }
-            break;
+              break;
 
             case 2:
               if (dynamic_cast<engine::Box*>(o) != nullptr){
@@ -588,7 +595,15 @@ void gp::Game::run()
               else{
                 scenario->setMaterial(spawnedObjects[ii], lightRed);
               }
-            break;
+              break;
+            default:
+                if(shots % 2 == 0){
+                  scenario->setMaterial(spawnedObjects[ii], blue);
+                }
+                else{
+                  scenario->setMaterial(spawnedObjects[ii], white);
+                }
+                break;
             //TODO
           }
         }
@@ -624,7 +639,11 @@ void gp::Game::run()
         float rRadius = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) + 0.5f;
         spawnedObjects[spawnIndex] = scenario->addSphere(1.0f, engine::Vector3f(rPos_x, rPos_y, rPos_z + 5.5f), rRadius, 
                               levelVel*rVel_length*engine::Vector3f(rVel_x+rVel_z, rVel_y, rVel_z+5.5f));
-
+        float destruct = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+        if(destruct >= 0.75f) {
+	        engine::Object* o = scenario->engineObjectManager().find(spawnedObjects[spawnIndex]);
+          o->setShots(-100);
+        }
 
         numObjectsToSpawn -= 1;
 	      gp::graphics::Material& redPink = scenario->getMaterial("redPink");
@@ -668,6 +687,11 @@ void gp::Game::run()
             engine::Vector3f(0, 0, levelVel*rVel_z)
             );        
 
+          float destruct = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+          if(destruct >= 0.75f) {
+	        engine::Object* o = scenario->engineObjectManager().find(spawnedObjects[spawnIndex]);
+            o->setShots(-100);
+          }
 
           numObjectsToSpawn -= 1;
 
