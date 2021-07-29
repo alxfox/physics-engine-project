@@ -134,7 +134,8 @@ void gp::engine::CollisionResolver::applyCollisionImpulseForRay()
 	//Collisions between unmovable objects shouldn't exist
 	if(!obj1->isMovable())
 		return;
-
+	if(obj1->isTriggered)
+		return;
 	if(obj1->objType() != Object::DEFAULT){
 		return;
 	}
@@ -156,6 +157,7 @@ void gp::engine::CollisionResolver::applyCollisionImpulseForRay()
 		binPos -= 10;
 		obj1->setMass(Object::UNMOVABLE_MASS);
 		objectDestroyed = true;
+		obj1->isTriggered=true;
 	}
 
 //=========================================Collecting Data==============================================
