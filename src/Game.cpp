@@ -121,6 +121,8 @@ void gp::Game::run()
   bool canShoot = true;
   int32_t shotIntensityLevel = 0;
   int32_t cooldown = 1000;
+
+  std::vector<Entity> entities;
   while (!glfwWindowShouldClose(m_window)) {
     if (m_scenarioControl.hasNewScenario()) {
       setupNewScenario();
@@ -132,8 +134,8 @@ void gp::Game::run()
       //m_cameraControl.reset();
 
       if(m_scenarioControl.m_reloadedScenario){
-            numObjectsToDespawn = 5;
-            numObjectsToSpawn = 5;
+            numObjectsToDespawn = 8;
+            numObjectsToSpawn = 8;
             level = 0;
             levelVel = 1;
             spawnVelocity = 1;
@@ -280,7 +282,7 @@ void gp::Game::run()
             engine::Vector3f(0, 0, 0),
             engine::Quaternion((2*M_PI / 20.0f) * j, engine::Vector3f(0, 1, 0))
             );
-
+            entities.push_back(e);
 	          scenario->setMaterial(e, white);
             j+=1;
         }
@@ -295,7 +297,7 @@ void gp::Game::run()
             engine::Vector3f(0, 0, 0),
             engine::Quaternion((2*M_PI / 20.0f) * j, engine::Vector3f(0, 1, 0))
             );
-
+            entities.push_back(e);
 	          scenario->setMaterial(e, white);
             j+=1;
         }
@@ -311,7 +313,7 @@ void gp::Game::run()
             engine::Quaternion((2*M_PI / 10.0f) * j, engine::Vector3f(0, 1, 0)),
             engine::Object::TRIGGER_ZONE_0
             );
-
+            entities.push_back(e);
 	          scenario->setMaterial(e, white);
             j+=1;
         }
@@ -328,7 +330,7 @@ void gp::Game::run()
             engine::Quaternion((2*M_PI / 10.0f) * j, engine::Vector3f(0, 1, 0)),
             engine::Object::TRIGGER_ZONE_0
             );
-
+            entities.push_back(e);
 	          scenario->setMaterial(e, white);
             j+=1;
         }
@@ -349,6 +351,7 @@ void gp::Game::run()
 	          scenario->getMaterial(colorName).shininess = 10.0f;
 	          scenario->getMaterial(colorName).specularColor = engine::Vector3f(0.2f, 0.5f, j/40.0f);
 	          scenario->setMaterial(e, scenario->getMaterial(colorName));
+            entities.push_back(e);
             j+=1;
         }
 
@@ -368,6 +371,7 @@ void gp::Game::run()
 	          scenario->getMaterial(colorName).specularColor = engine::Vector3f(0.2f, 0.5f, j/40.0f);
 	          scenario->setMaterial(e, scenario->getMaterial(colorName));
             j+=1;
+            entities.push_back(e);
         }
 
         scenario->addBox(gp::engine::Object::UNMOVABLE_MASS,
@@ -582,8 +586,8 @@ void gp::Game::run()
           newLevel = true;
           switch (level) {
             case 0: // 0->1 transition
-              numObjectsToDespawn = 10;
-              numObjectsToSpawn = 10;
+              numObjectsToDespawn = 12;
+              numObjectsToSpawn = 12;
               spawnVelocity = 2;
 
             break;
