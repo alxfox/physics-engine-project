@@ -84,11 +84,22 @@ FormHelper *gui3 = new FormHelper(this);
 	games3->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Fill));
 	gameover->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Middle));
 	endscore->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Middle));
-
+	games3->setPosition(Eigen::Vector2i(m_endmenu->width() /5, 10));
+	games3->setSize(Eigen::Vector2i((m_endmenu->width()*3)/5, m_endmenu->height()/1.5));
+	
+	int gameswidth = games3->width();
+	int gamesheight = games3->height();
 
 	m_winlose = new Label(gameover, "winlose");
-	
+	m_winlose->setFontSize(50);
+	// m_winlose->setPosition(Eigen::Vector2i(gameswidth/9, 5));
+	// m_winlose->setSize(Eigen::Vector2i((m_endmenu->width()*3)/5, m_endmenu->height()/1.5));
+
 	m_endscore = new Label(endscore, "SCORE:  0");
+	m_endscore->setFontSize(50);
+
+	// m_winlose->setPosition();
+
 
 	m_restart3 = new Button(games3, "BACK TO MENU");
 	m_restart3->setCallback([this]() { m_nanoguiWindow->setVisible(m_paused); m_endmenu->setVisible(false); });
