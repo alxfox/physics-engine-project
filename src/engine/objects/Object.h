@@ -88,7 +88,7 @@ public:
 	bool isCube;
 
 	bool m_destructible = true;
-
+	bool isTriggered = false;
 	Object(float_t mass, const Vector3f &position, const Vector3f &velocity, const Quaternion &rotation, const Matrix3f &rotationalInertia, float_t boundingRadius, ObjectType type = DEFAULT)
 		: m_invMass(1./mass), m_position(position), m_rotation(rotation), m_velocity(velocity),
 		m_angularVelocity(Vector3f::Zero()),

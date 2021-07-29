@@ -125,6 +125,8 @@ void gp::Game::run()
   std::vector<Entity> entities;
   while (!glfwWindowShouldClose(m_window)) {
     if (m_scenarioControl.hasNewScenario()) {
+      if(!m_scenarioControl.isPaused())
+          m_scenarioControl.toggleEngine();
       setupNewScenario();
       scenario = m_scenarioControl.scenario();
       spotLight = &scenario->spotLight();
@@ -251,11 +253,13 @@ void gp::Game::run()
           case 1:
             scenario->setMaterial(m_left, darkBlue);
             scenario->setMaterial(m_right, darkBlue);
+            m_vis2engine.push(gp::engine::messages::GravityMessage(engine::Vector3f(0.0f,0.0f,15.0f)));
           break;
 
           case 2:
             scenario->setMaterial(m_left, purple);
             scenario->setMaterial(m_right, purple);
+            m_vis2engine.push(gp::engine::messages::GravityMessage(engine::Vector3f(0.0f,0.0f,20.0f)));
           break;
         }
 
@@ -403,9 +407,10 @@ void gp::Game::run()
         );        
 
 
-
+        if(level!= 0 && m_scenarioControl.isPaused())
+          m_scenarioControl.toggleEngine();
       }
-
+      
     }
     // Check if any events have been activated (key pressed, mouse moved etc.) and call corresponding response functions
     glfwPollEvents();
@@ -798,7 +803,7 @@ void gp::Game::run()
         }
 
       }
-      if (gp::messages::isType<gp::engine::messages::EnemyDeathByGoalMessage>(message))
+      else if (gp::messages::isType<gp::engine::messages::EnemyDeathByGoalMessage>(message))
       {
         m_scenarioControl.m_score += 1;
         score += 100;
@@ -808,7 +813,7 @@ void gp::Game::run()
         m_scenarioControl.m_moobsLabel->setCaption("ENEMIES:  "+ std::to_string(numObjectsToDespawn));
       }
 
-      if (gp::messages::isType<gp::engine::messages::EnemyDeathByRayMessage>(message))
+      else if (gp::messages::isType<gp::engine::messages::EnemyDeathByRayMessage>(message))
       {
         score += 10;
         m_scenarioControl.m_scoreLabel->setCaption("SCORE:  "+ std::to_string(score));

@@ -24,16 +24,22 @@ gp::engine::CollisionResolver::TriggerType gp::engine::CollisionResolver::resolv
 	Object* obj1 = m_collision.object1();
 	Object* obj2 = m_collision.object2();
 	
-
 	if(obj1->objType() == Object::TRIGGER_ZONE_1){
+		if(obj2->isTriggered)
+			return DEFAULT;
+		obj2->isTriggered =true;
 		std::cout << "I'm triggered" << std::endl;
 		obj2->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
 		obj2->setMass(Object::UNMOVABLE_MASS);
+		
 		return ENEMY_HITS;
 	}
 
 	if(obj2->objType() == Object::TRIGGER_ZONE_1){
+		if(obj1->isTriggered)
+			return DEFAULT;
+		obj1->isTriggered =true;
 		std::cout << "I'm triggered" << std::endl;
 		obj1->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
@@ -42,6 +48,9 @@ gp::engine::CollisionResolver::TriggerType gp::engine::CollisionResolver::resolv
 	}
 
 	if(obj1->objType() == Object::TRIGGER_ZONE_0){
+		if(obj2->isTriggered)
+			return DEFAULT;
+		obj2->isTriggered =true;
 		std::cout << "I'm triggered" << std::endl;
 		obj2->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
@@ -50,6 +59,9 @@ gp::engine::CollisionResolver::TriggerType gp::engine::CollisionResolver::resolv
 	}
 
 	if(obj2->objType() == Object::TRIGGER_ZONE_0){
+		if(obj1->isTriggered)
+			return DEFAULT;
+		obj1->isTriggered =true;
 		std::cout << "I'm triggered" << std::endl;
 		obj1->setPosition(Vector3f(binPos, -10, 0));
 		binPos -= 10;
