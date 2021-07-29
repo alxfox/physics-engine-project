@@ -130,6 +130,7 @@ gp::graphics::Material& green = getMaterial("green");
 	gp::graphics::Material& boden = getMaterial("boden");
 	boden.setTexture(gp::graphics::Material::Diffuse, "boden_12");
 
+//==========================================ARENA WALLS======================================
 	float arenaSize = 40.0f;
 	float arenaHeight = 10.0f;
 	float arenaOffset = -2.0f;
@@ -195,11 +196,32 @@ gp::graphics::Material& green = getMaterial("green");
   setMaterial(e, blue);
   e = addBox(1, engine::Vector3f(-2.0f, 2.5f, 0.0f), engine::Vector3f::Ones());
   setMaterial(e, blue);
+//   =====================================Pyramide==============================
+for(int y=-1.5; y <=2;y++){
+	for(int z= 7; z>=2; z--){
+		e = addBox(1, engine::Vector3f(-10.0f, y, z), engine::Vector3f::Ones());
+  setMaterial(e, blue);
+ 
+	}
+}
+
 
 //==================================Aiming training
+Entity bar = addBox(gp::engine::Object::UNMOVABLE_MASS, engine::Vector3f(10.0f, 2.5f, 10.0f), gp::engine::Vector3f(0.1f, 0.1f, 3.0f));
+  setMaterial(e, blue);
+e = addBox(1, engine::Vector3f(10.0f, 1.0f, 8.5f), gp::engine::Vector3f(0.1f, 1.0f, 0.5f));
+  setMaterial(e, blue);
+ addRope(bar, e, 1.5, engine::Vector3f(0.0f, -0.05f, -1.5f), engine::Vector3f(0.05f, 0.5f, 0.25f));
 
+e = addBox(1, engine::Vector3f(10.0f, 1.0f, 11.5f), gp::engine::Vector3f(0.1f, 1.0f, 0.5f));
+  setMaterial(e, blue);
+ addRope(bar, e, 1.5, engine::Vector3f(0.0f, -0.05f, 1.5f), engine::Vector3f(0.05f, 0.5f, 0.25f));
 
-	
+e = addSphere(1, engine::Vector3f(10, 1.0, 10), 0.4);
+	setMaterial(e, green);
+
+	addRope(bar, e, 1.5, engine::Vector3f(0.0f, -0.05f, 0.0f), engine::Vector3f(0.0f, 0.0f, 0.0f));
+
 }
 
 gp::Custom3::Custom3()

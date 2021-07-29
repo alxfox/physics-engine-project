@@ -144,7 +144,10 @@ void gp::Game::run()
       }
 
 
-      if (dynamic_cast<gp::Custom2*>(scenario) != nullptr){          
+      if (dynamic_cast<gp::Custom2*>(scenario) != nullptr){    
+        m_scenarioControl.m_xFactor = 20 -1;
+        m_scenarioControl.m_yFactor = 2 -1;
+        m_scenarioControl.m_zFactor = 20 -1;
         m_scenarioControl.isPlayground = true;
         m_scenarioControl.m_xFactor = width/2.0 -1;
         m_scenarioControl.m_yFactor = 20 -1;
@@ -746,7 +749,7 @@ void gp::Game::run()
         m_scenarioControl.m_moobsLabel->setCaption("ENEMIES:  "+ std::to_string(numObjectsToDespawn));
 
         //Game Over
-        if(lives <= 0){
+        if(lives <= 4){
         
           m_scenarioControl.m_winlose->setCaption("GAME OVER ");
           m_scenarioControl.m_endscore->setCaption("SCORE:  "+ std::to_string(score));
