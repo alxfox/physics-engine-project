@@ -59,7 +59,7 @@ namespace gp
       /*! Translate the camera (in camera coordinates) */
       void translateCC(glm::vec3 const& tcc) {
         m_pos += glm::mat3(glm::transpose(view)) * tcc;
-        m_pos[1] = 1.0f;
+        //m_pos[1] = 1.0f;
         updateViewMatrix();
       }
 
