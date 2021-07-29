@@ -171,7 +171,9 @@ void gp::Game::run()
       //(need to have references of some objects in Game.cpp, so as to make them interactive)
         //return;
 	      white = scenario->getMaterial("white");
+       	white.diffuseColor = engine::Vector3f(0.7f, 0.7f, 0.7f);
 	      black = scenario->getMaterial("black");
+       	black.diffuseColor = engine::Vector3f(0.2f, 0.2f, 0.2f);
 
        	lightBlue = scenario->getMaterial("lightBlue");
        	lightBlue.diffuseColor = engine::Vector3f(0.01f, 0.53f, 0.82f);
@@ -603,7 +605,7 @@ void gp::Game::run()
               break;
             default:
                 if(shots % 2 == 0){
-                  scenario->setMaterial(spawnedObjects[ii], blue);
+                  scenario->setMaterial(spawnedObjects[ii], black);
                 }
                 else{
                   scenario->setMaterial(spawnedObjects[ii], white);
