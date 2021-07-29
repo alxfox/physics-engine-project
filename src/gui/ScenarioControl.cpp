@@ -143,6 +143,7 @@ FormHelper *gui3 = new FormHelper(this);
 	level->setFixedHeight(30);
 	games2->setFixedWidth(200);
 	games2->setFixedHeight(30);
+	m_scoringboard->setVisible(false);
 	gui2->addWidget("",games2);
 
 
