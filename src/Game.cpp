@@ -125,8 +125,15 @@ void gp::Game::run()
   std::vector<Entity> entities;
   while (!glfwWindowShouldClose(m_window)) {
     if (m_scenarioControl.hasNewScenario()) {
-      if(!m_scenarioControl.isPaused())
+      if(!m_scenarioControl.isPaused()){
           m_scenarioControl.toggleEngine();
+          std::chrono::steady_clock::time_point timestamp = std::chrono::steady_clock::now();
+          while(true){
+            std::chrono::steady_clock::time_point rightnow = std::chrono::steady_clock::now();
+            int64_t millis = std::chrono::duration_cast<std::chrono::milliseconds>(rightnow-timestamp).count();
+            if(millis>1000)break;
+          }
+        }
       setupNewScenario();
       scenario = m_scenarioControl.scenario();
       spotLight = &scenario->spotLight();
@@ -408,6 +415,7 @@ void gp::Game::run()
 
 
         if(level!= 0 && m_scenarioControl.isPaused())
+          
           m_scenarioControl.toggleEngine();
       }
       
