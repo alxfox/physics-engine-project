@@ -156,7 +156,7 @@ gp::graphics::Material& green = getMaterial("green");
 	setMaterial(e, orange);
 	setName(e, "front");
 
-	m_spotLight.setupLight(glm::vec3(0.0f, 12.0f, 7.0f), glm::vec3(0.0f, -1.0f, -0.5f), 30.0f, 0.1f);
+	m_spotLight.setupLight(glm::vec3(0.0f, 12.0f, 7.0f), glm::vec3(0.0f, -1.0f, -0.5f), 100.0f, 0.1f);
 	m_camera.setWorldPosition(glm::vec3(0.0f, 1.0f, 10.0f));
 
 

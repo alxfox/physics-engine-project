@@ -149,9 +149,10 @@ void gp::Game::run()
         m_scenarioControl.m_yFactor = 2 -1;
         m_scenarioControl.m_zFactor = 20 -1;
         m_scenarioControl.isPlayground = true;
-        m_scenarioControl.m_xFactor = width/2.0 -1;
-        m_scenarioControl.m_yFactor = 20 -1;
-        m_scenarioControl.m_zFactor = depth/2.0 -1;
+        //m_scenarioControl.m_xFactor = width/2.0 -1;
+        //m_scenarioControl.m_yFactor = 20 -1;
+        //m_scenarioControl.m_zFactor = depth/2.0 -1;
+        m_scenarioControl.m_scoringboard->setVisible(false);
         m_vis2engine.push(gp::engine::messages::GravityMessage(engine::Vector3f(0.0f,-9.81f,0.0f)));
       }
 
@@ -161,6 +162,7 @@ void gp::Game::run()
         m_scenarioControl.m_yFactor = height/2.0 -1;
         m_scenarioControl.m_zFactor = depth/2.0 -1;
         m_scenarioControl.isPlayground = false;
+        m_scenarioControl.m_scoringboard->setVisible(true);
         t0 = static_cast<long int> (std::time(NULL));
         t0_ball = static_cast<long int> (std::time(NULL));
         t0_squares = static_cast<long int> (std::time(NULL));
@@ -549,14 +551,14 @@ void gp::Game::run()
           newLevel = true;
           switch (level) {
             case 0: // 0->1 transition
-              numObjectsToDespawn = 5;
-              numObjectsToSpawn = 5;
+              numObjectsToDespawn = 2;
+              numObjectsToSpawn = 2;
               levelVel = 2;
 
             break;
             case 1: //1->2 transition
-              numObjectsToDespawn = 5;
-              numObjectsToSpawn = 5;
+              numObjectsToDespawn = 1;
+              numObjectsToSpawn = 1;
               levelVel = 4;
             break;
           }
@@ -749,7 +751,7 @@ void gp::Game::run()
         m_scenarioControl.m_moobsLabel->setCaption("ENEMIES:  "+ std::to_string(numObjectsToDespawn));
 
         //Game Over
-        if(lives <= 4){
+        if(lives <= 0){
         
           m_scenarioControl.m_winlose->setCaption("GAME OVER ");
           m_scenarioControl.m_endscore->setCaption("SCORE:  "+ std::to_string(score));
