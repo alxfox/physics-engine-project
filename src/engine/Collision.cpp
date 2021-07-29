@@ -61,7 +61,12 @@ bool gp::engine::Collision::detectShot(){
 		//std::cout << m_collisionPoint1.x() << " "<< m_collisionPoint1.y() << " "<< m_collisionPoint1.z() << std::endl;
 		return true;
 	}
-	else{
+	else{//coarse culling
+		Line line(m_shotSource,m_shotDirection);
+		Vector3f pointOnLine;
+		float_t a = line.distPointLine(m_object1->position(),pointOnLine);
+		if(a>m_object1->boundingRadius())return false;
+
 		Box* myBox = dynamic_cast<Box*>(m_object1);
 		Vector3f pos = myBox->invModelMatrix() * m_shotSource;
 		Vector3f dir = myBox->invModelMatrix().linear() * m_shotDirection;
