@@ -58,7 +58,10 @@ public:
 	nanogui::Button* m_g3 = nullptr;
 	nanogui::Button* m_restart3 = nullptr;
 	nanogui::Window* m_aimingReticleHor = nullptr;
+	nanogui::Window* m_aimingReticleHorRight = nullptr;
 	nanogui::Window* m_aimingReticleVer = nullptr;
+	nanogui::Window* m_aimingReticleVerBot = nullptr;
+	nanogui::Window* m_middleReference = nullptr;
 	nanogui::Window* m_nanoguiWindow = nullptr;
 	nanogui::Window* m_scoringboard = nullptr;
 	nanogui::Window* m_endmenu = nullptr;

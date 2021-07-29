@@ -66,6 +66,9 @@ void gp::Game::run()
   Entity m_left;
   Entity m_roof;
   Entity m_floor;
+
+  float_t reticleShoot = 2.5f;
+  float_t reticleNoShoot = 1.5f;
   float time = 0;
   // Game loop
   int wave = 0;
@@ -77,6 +80,7 @@ void gp::Game::run()
   int numObjectsToSpawn = 10;
   int level = 0;
   float_t levelVel = 1;
+  float_t spawnVelocity = 1;
   int lives = 5;
   int score = 0;
   Entity spawnedObjects[30];
@@ -128,10 +132,11 @@ void gp::Game::run()
       //m_cameraControl.reset();
 
       if(m_scenarioControl.m_reloadedScenario){
-            numObjectsToDespawn = 1;
-            numObjectsToSpawn = 1;
+            numObjectsToDespawn = 5;
+            numObjectsToSpawn = 5;
             level = 0;
             levelVel = 1;
+            spawnVelocity = 1;
             lives = 5;
             score = 0;
             m_scenarioControl.m_reloadedScenario = false;
@@ -421,6 +426,10 @@ void gp::Game::run()
         currentlyChargedShooting = true;
         startShot = std::chrono::steady_clock::now();
         m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 8;
+	      m_scenarioControl.m_aimingReticleHor->setHeight(reticleShoot);
+	      m_scenarioControl.m_aimingReticleVer->setWidth(reticleShoot);
+	      m_scenarioControl.m_aimingReticleHorRight->setHeight(reticleShoot);
+	      m_scenarioControl.m_aimingReticleVerBot->setWidth(reticleShoot);
         gp::engine::Vector4f shootColor(255.0f, 0.0f, .0f, 955.0f);
         m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
         m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
@@ -441,6 +450,10 @@ void gp::Game::run()
         //std::cout << towards << std::endl;
         m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards,intensityMod));
         m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 8;
+	      m_scenarioControl.m_aimingReticleHor->setHeight(reticleShoot);
+	      m_scenarioControl.m_aimingReticleVer->setWidth(reticleShoot);
+	      m_scenarioControl.m_aimingReticleHorRight->setHeight(reticleShoot);
+	      m_scenarioControl.m_aimingReticleVerBot->setWidth(reticleShoot);
         gp::engine::Vector4f shootColor(255.0f, 0.0f, .0f, 955.0f);
         m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
         m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
@@ -458,6 +471,10 @@ void gp::Game::run()
       int64_t millis = std::chrono::duration_cast<std::chrono::milliseconds>(curTime-lastShot).count();
       if(millis>50){
       m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 4;
+	    m_scenarioControl.m_aimingReticleHor->setHeight(reticleNoShoot);
+	    m_scenarioControl.m_aimingReticleVer->setWidth(reticleNoShoot);
+	    m_scenarioControl.m_aimingReticleHorRight->setHeight(reticleNoShoot);
+	    m_scenarioControl.m_aimingReticleVerBot->setWidth(reticleNoShoot);
       m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
       m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
       m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillFocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
@@ -488,6 +505,10 @@ void gp::Game::run()
         //std::cout << towards << std::endl;
         m_vis2engine.push(gp::engine::messages::ShootMessage(posV,towards,intensityMod));
         m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 4;
+	      m_scenarioControl.m_aimingReticleHor->setHeight(reticleNoShoot);
+	      m_scenarioControl.m_aimingReticleVer->setWidth(reticleNoShoot);
+	      m_scenarioControl.m_aimingReticleHorRight->setHeight(reticleNoShoot);
+	      m_scenarioControl.m_aimingReticleVerBot->setWidth(reticleNoShoot);
         m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
         m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
         m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillFocused = nanogui::Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
@@ -503,6 +524,10 @@ void gp::Game::run()
         if(millis>1000){
           shotIntensityLevel = 1;//TODO: add charge level 1 color here
           m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 8;
+	        m_scenarioControl.m_aimingReticleHor->setHeight(reticleShoot);
+	        m_scenarioControl.m_aimingReticleVer->setWidth(reticleShoot);
+	        m_scenarioControl.m_aimingReticleHorRight->setHeight(reticleShoot);
+	        m_scenarioControl.m_aimingReticleVerBot->setWidth(reticleShoot);
           gp::engine::Vector4f shootColor(.0f, 0.0f, 255.0f, 955.0f);
           m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
           m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
@@ -512,6 +537,10 @@ void gp::Game::run()
         if(millis>2500){
           shotIntensityLevel = 2;//TODO: add charge level 2 color here
           m_scenarioControl.m_aimingReticleHor->theme()->mWindowCornerRadius = 8;
+	        m_scenarioControl.m_aimingReticleHor->setHeight(reticleShoot);
+	        m_scenarioControl.m_aimingReticleVer->setWidth(reticleShoot);
+	        m_scenarioControl.m_aimingReticleHorRight->setHeight(reticleShoot);
+	        m_scenarioControl.m_aimingReticleVerBot->setWidth(reticleShoot);
           gp::engine::Vector4f shootColor(.0f, 255.0f, .0f, 955.0f);
           m_scenarioControl.m_aimingReticleHor->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
           m_scenarioControl.m_aimingReticleVer->theme()->mWindowFillUnfocused = nanogui::Color(shootColor);
@@ -553,15 +582,16 @@ void gp::Game::run()
           newLevel = true;
           switch (level) {
             case 0: // 0->1 transition
-              numObjectsToDespawn = 2;
-              numObjectsToSpawn = 2;
-              levelVel = 2;
+              numObjectsToDespawn = 10;
+              numObjectsToSpawn = 10;
+              spawnVelocity = 2;
 
             break;
             case 1: //1->2 transition
-              numObjectsToDespawn = 1;
-              numObjectsToSpawn = 1;
-              levelVel = 4;
+              numObjectsToDespawn = 15;
+              numObjectsToSpawn = 15;
+              levelVel = 2;
+              spawnVelocity = 4;
             break;
           }
           level += 1;
@@ -622,7 +652,7 @@ void gp::Game::run()
           scenario->setMaterial(m_back, red);
           wave+=1;
         }
-        if (t1 - t0_ball > 3.0f && numObjectsToSpawn > 0) {
+        if (t1 - t0_ball > 3.0f/spawnVelocity + 0.5f && numObjectsToSpawn > 0) {
           t0_ball = static_cast<long int> (std::time(NULL));
           float rPos_x = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (width -4.0f) - (width/2.0f-2.0f);
           float rPos_y = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (height-4.0f) - (height/2.0f-2.0f);
@@ -675,7 +705,7 @@ void gp::Game::run()
         spawnIndex+=1;
         }
 
-        if (t1 - t0_squares > 9.0f && numObjectsToSpawn > 0) {
+        if (t1 - t0_squares > 9.0f/spawnVelocity && numObjectsToSpawn > 0) {
           t0_squares= static_cast<long int> (std::time(NULL));
           float rPos_x = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (width -6.0f) - (width/2.0f-3.0f);
           float rPos_y = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (height-6.0f) - (height/2.0f-3.0f);

@@ -20,9 +20,17 @@ void gp::gui::CameraControl::moveCamera(GLFWwindow* window, gp::gui::ScenarioCon
   int endmenuHeight = scenarioControl.m_endmenu->height();
   scenarioControl.m_restart3->setPosition(Eigen::Vector2i(0, endmenuHeight/2  + endmenuHeight/4));
   scenarioControl.m_restart3->setSize(Eigen::Vector2i(endmenuWidth/1 -40, endmenuHeight/8));
+	scenarioControl.m_winlose->setPosition(Eigen::Vector2i(endmenuWidth/2 - 100, endmenuHeight/2 - endmenuHeight/3));
+	//scenarioControl.m_winlose->setSize(Eigen::Vector2i((endmenuWidth*3)/5, endmenuHeight/1.5));
+	scenarioControl.m_endscore->setPosition(Eigen::Vector2i(endmenuWidth/2 - 120, endmenuHeight/2));
+	//scenarioControl.m_endscore->setSize(Eigen::Vector2i((endmenuWidth*3)/5, endmenuHeight/1.5));
 
-  scenarioControl.m_aimingReticleHor->setPosition(Eigen::Vector2i(width/2.0f-20, height/2.0f));
-  scenarioControl.m_aimingReticleVer->setPosition(Eigen::Vector2i(width/2.0f-9, height/2.0f-9));
+  scenarioControl.m_aimingReticleHor->setPosition(Eigen::Vector2i(width/2.0f-13, height/2.0f));
+  scenarioControl.m_aimingReticleVer->setPosition(Eigen::Vector2i(width/2.0f, height/2.0f-12));
+  scenarioControl.m_aimingReticleHorRight->setPosition(Eigen::Vector2i(width/2.0f+4, height/2.0f));
+  scenarioControl.m_aimingReticleVerBot->setPosition(Eigen::Vector2i(width/2.0f, height/2.0f+4));
+  scenarioControl.m_middleReference->setPosition(Eigen::Vector2i(width/2.0f-2.f, height/2.0f -2.f));
+  scenarioControl.m_middleReference->setVisible(false);
   scenarioControl.m_nanoguiWindow->setPosition(Eigen::Vector2i(width/2.0f- (width/ 5.0f)/2.0f, height/2.0f -(height / 5.0f)/2.0f ));
   scenarioControl.m_nanoguiWindow->setSize(Eigen::Vector2i(width / 5.0f, height / 5.0f));
   int menuWidth = scenarioControl.m_nanoguiWindow->width();

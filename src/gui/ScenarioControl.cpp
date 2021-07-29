@@ -17,17 +17,28 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 //=============================================AIMING CROSS=========================================================
 
 	FormHelper *aimingReticleHor = new FormHelper(this);
-	m_aimingReticleHor = aimingReticleHor->addWindow(Eigen::Vector2i(width/2.0f-20, height/2.0f), "");
-	m_aimingReticleHor->setFixedWidth(20);
-	m_aimingReticleHor->setFixedHeight(-1);
+	m_aimingReticleHor = aimingReticleHor->addWindow(Eigen::Vector2i(width/2.0f-25, height/2.0f), "");
+	m_aimingReticleHorRight = aimingReticleHor->addWindow(Eigen::Vector2i(width/2.0f+5, height/2.0f), "");
+	m_middleReference = aimingReticleHor->addWindow(Eigen::Vector2i(width/2.0f, height/2.0f), "");
+	m_middleReference->setFixedWidth(5);
+	m_middleReference->setFixedHeight(5);
+	m_aimingReticleHor->setFixedWidth(10);
+	m_aimingReticleHor->setFixedHeight(1.75f);
+	m_aimingReticleHorRight->setFixedWidth(10);
+	m_aimingReticleHorRight->setFixedHeight(1.75f);
 	FormHelper *aimingReticleVer = new FormHelper(this);
-	m_aimingReticleVer = aimingReticleVer->addWindow(Eigen::Vector2i(width/2.0f-10, height/2.0f-10), "");
-	m_aimingReticleVer->setFixedWidth(-1.f);
-	m_aimingReticleVer->setFixedHeight(18);
+	m_aimingReticleVer = aimingReticleVer->addWindow(Eigen::Vector2i(width/2.0f, height/2.0f-25), "");
+	m_aimingReticleVerBot = aimingReticleVer->addWindow(Eigen::Vector2i(width/2.0f, height/2.0f+5), "");
+	m_aimingReticleVerBot->setFixedWidth(1.75f);
+	m_aimingReticleVerBot->setFixedHeight(10);
+	m_aimingReticleVer->setFixedWidth(1.75f);
+	m_aimingReticleVer->setFixedHeight(10);
 	NVGcontext* cont = this->nvgContext();
 	Theme* base = new Theme(cont);
 	m_aimingReticleHor->setTheme(base);
+	m_aimingReticleHorRight->setTheme(base);
 	m_aimingReticleVer->setTheme(base);
+	m_aimingReticleVerBot->setTheme(base);
 	m_aimingReticleHor->theme()->mWindowDropShadowSize = 10;
 	m_aimingReticleHor->theme()->mWindowCornerRadius = 4;
 	m_aimingReticleHor->theme()->mWindowFillUnfocused = Color(engine::Vector4f(255.0f, 255.0f, 255.0f, 255.0f));
@@ -43,10 +54,10 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 	Theme* base2 = new Theme(cont2);
 	m_nanoguiWindow->setTheme(base2);
 
-	m_nanoguiWindow->theme()->mWindowFillUnfocused = Color(engine::Vector4f(.2f, 0.33f, 0.66f, .7f));
-	m_nanoguiWindow->theme()->mWindowFillFocused = Color(engine::Vector4f(.2f, 0.33f, 0.66f, .7f));
+	m_nanoguiWindow->theme()->mWindowFillUnfocused = Color(engine::Vector4f(.2f, 0.33f, 0.66f, .9f));
+	m_nanoguiWindow->theme()->mWindowFillFocused = Color(engine::Vector4f(.2f, 0.33f, 0.66f, .9f));
 
-
+	m_middleReference->setTheme(base2);
 	Widget* games = new Widget(m_nanoguiWindow);
 	
 	//games->setLayout(new GridLayout(Orientation::Horizontal, 3, Alignment::Middle, 0, 50));
@@ -76,26 +87,23 @@ gp::gui::ScenarioControl::ScenarioControl(GLFWwindow* window, gp::messages::Queu
 
 FormHelper *gui3 = new FormHelper(this);
 	m_endmenu = gui3->addWindow(Eigen::Vector2i(50, 50), "");
-
+	m_endmenu->setTheme(base2);
 	m_endmenu->setVisible(false);
+
 	Widget* games3 = new Widget(m_endmenu);
-	Widget* gameover = new Widget(games3);
-	Widget* endscore = new Widget(games3);
 	games3->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Fill));
-	gameover->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Middle));
-	endscore->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Middle));
 	games3->setPosition(Eigen::Vector2i(m_endmenu->width() /5, 10));
 	games3->setSize(Eigen::Vector2i((m_endmenu->width()*3)/5, m_endmenu->height()/1.5));
 	
 	int gameswidth = games3->width();
 	int gamesheight = games3->height();
 
-	m_winlose = new Label(gameover, "winlose");
+	m_winlose = new Label(games3, "winlose");
 	m_winlose->setFontSize(50);
 	// m_winlose->setPosition(Eigen::Vector2i(gameswidth/9, 5));
 	// m_winlose->setSize(Eigen::Vector2i((m_endmenu->width()*3)/5, m_endmenu->height()/1.5));
 
-	m_endscore = new Label(endscore, "SCORE:  0");
+	m_endscore = new Label(games3, "SCORE:  0");
 	m_endscore->setFontSize(50);
 
 	// m_winlose->setPosition();
@@ -103,9 +111,9 @@ FormHelper *gui3 = new FormHelper(this);
 
 	m_restart3 = new Button(games3, "BACK TO MENU");
 	m_restart3->setCallback([this]() { m_nanoguiWindow->setVisible(m_paused); m_endmenu->setVisible(false); });
-	
-	gameover->setFixedWidth(width*1000);
-	games3->setFixedWidth(width);
+	m_restart3->setBackgroundColor(Color(engine::Vector4f(.2f, 0.43f, 0.76f, .7f)));
+	//gameover->setFixedWidth(width*1000);
+	games3->setFixedWidth(width*10);
 	games3->setFixedHeight(height);
 	gui3->addWidget("",games3);
 
