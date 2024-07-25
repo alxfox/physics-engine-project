@@ -1,10 +1,23 @@
-# GamePhysics
-An educational software for  simulation and visualization of 3D game physics
+# Game Physics Project
+Implementation of a game physics engine in C++ for the Game Physics course at the Technical University Munich.
+
+As part of this project, collision detection and handling was implemented to enable an accurate physics simulation.\
+Supported objects include spheres, cuboids, and tethers, the latter of which may be used to physically tie other objects to each other.
+
+![Physics Scene](/assets/physics_screenshot.png?raw=true "Physics Scene")
+
+For the final part of the project, a simple shooting game was conceptualized and implemented.\
+Notable parts of this implementation include support for cursor-based interaction with the 3D environment, as well as support for collision-based triggers to facilitate a scoring system.
+
+![Game Scene](/assets/game_screenshot.png?raw=true "Game Scene")
+
+
+## General Information:
 
 ### Enviroment
 The officially supported OS for this cource is Ubuntu (Linux) between versions 14.04 and 20.04. We strongly recomend you to use VirtualBox in case if your host OS is either Windows or MacOS. It doesn't mean that our engine cannot get compiled for other OS's. It is done on purpose to provide a better support to students in case of any problems with compiling and linking.
 
-### Instalation Process
+### Installation Process
 
 #### Prerequisites
 ```console
